@@ -1,0 +1,344 @@
+\documentclass[11pt]{article}
+\usepackage{sbc-template}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{enumitem}
+
+\lstset{ %
+basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+numbers=left,                   % where to put the line-numbers
+numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
+numbersep=7pt,                   % choose the background color. You must add \usepackage{color}
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=single,           % adds a frame around the code
+tabsize=2,          % sets default tabsize to 2 spaces
+breaklines=true,        % sets automatic line breaking
+breakatwhitespace=false,    % sets if automatic breaks should only happen at whitespace
+escapeinside={\%*}{*)},          % if you want to add a comment within your code
+extendedchars=true,
+literate={á}{{\'a}}1 {ã}{{\~a}}1 {é}{{\'e}}1
+}
+
+\title{Especificação da linguagem}
+
+\author{Lucas Amaral $^1$}
+
+\date{\today}
+
+\address{Departamento de Ciência da Computação - Universidade de Brasília}
+
+\pagenumbering{roman}
+\begin{document}
+\maketitle
+
+
+\section{Descrição do trabalho}
+Este trabalho consiste na implementação de um tradutor para uma linguagem destinada à 
+área de programação funcional.
+A linguagem será baseada em outras, como ML e Haskell:
+pura, com funções de primeira ordem e listas como tipo primitivo.
+O diferencial desta linguagem é a possibilidade de declarações de funções de uma maneira procedural,
+porém sem uso de variáveis globais ou modificação de estado fora de seu escopo direto.
+
+Em linguagens puramente funcionais, as funções são definidas a partir de composições, descrevendo 
+seu comportamento através do relacionamento entre as funções que a compõem,
+ao invés de uma descrição dos passos a serem realizados, como em linguagens mais tradicionais e
+estruturadas, como C.
+Este alto nível de abstração, acompanhado da rigidez em relação a efeitos colaterais e 
+de um sistema de tipos forte,
+provê qualidades há muito conhecidas no campo de estudo de linguagens de programação, 
+como diminuição do acoplamento do código, 
+facilitamento no raciocínio sobre o funcionamento de funções (estas não modificam o meio) 
+e também auxílio no estudo de propriedades lógicas e matemáticas das funções, 
+devido ao embasamento teórico do Cálculo Lâmbda e da Teoria de Tipos.
+
+Porém, nem sempre a maneira funcional é a mais intuitiva para a concretização de um algoritmo.
+Aprendemos a projetar nossas soluções para problemas como uma sequência de passos,
+o que pode não ter uma descrição simples através de composição de funções. 
+Assim, uma modificação à esta estrutura é proposta, permitindo que funções sejam, também, declaradas
+imperativamente. Mas, diferentemente das linguagens estruturadas comuns, 
+a modificação do ambiente não é permitida, mantendo, assim, a "pureza" da função,
+sem perder as vantagens mencionadas anteriormente.
+
+Essencial para o bom funcionamento do compilador é um algoritmo básico para inferência de tipos.
+Apesar de já existirem algoritmos bem estabelecidos com este propósito 
+para linguagens funcionais, modificações em sua estrutura podem vir a serem necessárias devido 
+à adição das definições imperativas.
+
+
+\section{ Explicação semântica da linguagem }
+
+Abaixo encontram-se dois exemplos que demonstram os aspectos semânticos da linguagem, acompanhados de uma breve explicação.
+
+
+\subsection{Primeiro exemplo}
+
+\begin{lstlisting}[basicstyle=\small]
+incListBy :: Integer -> [Integer] -> [Integer];
+incListBy 0 xs = xs;
+incListBy _ [] = [];
+incListBy i xs = do {
+    ys <- [];
+    while( xs /= [] ) {
+        x:xs <- xs;
+        ys <- (x + i):ys;
+    };
+    rev ys;
+} where {
+    rev [] = [];
+    rev x:xs = (rev xs) ++ [x];
+}
+\end{lstlisting}
+
+
+Pontos a se observar:
+
+\begin{itemize}[leftmargin=.5in]
+  \item Declarações de tipo
+  \item Declaração de função com pattern matching
+  \item Pattern matching em atribuições
+  \item Declaração de função limitada a um escopo
+  \item Funções definidas imperativamente
+\end{itemize}
+
+Nas primeiras linhas, observamos uma estrutura semelhante à de outras linguagens funcionais,
+como Haskell.
+Inicia-se uma função com uma declaração de seu tipo, contendo tipos dos argumentos e de retorno.
+A função pode ser definida para alguns valores específicos, com Pattern Matching. 
+A ordem das declarações faz diferença, seguindo uma abordagem top-down. 
+Também são usados wildscores ``\_" e variáveis.
+
+A partir deste ponto, já notamos uma grande diferença: a descrição imperativa da função. 
+Nela, podemos notar o uso de estruturas de repetição, atualização do valor
+de variáveis e, novamente, o uso de Pattern Matching. Podemos notar também que a função é avaliada 
+para o valor da última linha executada. No caso \emph{rev ys}.
+A limitação de escopo também está presente, explicitada pelo uso da palavra-chave \emph{where}. 
+Nela, a função \emph{rev} é declarada, mas tem seu escopo limitado à função. 
+
+
+\subsection{Segundo exemplo}
+
+\begin{lstlisting}[basicstyle=\small]
+sumBelow10 :: [Integer] -> Integer;
+sumBelow10 [] = 0;
+sumBelow10 xs = do {
+    sum <- 0;
+    while(xs /= []) {
+        x:xs <- xs;
+        aux  <- if (x < 10) then {
+                    yield x;
+                } else {
+                    yield 0;
+                };
+        sum <- sum + aux;
+    };
+    sum;
+}
+\end{lstlisting}
+
+Pontos a observar:
+\begin{itemize}[leftmargin=.5in]
+\item Expressões possuem valores
+\item Função declarada imperativamente retorna o último valor computado.
+\end{itemize}
+
+
+Aqui, vemos que o valor da expressão \emph{if-then-else} está sendo atribuída à uma variável 
+\emph{aux}, diferente da expressão while, que não tem seu valor atribuído a nada.
+Isto se deve ao uso da palavra-chave \emph{yield}, que faz com que estas estruturas tenham retornem 
+um valor no contexto imperativo. No caso do \emph{if}, ambas as branches precisam
+de um \emph{yield}, e o tipo deve ser compatível.
+Caso o \emph{yield} não seja usado, como no caso do \emph{while}, a expressão retorna o valor 
+unitário, "()".
+
+Vale ressaltar que o \emph{yield} não funciona da mesma maneira que o \emph{return} das linguagens 
+tradicionais, pois não pode ser usado para terminar a execução no meio de um bloco.
+Diferentemente, ele é opcional, e só pode ser usado como última instrução de uma estrutura de 
+loop/condição.
+Vemos também que a função retorna o valor de \emph{sum}, pois é a última linha a ser executada.
+
+
+O uso de estruturas imperativas e modificação de variáveis 
+internas não afeta a 
+\emph{previsibilidade} da função. Para os mesmo valores de 
+entrada, ela sempre retorna o mesmo 
+resultado.
+
+\section{Gramática da linguagem}
+
+Abaixo encontra-se a gramática para a linguagem. Alguns detalhes importantes:
+\begin{itemize}[leftmargin=.5in]
+\item O uso de `;' para delimitar extensão das declarações de
+função e statments no caso imperativo. 
+\item O uso das variáveis 
+do tipo \emph{op\_precN}. Nelas, \emph{N} representa o nível de 
+precedência do operador, em ordem crescente. 
+\item Notar também a variável \emph{procdecl}, referente à declaração procedural de função.
+\end{itemize}
+
+\begin{lstlisting}[basicstyle=\small]
+program:  
+    line_elems
+
+line_elems: 
+    line_elem line_elems
+    | line_elem
+
+line_elem:
+    fundecl
+    | procdecl
+    | funtype_decl
+
+fundecl: 
+    ID args '=' expr ';'
+    | ID args '=' expr where_exp 
+    | ID '=' expr ';'
+    | ID '=' expr where_exp
+
+args:
+    arg_value args 
+    | arg_value
+    | WILDSCORE
+
+arg_value:
+    list_value
+    | basic_value
+    | '(' arg_value ')'
+
+basic_value: 
+    INT
+    | FLOAT
+    | TRUE
+    | FALSE
+    | ID
+    | `(' `)'
+
+list_value:
+    arg_value ':' list_value
+    | built_list_value
+
+built_list_value:
+    '[' ']'
+    | '[' args ']'
+
+funtype_decl:
+    ID '::' funtype ';'
+
+funtype:
+    basic_type
+    | '(' funtype ')'
+    | basic_type '->' funtype
+
+basic_type:
+    INTEGER
+    | FLOAT_T
+    | BOOL
+    | '[' types ']' 
+    | ID
+    | `(' `)'
+
+types:
+    basic_type
+    | basic_type ',' types
+
+expr:
+    op_prec1
+    | appexp
+    | ifexpr
+    | yieldexpr
+
+ifexpr:
+    'if' expr 'then' '{' expr '}' 'else' '{' expr '}'
+
+yieldexpr:
+    "yield" ifexpr
+    | "yield" appexpr
+    | "yield" op_prec1
+
+
+op_prec1:
+     op_prec2 '||' op_prec1
+     | op_prec2
+
+op_prec2:
+     op_prec3 '&&' op_prec2
+     | op_prec3
+
+op_prec3:
+     op_prec3 '==' op_prec4
+     | op_prec3 '/=' op_prec4
+     | op_prec3 '<' op_prec4
+     | op_prec3 '<=' op_prec4
+     | op_prec3 '>' op_prec4
+     | op_prec3 '>=' op_prec4
+     op_prec4
+
+op_prec4:
+     op_prec5 ':' op_prec4
+     | op_prec5 '++' op_prec4
+     | op_prec5
+
+op_prec5:
+    op_prec5 '+' op_prec6
+    | op_prec5 '-' op_prec6
+    | op_prec6
+
+op_prec6:
+     op_prec6 '%' op_prec7
+     | op_prec7
+
+op_prec7:
+    op_prec7 '*' op_prec8
+    | op_prec7 '/' op_prec8
+    | op_prec8
+
+op_prec8:
+    basic_value
+    | list_expr
+    | '(' expr ')'
+    | '-' expr
+
+list_expr:
+    | '[' exprs ']'
+    | '[' ']'
+    
+exprs:
+    expr
+    | expr ',' exprs
+
+appexp:
+    ID expr
+
+where_exp:
+    'where' '{' line_elems '}' 
+
+procdecl:
+    ID args '=' 'do' '{' stmts '}'
+    | ID args '=' 'do' '{' stmts '}' where_exp
+    | ID '=' 'do' '{' stmts '}'
+    | ID '=' 'do' '{' stmts '}' where_exp
+
+stmts:
+    stmt
+    | stmt stmts
+
+stmt:
+    basic_value '<-' expr ';'
+    | basic_value '<-' while_expr ';'
+    | expr ';'
+    | while_expr ';'
+
+while_expr:
+    'while' '(' expr ')' '{' stmts '}' 
+\end{lstlisting}
+
+\section{Referências Bibliográficas}
+[1] The Haskell 98 Report - https://www.haskell.org/onlinereport/index.html $^1$
+
+$^1$ Utilizado como referência para estruturas da linguagem Haskell e predecências de operadores.
+
+\end{document}

@@ -1,0 +1,309 @@
+\documentclass[11pt]{article}
+\usepackage{sbc-template}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{enumitem}
+
+\lstset{ %
+basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+numbers=left,                   % where to put the line-numbers
+numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
+numbersep=7pt,                   % choose the background color. You must add \usepackage{color}
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=single,           % adds a frame around the code
+tabsize=2,          % sets default tabsize to 2 spaces
+breaklines=true,        % sets automatic line breaking
+breakatwhitespace=false,    % sets if automatic breaks should only happen at whitespace
+escapeinside={\%*}{*)},          % if you want to add a comment within your code
+extendedchars=true,
+literate={á}{{\'a}}1 {ã}{{\~a}}1 {é}{{\'e}}1
+}
+
+\title{Documentação do analisador léxico}
+
+\author{Lucas Amaral $^1$}
+
+\address{Departamento de Ciência da Computação - Universidade de Brasília}
+
+\begin{document}
+\maketitle
+
+
+\section{Descrição do trabalho}
+
+Este trabalho consiste na implementação do analisador léxico utilizando a ferramenta Flex.
+Uma pequena modificação da gramática foi feita em relação à anteriormente apresentada. 
+Mais especificamente, as diretrizes de entrada e saída foram adicionadas, 
+como vai ser exibido posteriormente.
+
+\section{Visão geral do projeto}
+
+Foi utilizada a linguagem C++ para o programa, principalmente pelo fornecimento de estruturas
+de dados prontas em suas bibliotecas. 
+
+O programa irá receber, por linha de comando, o arquivo a ser escaneado. Cada token será
+lido e terá seu nome correspondente impresso na tela. 
+Quebras de linha no arquivo fonte são replicadas na saída. 
+Caso algum erro ocorra, este será guardado e só será notificado no final da 
+execução do programa. É utilizada uma estrutura em uma lista para armazenamento dos erros.
+
+A função \emph{handle\_token(int token)} é utilizada para fazer o tratamento de um token lido,
+imprimindo na tela os adequados e adicionando à lista de erros caso algo de incorreto seja
+encontrado. Ela consiste, basicamente, de um \emph{switch/case} único, contendo um tratamento
+apropriado para cada token. Quando um token não identificado é lido, o código seguinte é 
+executado. Nele \emph{comp\_error\_t} é uma estrutura que representa um erro, contendo um tipo de
+erro e uma mensagem a ser mostrada. A lista de erros é chamada de \emph{error\_list}. A linha
+e coluna onde o token inválido é encontrado são adicionadas no início da mensagem.
+
+
+\begin{lstlisting}[basicstyle=\small]
+    default:
+        std::string aux = "\n" ;
+        aux += to_string(line);
+        aux += ":";
+        aux += to_string(col);
+        aux += " Token não reconhecido \"";
+        aux += yytext;
+        aux += "\"";
+        error_list.push_back(comp_error_t(0, aux));
+        break;
+\end{lstlisting}
+
+Este tratamento foi escolhido por dois motivos:
+
+\begin{itemize}[leftmargin=.5in]
+  \item Organização da saída do programa
+  \item Reaproveitamento da estrutura de tratamento de erros para os próximos trabalhos
+\end{itemize}
+
+Foi incluida também uma função \emph{main} para realização da do recebimento do nome do
+arquivo por linha de comando, chamada à função específica do parser e impressão dos resultados.
+
+
+
+\subsection{Segundo exemplo}
+
+\begin{lstlisting}[basicstyle=\small]
+sumBelow10 :: [Integer] -> Integer;
+sumBelow10 [] = 0;
+sumBelow10 xs = do {
+    sum <- 0;
+    while(xs /= []) {
+        x:xs <- xs;
+        aux  <- if (x < 10) then {
+                    yield x;
+                } else {
+                    yield 0;
+                };
+        sum <- sum + aux;
+    };
+    sum;
+}
+\end{lstlisting}
+
+Pontos a observar:
+\begin{itemize}[leftmargin=.5in]
+\item Expressões possuem valores
+\item Função declarada imperativamente retorna o último valor computado.
+\end{itemize}
+
+
+Aqui, vemos que o valor da expressão \emph{if-then-else} está sendo atribuída à uma variável 
+\emph{aux}, diferente da expressão while, que não tem seu valor atribuído a nada.
+Isto se deve ao uso da palavra-chave \emph{yield}, que faz com que estas estruturas tenham retornem 
+um valor no contexto imperativo. No caso do \emph{if}, ambas as branches precisam
+de um \emph{yield}, e o tipo deve ser compatível.
+Caso o \emph{yield} não seja usado, como no caso do \emph{while}, a expressão retorna o valor 
+unitário, "()".
+
+Vale ressaltar que o \emph{yield} não funciona da mesma maneira que o \emph{return} das linguagens 
+tradicionais, pois não pode ser usado para terminar a execução no meio de um bloco.
+Diferentemente, ele é opcional, e só pode ser usado como última instrução de uma estrutura de 
+loop/condição.
+Vemos também que a função retorna o valor de \emph{sum}, pois é a última linha a ser executada.
+
+
+O uso de estruturas imperativas e modificação de variáveis 
+internas não afeta a 
+\emph{previsibilidade} da função. Para os mesmo valores de 
+entrada, ela sempre retorna o mesmo 
+resultado.
+
+\section{Gramática da linguagem}
+
+Abaixo encontra-se a gramática para a linguagem. Alguns detalhes importantes:
+\begin{itemize}[leftmargin=.5in]
+\item O uso de `;' para delimitar extensão das declarações de
+função e statments no caso imperativo. 
+\item O uso das variáveis 
+do tipo \emph{op\_precN}. Nelas, \emph{N} representa o nível de 
+precedência do operador, em ordem crescente. 
+\item Notar também a variável \emph{procdecl}, referente à declaração procedural de função.
+\end{itemize}
+
+\begin{lstlisting}[basicstyle=\small]
+program:  
+    line_elems
+
+line_elems: 
+    line_elem line_elems
+    | line_elem
+
+line_elem:
+    fundecl
+    | procdecl
+    | funtype_decl
+
+fundecl: 
+    ID args '=' expr ';'
+    | ID args '=' expr where_exp 
+    | ID '=' expr ';'
+    | ID '=' expr where_exp
+
+args:
+    arg_value args 
+    | arg_value
+    | WILDSCORE
+
+arg_value:
+    list_value
+    | basic_value
+    | '(' arg_value ')'
+
+basic_value: 
+    INT
+    | FLOAT
+    | TRUE
+    | FALSE
+    | ID
+    | `(' `)'
+
+list_value:
+    arg_value ':' list_value
+    | built_list_value
+
+built_list_value:
+    '[' ']'
+    | '[' args ']'
+
+funtype_decl:
+    ID '::' funtype ';'
+
+funtype:
+    basic_type
+    | '(' funtype ')'
+    | basic_type '->' funtype
+
+basic_type:
+    INTEGER
+    | FLOAT_T
+    | BOOL
+    | '[' types ']' 
+    | ID
+    | `(' `)'
+
+types:
+    basic_type
+    | basic_type ',' types
+
+expr:
+    op_prec1
+    | appexp
+    | ifexpr
+    | yieldexpr
+
+ifexpr:
+    'if' expr 'then' '{' expr '}' 'else' '{' expr '}'
+
+yieldexpr:
+    "yield" ifexpr
+    | "yield" appexpr
+    | "yield" op_prec1
+
+
+op_prec1:
+     op_prec2 '||' op_prec1
+     | op_prec2
+
+op_prec2:
+     op_prec3 '&&' op_prec2
+     | op_prec3
+
+op_prec3:
+     op_prec3 '==' op_prec4
+     | op_prec3 '/=' op_prec4
+     | op_prec3 '<' op_prec4
+     | op_prec3 '<=' op_prec4
+     | op_prec3 '>' op_prec4
+     | op_prec3 '>=' op_prec4
+     op_prec4
+
+op_prec4:
+     op_prec5 ':' op_prec4
+     | op_prec5 '++' op_prec4
+     | op_prec5
+
+op_prec5:
+    op_prec5 '+' op_prec6
+    | op_prec5 '-' op_prec6
+    | op_prec6
+
+op_prec6:
+     op_prec6 '%' op_prec7
+     | op_prec7
+
+op_prec7:
+    op_prec7 '*' op_prec8
+    | op_prec7 '/' op_prec8
+    | op_prec8
+
+op_prec8:
+    basic_value
+    | list_expr
+    | '(' expr ')'
+    | '-' expr
+
+list_expr:
+    | '[' exprs ']'
+    | '[' ']'
+    
+exprs:
+    expr
+    | expr ',' exprs
+
+appexp:
+    ID expr
+
+where_exp:
+    'where' '{' line_elems '}' 
+
+procdecl:
+    ID args '=' 'do' '{' stmts '}'
+    | ID args '=' 'do' '{' stmts '}' where_exp
+    | ID '=' 'do' '{' stmts '}'
+    | ID '=' 'do' '{' stmts '}' where_exp
+
+stmts:
+    stmt
+    | stmt stmts
+
+stmt:
+    basic_value '<-' expr ';'
+    | basic_value '<-' while_expr ';'
+    | expr ';'
+    | while_expr ';'
+
+while_expr:
+    'while' '(' expr ')' '{' stmts '}' 
+\end{lstlisting}
+
+\section{Referências Bibliográficas}
+[1] The Haskell 98 Report - https://www.haskell.org/onlinereport/index.html $^1$
+
+$^1$ Utilizado como referência para estruturas da linguagem Haskell e predecências de operadores.
+
+\end{document}

@@ -1,0 +1,32 @@
+incListBy :: Integer -> [Integer] -> [Integer]
+incListBy 0 xs = xs
+incListBy _ [] = []
+incListBy i xs = do {
+    ys <- []
+    while( xs /= [] ) {
+        x:xs <- xs
+        ys <- (x + i):ys
+    }
+    rev ys
+} where {
+    rev [] = []
+    rev x:xs = (rev xs) ++ [x]
+}
+
+---------------------------------------------------
+
+sumBelow10 :: [Integer]
+sumBelow10 [] = []
+sumBelow10 xs = do {
+    sum <- 0
+    while(xs /= []) {
+        x:xs <- xs
+        aux  <- if (x < 10) then {
+                    yield x
+                } else {
+                    yield 0
+                }
+        sum <- sum + aux
+        yield sum
+    }
+}
