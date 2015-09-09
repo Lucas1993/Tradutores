@@ -121,53 +121,57 @@ NL            [\n\r]
 
 %%
 
-{LCBRACKET}                              { return T_LCBRACKET; }
-{RCBRACKET}                              { return T_RCBRACKET; }
-{LPAREN}                                 { return T_LPAREN; }
-{RPAREN}                                 { return T_RPAREN; }
-{COLON}                                  { return T_COLON; }
-{LARROW}                                 { return T_LARROW; }
-{RARROW}                                 { return T_RARROW; }
-{NOTEQUAL}                               { return T_NOTEQUAL; }
-{EQUALS}                                 { return T_EQUALS; }
-{PLUS}                                   { return T_PLUS; }
-{MINUS}                                  { return T_MINUS; }
-{DIV}                                    { return T_DIV; }
-{STAR}                                   { return T_STAR; }
-{PERCENT}                                { return T_PERCENT; }
-{UNDERSCORE}                             { return T_UNDERSCORE; }
-{DOUBLECOLON}                            { return T_DOUBLECOLON; }
-{LBRACKET}                               { return T_LBRACKET; }
-{RBRACKET}                               { return T_RBRACKET; }
-{SEMICOLON}                              { return T_SEMICOLON; }
-{APPEND}                                 { return T_APPEND; }
-{AND}                                    { return T_AND; }
-{OR}                                     { return T_OR; }
-{LESS}                                   { return T_LESS; }
-{LESSEQ}                                 { return T_LESSEQ; }
-{MORE}                                   { return T_MORE; }
-{MOREEQ}                                 { return T_MOREEQ; }
-{ATRIB}                                  { return T_ATRIB; }
-{COMMA}                                  { return T_COMMA; }
-{YIELD}                                  { return T_YIELD; }
-{INTEGER}                                { return T_INTEGER; }
-{FLOAT}                                  { return T_FLOAT; }
-{BOOLEAN}                                { return T_BOOLEAN; }
-{DO}                                     { return T_DO; }
-{IF}                                     { return T_IF; }
-{THEN}                                   { return T_THEN; }
-{ELSE}                                   { return T_ELSE; }
-{WHILE}                                  { return T_WHILE; }
-{READINT}                                { return T_READINT; }
-{READFLOAT}                              { return T_READFLOAT; }
-{READBOOL}                               { return T_READBOOL; }
-{PRINT}                                  { return T_PRINT; }
-{LETTER}({NUMBER}|{LETTER}|_)*           { return T_ID; }
-{NUMBER}+                                { return T_NUMBER; }
-{NUMBER}+"."{NUMBER}+                    { return T_FLOATNUM; }
-{WS}+                                    { col += yyleng; BEGIN(INITIAL); }
-{NL}                                     { col = 1; line++; BEGIN(INITIAL); cout << "\n";}
-.                                       { return -1; }
+
+_+{LETTER}({NUMBER}|{LETTER}|_)*            { return -1; }
+_+{NUMBER}({NUMBER}|{LETTER}|_)*            { return -1; }
+{NUMBER}+({LETTER}|_)({NUMBER}|{LETTER}|_)* { return -1; }
+{LCBRACKET}                                 { return T_LCBRACKET; }
+{RCBRACKET}                                 { return T_RCBRACKET; }
+{LPAREN}                                    { return T_LPAREN; }
+{RPAREN}                                    { return T_RPAREN; }
+{COLON}                                     { return T_COLON; }
+{LARROW}                                    { return T_LARROW; }
+{RARROW}                                    { return T_RARROW; }
+{NOTEQUAL}                                  { return T_NOTEQUAL; }
+{EQUALS}                                    { return T_EQUALS; }
+{PLUS}                                      { return T_PLUS; }
+{MINUS}                                     { return T_MINUS; }
+{DIV}                                       { return T_DIV; }
+{STAR}                                      { return T_STAR; }
+{PERCENT}                                   { return T_PERCENT; }
+{UNDERSCORE}                                { return T_UNDERSCORE; }
+{DOUBLECOLON}                               { return T_DOUBLECOLON; }
+{LBRACKET}                                  { return T_LBRACKET; }
+{RBRACKET}                                  { return T_RBRACKET; }
+{SEMICOLON}                                 { return T_SEMICOLON; }
+{APPEND}                                    { return T_APPEND; }
+{AND}                                       { return T_AND; }
+{OR}                                        { return T_OR; }
+{LESS}                                      { return T_LESS; }
+{LESSEQ}                                    { return T_LESSEQ; }
+{MORE}                                      { return T_MORE; }
+{MOREEQ}                                    { return T_MOREEQ; }
+{ATRIB}                                     { return T_ATRIB; }
+{COMMA}                                     { return T_COMMA; }
+{YIELD}                                     { return T_YIELD; }
+{INTEGER}                                   { return T_INTEGER; }
+{FLOAT}                                     { return T_FLOAT; }
+{BOOLEAN}                                   { return T_BOOLEAN; }
+{DO}                                        { return T_DO; }
+{IF}                                        { return T_IF; }
+{THEN}                                      { return T_THEN; }
+{ELSE}                                      { return T_ELSE; }
+{WHILE}                                     { return T_WHILE; }
+{READINT}                                   { return T_READINT; }
+{READFLOAT}                                 { return T_READFLOAT; }
+{READBOOL}                                  { return T_READBOOL; }
+{PRINT}                                     { return T_PRINT; }
+{LETTER}({NUMBER}|{LETTER}|_)*              { return T_ID; }
+{NUMBER}+                                   { return T_NUMBER; }
+{NUMBER}+"."{NUMBER}+                       { return T_FLOATNUM; }
+{WS}+                                       { col += yyleng; BEGIN(INITIAL); }
+{NL}                                        { col = 1; line++; BEGIN(INITIAL); cout << "\n";}
+.                                           { return -1; }
 
 
 %%
