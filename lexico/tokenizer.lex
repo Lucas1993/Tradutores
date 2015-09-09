@@ -1,8 +1,6 @@
 %{
 #include <stdio.h>
-#include <iostream>
-#include <string>
-#include <vector>
+#include "list_error.h"
 
 
 #define T_LCBRACKET      1   
@@ -55,21 +53,11 @@
 int line = 1;
 int col = 1;
 
-using namespace std;
 
 void handle_token(int token);
 
-struct comp_error_t {
-    int type;
-    std::string msg;
+list_error_t *error_list_root = NULL;
 
-    comp_error_t(int _type, std::string _msg) {
-        type = _type;
-        msg = _msg;
-    }
-};
-
-std::vector<comp_error_t> error_list;
 
 %}
 
@@ -170,7 +158,7 @@ _+{NUMBER}({NUMBER}|{LETTER}|_)*            { return -1; }
 {NUMBER}+                                   { return T_NUMBER; }
 {NUMBER}+"."{NUMBER}+                       { return T_FLOATNUM; }
 {WS}+                                       { col += yyleng; BEGIN(INITIAL); }
-{NL}                                        { col = 1; line++; BEGIN(INITIAL); cout << "\n";}
+{NL}                                        { col = 1; line++; BEGIN(INITIAL); printf("\n");}
 .                                           { return -1; }
 
 
@@ -178,10 +166,10 @@ _+{NUMBER}({NUMBER}|{LETTER}|_)*            { return -1; }
 
 int main(int argc, char *argv[]) {
 	yyin = fopen(argv[1], "r");
+    list_error_t* cur = NULL;
     int token = 0;
 
-    cout << "============== Tokens reconhecidos ============== \n";
-    cout << endl;
+    printf("============== Tokens reconhecidos ============== \n\n");
 
     do {
         token = yylex();
@@ -193,16 +181,18 @@ int main(int argc, char *argv[]) {
 
     printf("\n");
 
-    if(not error_list.empty()) {
-        cout << endl;
-        cout << "==================== ERROS =====================";
-        cout << endl;
+    if(error_list_root != NULL) {
+        printf("\n");
+        printf("==================== ERROS =====================");
+        printf("\n");
     }
 
-    for(auto it = error_list.begin(); it != error_list.end(); it++) {
-        cout << it->msg;
+    cur = error_list_root;
+    while(cur != NULL) {
+        printf("\n%d:%d Token não identificado: \'%s\'", cur->erro->line, cur->erro->col, cur->erro->token); 
+        cur = cur->next;
     }
-    cout << endl;
+    printf("\n");
 }
 
 void handle_token(int token) {
@@ -220,16 +210,9 @@ void handle_token(int token) {
     } else if(token > 0 && token <= 44) {
         printf("<%s>", tokens[token]);
     } else {
-        std::string aux = "\n" ;
-        aux += to_string(line);
-        aux += ":";
-        aux += to_string(col);
-        aux += " Token não reconhecido \"";
-        aux += yytext;
-        aux += "\"";
-        error_list.push_back(comp_error_t(0, aux));
+        comp_error_t* err = make_error(0, yytext, line, col);
+        add_error(&error_list_root, err);
     }
     col += yyleng;
-
 
 }
