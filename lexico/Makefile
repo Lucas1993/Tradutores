@@ -13,4 +13,4 @@ list_error.o:
 	gcc -Wall list_error.c -c 
 
 clean:
-	rm *.o
+	rm *.o *.out

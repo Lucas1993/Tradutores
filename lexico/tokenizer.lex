@@ -107,9 +107,15 @@ LETTER        [a-zA-Z]
 NUMBER        [0-9]
 NL            [\n\r]
 
+%x INCOMMENT
+
 %%
 
 
+"/*"                                        { BEGIN(INCOMMENT); }
+<INCOMMENT>"*/"                             { BEGIN(INITIAL); }
+<INCOMMENT>.                                { col += yyleng; }
+<INCOMMENT>\n                               { line += 1; }
 _+{LETTER}({NUMBER}|{LETTER}|_)*            { return -1; }
 _+{NUMBER}({NUMBER}|{LETTER}|_)*            { return -1; }
 {NUMBER}+({LETTER}|_)({NUMBER}|{LETTER}|_)* { return -1; }
@@ -203,10 +209,12 @@ void handle_token(int token) {
     "T_ATRIB" , "T_COMMA" , "T_YIELD" , "T_INTEGER" , "T_FLOAT" , "T_BOOLEAN" , "T_DO" , "T_IF" , "T_THEN" , "T_ELSE" , "T_WHILE" , "T_READINT" , "T_READFLOAT" , "T_READBOOL" , "T_PRINT" , 
     "T_ID" , "T_NUMBER" , "T_FLOATNUM"};
 
-    if(token == 43) {
-        printf("<%s,%d>", tokens[token], atoi(yytext));
+    if(token == 42) {
+        printf("<%s, '%s'>", tokens[token], yytext);
+    } else if(token == 43) {
+        printf("<%s, %d>", tokens[token], atoi(yytext));
     } else if(token == 44) {
-        printf("<%s,%.2f>", tokens[token], atof(yytext));
+        printf("<%s, %.2f>", tokens[token], atof(yytext));
     } else if(token > 0 && token <= 44) {
         printf("<%s>", tokens[token]);
     } else {
