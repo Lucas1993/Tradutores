@@ -1,0 +1,14 @@
+incListBy :: Integer -> [Integer] -> [Integer];
+incListBy 0 xs = xs;
+incListBy _ [] = [];
+incListBy i xs = do {
+    ys <- [];
+    while( xs /= [] ) {
+        x:xs <- xs;
+        ys <- (x + i):ys;
+    };
+    rev ys;
+} where {
+    rev [] = [];
+    rev x:xs = (rev xs) ++ [x];
+}

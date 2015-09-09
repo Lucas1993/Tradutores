@@ -1,0 +1,2 @@
+_function [] = 0;
+_function xs = if (pred? True) then True else False

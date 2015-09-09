@@ -429,7 +429,7 @@ static yyconst flex_int32_t yy_ec[256] =
 static yyconst flex_int32_t yy_meta[47] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    2,    1,    1,    1,    1,    1,
         2,    2,    2,    2,    1,    1,    2,    2,    2,    2,
         2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
         2,    2,    2,    1,    1,    1
@@ -1102,7 +1102,7 @@ case 46:
 /* rule 46 can match eol */
 YY_RULE_SETUP
 #line 169 "tokenizer.lex"
-{ col = 1; line++; BEGIN(INITIAL);}
+{ col = 1; line++; BEGIN(INITIAL); cout << "\n";}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
@@ -2113,18 +2113,18 @@ void yyfree (void * ptr )
 
 
 
-/*extern int yylex(void);*/
-/*extern FILE* yyin;*/
-
 int main(int argc, char *argv[]) {
 	yyin = fopen(argv[1], "r");
     int token = 0;
 
     cout << "============== Tokens reconhecidos ============== \n";
+    cout << endl;
 
     do {
         token = yylex();
-        handle_token(token);
+        if(token) {
+            handle_token(token);
+        }
         printf(" ");
     } while(token);
 
@@ -2144,209 +2144,30 @@ int main(int argc, char *argv[]) {
 
 void handle_token(int token) {
 
+
+    static char const* tokens[] = {0, "T_LCBRACKET", "T_RCBRACKET" , "T_LPAREN" , "T_RPAREN" , "T_COLON" , "T_LARROW" , "T_RARROW" , "T_NOTEQUAL" , "T_EQUALS", "T_PLUS", "T_MINUS", "T_DIV",
+    "T_STAR" , "T_PERCENT" , "T_UNDERSCORE" , "T_DOUBLECOLON" , "T_LBRACKET" , "T_RBRACKET" , "T_SEMICOLON" , "T_APPEND" , "T_AND" , "T_OR" , "T_LESS" , "T_LESSEQ" , "T_MORE" , "T_MOREEQ" ,
+    "T_ATRIB" , "T_COMMA" , "T_YIELD" , "T_INTEGER" , "T_FLOAT" , "T_BOOLEAN" , "T_DO" , "T_IF" , "T_THEN" , "T_ELSE" , "T_WHILE" , "T_READINT" , "T_READFLOAT" , "T_READBOOL" , "T_PRINT" , 
+    "T_ID" , "T_NUMBER" , "T_FLOATNUM"};
+
+    if(token == 43) {
+        printf("<%s,%d>", tokens[token], atoi(yytext));
+    } else if(token == 44) {
+        printf("<%s,%.2f>", tokens[token], atof(yytext));
+    } else if(token > 0 && token <= 44) {
+        printf("<%s>", tokens[token]);
+    } else {
+        std::string aux = "\n" ;
+        aux += to_string(line);
+        aux += ":";
+        aux += to_string(col);
+        aux += " Token não reconhecido \"";
+        aux += yytext;
+        aux += "\"";
+        error_list.push_back(comp_error_t(0, aux));
+    }
     col += yyleng;
 
-    switch(token) {
-
-        case(T_LCBRACKET):
-            printf("T_LCBRACKET");
-            break;
-           
-        case(T_RCBRACKET):
-            printf("T_RCBRACKET");
-            break;
-           
-        case(T_LPAREN):
-            printf("T_LPAREN");
-            break;
-              
-        case(T_RPAREN):
-            printf("T_RPAREN");
-            break;
-              
-        case(T_COLON):
-            printf("T_COLON");
-            break;
-               
-        case(T_LARROW):
-            printf("T_LARROW");
-            break;
-              
-        case(T_RARROW):
-            printf("T_RARROW");
-            break;
-              
-        case(T_NOTEQUAL):
-            printf("T_NOTEQUAL");
-            break;
-            
-        case(T_EQUALS):
-            printf("T_EQUALS");
-            break;
-              
-        case(T_PLUS):
-            printf("T_PLUS");
-            break;
-                
-        case(T_MINUS):
-            printf("T_MINUS");
-            break;
-               
-        case(T_DIV):
-            printf("T_DIV");
-            break;
-                 
-        case(T_STAR):
-            printf("T_STAR");
-            break;
-                
-        case(T_PERCENT):
-            printf("T_PERCENT");
-            break;
-             
-        case(T_UNDERSCORE):
-            printf("T_UNDERSCORE");
-            break;
-          
-        case(T_DOUBLECOLON):
-            printf("T_DOUBLECOLON");
-            break;
-         
-        case(T_LBRACKET):
-            printf("T_LBRACKET");
-            break;
-            
-        case(T_RBRACKET):
-            printf("T_RBRACKET");
-            break;
-            
-        case(T_SEMICOLON):
-            printf("T_SEMICOLON");
-            break;
-           
-        case(T_APPEND):
-            printf("T_APPEND");
-            break;
-              
-        case(T_AND):
-            printf("T_AND");
-            break;
-                 
-        case(T_OR):
-            printf("T_OR");
-            break;
-                  
-        case(T_LESS):
-            printf("T_LESS");
-            break;
-                
-        case(T_LESSEQ):
-            printf("T_LESSEQ");
-            break;
-              
-        case(T_MORE):
-            printf("T_MORE");
-            break;
-                
-        case(T_MOREEQ):
-            printf("T_MOREEQ");
-            break;
-              
-        case(T_ATRIB):
-            printf("T_ATRIB");
-            break;
-               
-        case(T_COMMA):
-            printf("T_COMMA");
-            break;
-               
-        case(T_YIELD):
-            printf("T_YIELD");
-            break;
-               
-        case(T_INTEGER):
-            printf("T_INTEGER");
-            break;
-             
-        case(T_FLOAT):
-            printf("T_FLOAT");
-            break;
-               
-        case(T_BOOLEAN):
-            printf("T_BOOLEAN");
-            break;
-             
-        case(T_DO):
-            printf("T_DO");
-            break;
-                  
-        case(T_IF):
-            printf("T_IF");
-            break;
-                  
-        case(T_THEN):
-            printf("T_THEN");
-            break;
-                
-        case(T_ELSE):
-            printf("T_ELSE");
-            break;
-                
-        case(T_WHILE):
-            printf("T_WHILE");
-            break;
-               
-        case(T_READINT):
-            printf("T_READINT");
-            break;
-             
-        case(T_READFLOAT):
-            printf("T_READFLOAT");
-            break;
-           
-        case(T_READBOOL):
-            printf("T_READBOOL");
-            break;
-            
-        case(T_PRINT):
-            printf("T_PRINT");
-            break;
-               
-        case(T_ID):
-            printf("T_ID");
-            break;
-                  
-        case(T_NUMBER):
-            printf("T_NUMBER");
-            break;
-              
-        case(T_FLOATNUM):
-            printf("T_FLOATNUM");
-            break;
-
-        case(NEWLINE):
-            break;
-
-        case(WHITE):
-            printf("QUEEE");
-            break;
-
-        case(0):
-            break;
-            
-        default:
-            std::string aux = "\n" ;
-            aux += to_string(line);
-            aux += ":";
-            aux += to_string(col);
-            aux += " Token não reconhecido \"";
-            aux += yytext;
-            aux += "\"";
-            error_list.push_back(comp_error_t(0, aux));
-            /*printf("\n%d:%d: Token não reconhecido ->%s<-", line, col, yytext);*/
-            break;
-         
-     }
 
 }
 

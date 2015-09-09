@@ -53,7 +53,7 @@ execução do programa. É utilizada uma estrutura em uma lista para armazenamen
 
 A função \emph{handle\_token(int token)} é utilizada para fazer o tratamento de um token lido,
 imprimindo na tela os adequados e adicionando à lista de erros caso algo de incorreto seja
-encontrado. Ela consiste, basicamente, de um \emph{switch/case} único, contendo um tratamento
+encontrado. Ela consiste, basicamente, de um vetor contendo os tokens como strings, e \emph{if-then-else} com um tratamento
 apropriado para cada token. Quando um token não identificado é lido, o código seguinte é 
 executado. Nele \emph{comp\_error\_t} é uma estrutura que representa um erro, contendo um tipo de
 erro e uma mensagem a ser mostrada. A lista de erros é chamada de \emph{error\_list}. A linha
@@ -61,16 +61,14 @@ e coluna onde o token inválido é encontrado são adicionadas no início da men
 
 
 \begin{lstlisting}[basicstyle=\small]
-    default:
-        std::string aux = "\n" ;
-        aux += to_string(line);
-        aux += ":";
-        aux += to_string(col);
-        aux += " Token não reconhecido \"";
-        aux += yytext;
-        aux += "\"";
-        error_list.push_back(comp_error_t(0, aux));
-        break;
+    std::string aux = "\n" ;
+    aux += to_string(line);
+    aux += ":";
+    aux += to_string(col);
+    aux += " Token não reconhecido \"";
+    aux += yytext;
+    aux += "\"";
+    error_list.push_back(comp_error_t(0, aux));
 \end{lstlisting}
 
 Este tratamento foi escolhido por dois motivos:
@@ -79,6 +77,9 @@ Este tratamento foi escolhido por dois motivos:
   \item Organização da saída do programa
   \item Reaproveitamento da estrutura de tratamento de erros para os próximos trabalhos
 \end{itemize}
+
+Vale ressaltar que o único tipo de erro tratado nesta fase é o erro estritamente léxico. 
+Apenas tokens inválidos são identificados como um erro por este analisador.
 
 Foi incluida também uma função \emph{main} para realização da do recebimento do nome do
 arquivo por linha de comando, chamada à função específica do parser e impressão dos resultados.
