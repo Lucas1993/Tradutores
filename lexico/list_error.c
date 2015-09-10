@@ -43,19 +43,23 @@ comp_error_t* make_error(int type, char* token, int line, int col) {
     return err;
 }
 
-/*int main() {*/
-    /*list_error_t* root = NULL;*/
-    /*comp_error_t* err;*/
-    /*comp_error_t* err2;*/
+void del_list(list_error_t** root) {
+    list_error_t* aux = NULL;
+    if (root != NULL && (*root) != NULL) {
+        if ((*root)->erro != NULL) {
+            if ((*root)->erro->token != NULL) {
+                free((*root)->erro->token);
+            }
+            free((*root)->erro);
+        }
+        if ((*root)->next != NULL) {
+            aux = (*root)->next;
+        }
+        free(*root);
+    }
+    root = NULL;
+    if (aux != NULL) {
+        del_list(&aux);
+    }
 
-
-    /*err = make_error(0, "Teste", 0, 1);*/
-
-    /*add_error(&root, err);*/
-    /*err2 = make_error(0, "Teste2", 0, 1);*/
-    /*add_error(&root, err2);*/
-
-    /*printf("%s\n", root->next->erro->token);*/
-
-    /*return 0;*/
-/*}*/
+}

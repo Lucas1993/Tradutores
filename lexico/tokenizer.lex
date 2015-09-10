@@ -205,6 +205,7 @@ int main(int argc, char *argv[]) {
         printf("\n%d:%d Token não identificado: \'%s\'", cur->erro->line, cur->erro->col, cur->erro->token); 
         cur = cur->next;
     }
+    del_list(&error_list_root);
     printf("\n");
 }
 

@@ -16,3 +16,4 @@ typedef struct list_error_t {
 
 void add_error(list_error_t** root, comp_error_t* erro);
 comp_error_t* make_error(int type, char* token, int line, int col);
+void del_list(list_error_t** root);
