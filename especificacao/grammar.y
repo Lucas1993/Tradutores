@@ -29,8 +29,7 @@ arg_value:
 basic_value: 
     INT
     | FLOAT
-    | TRUE
-    | FALSE
+    | BOOLVAL
     | ID
     | '(' ')'
 

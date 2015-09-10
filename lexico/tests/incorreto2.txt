@@ -1,0 +1,12 @@
+
+#test: 23 /* '#' não é um comentário, é erro! */
+
+
+1func _x y = do {
+    z <- _x + y;
+    while(z /= 0) {
+         z--; 
+    };
+    return z;
+}
+

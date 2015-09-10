@@ -1,9 +1,10 @@
 \documentclass[11pt]{article}
 \usepackage{sbc-template}
-\usepackage[english]{babel}
+\usepackage[portuguese]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{enumitem}
+\usepackage{indentfirst}
 
 \lstset{ %
 basicstyle=\footnotesize,       % the size of the fonts that are used for the code
@@ -40,10 +41,9 @@ Uma pequena modificação da gramática foi feita em relação à anteriormente 
 Mais especificamente, as diretrizes de entrada e saída foram adicionadas, 
 como vai ser exibido posteriormente.
 
-\section{Visão geral do projeto}
+\section{Analisador Léxico}
 
-Foi utilizada a linguagem C++ para o programa, principalmente pelo fornecimento de estruturas
-de dados prontas em suas bibliotecas. 
+\subsection{Visão geral do projeto}
 
 O programa irá receber, por linha de comando, o arquivo a ser escaneado. Cada token será
 lido e terá seu nome correspondente impresso na tela. 
@@ -51,25 +51,27 @@ Quebras de linha no arquivo fonte são replicadas na saída.
 Caso algum erro ocorra, este será guardado e só será notificado no final da 
 execução do programa. É utilizada uma estrutura em uma lista para armazenamento dos erros.
 
+\subsection{Tratamento de erros}
+
 A função \emph{handle\_token(int token)} é utilizada para fazer o tratamento de um token lido,
 imprimindo na tela os adequados e adicionando à lista de erros caso algo de incorreto seja
 encontrado. Ela consiste, basicamente, de um vetor contendo os tokens como strings, e \emph{if-then-else} com um tratamento
 apropriado para cada token. Quando um token não identificado é lido, o código seguinte é 
 executado. Nele \emph{comp\_error\_t} é uma estrutura que representa um erro, contendo um tipo de
-erro e uma mensagem a ser mostrada. A lista de erros é chamada de \emph{error\_list}. A linha
-e coluna onde o token inválido é encontrado são adicionadas no início da mensagem.
+erro e uma mensagem a ser mostrada. A lista de erros é chamada de \emph{list\_error\_t}. A linha
+e coluna onde o token inválido é encontrado são adicionadas no início da mensagem. Nele,
+\emph{make\_error} recebe como parâmetro o tipo de erro (léxico, sintático, etc), o token que causou o erro
+e a linha e coluna onde o erro foi identificado.
 
 
 \begin{lstlisting}[basicstyle=\small]
-    std::string aux = "\n" ;
-    aux += to_string(line);
-    aux += ":";
-    aux += to_string(col);
-    aux += " Token não reconhecido \"";
-    aux += yytext;
-    aux += "\"";
-    error_list.push_back(comp_error_t(0, aux));
+    comp_error_t* err = make_error(0, yytext, line, col);
+    add_error(&error_list_root, err);
 \end{lstlisting}
+
+As funções \emph{make\_error} e \emph{add\_error} são implementadas em um arquivo separado, chamado
+\emph{list\_error}. A primeira aloca uma struct do tipo comp\_error\_t e inicializa com os parâmetros, retornando o ponteiro,
+e a segunda adiciona um erro em uma lista dada no primeiro argumento.
 
 Este tratamento foi escolhido por dois motivos:
 
@@ -80,71 +82,71 @@ Este tratamento foi escolhido por dois motivos:
 
 Vale ressaltar que o único tipo de erro tratado nesta fase é o erro estritamente léxico. 
 Apenas tokens inválidos são identificados como um erro por este analisador.
+Exemplos de erros léxicos são números seguidos de letras, como ``954asd", identificadores iniciados com underscore, como ``\_func",
+e caracteres não aceitos na linguagem, como ``ç".
 
 Foi incluida também uma função \emph{main} para realização da do recebimento do nome do
 arquivo por linha de comando, chamada à função específica do parser e impressão dos resultados.
 
 
+\section{Sobre a gramática da linguagem}
 
-\subsection{Segundo exemplo}
+No final deste relatório encontra-se a gramática para a linguagem. Em relação à entrega anterior, houveram apenas duas mudanças.
+A primeira foi a adição das diretivas de entrada e saída. Mais especificamente, as seguintes regras foram adicionadas.
+
 
 \begin{lstlisting}[basicstyle=\small]
-sumBelow10 :: [Integer] -> Integer;
-sumBelow10 [] = 0;
-sumBelow10 xs = do {
-    sum <- 0;
-    while(xs /= []) {
-        x:xs <- xs;
-        aux  <- if (x < 10) then {
-                    yield x;
-                } else {
-                    yield 0;
-                };
-        sum <- sum + aux;
-    };
-    sum;
-}
+stmt:
+    | io_stmt ';'
+
+io_stmt:
+    | 'readInt'
+    | 'readFloat'
+    | 'readBool'
+    | 'print' expr
 \end{lstlisting}
 
-Pontos a observar:
-\begin{itemize}[leftmargin=.5in]
-\item Expressões possuem valores
-\item Função declarada imperativamente retorna o último valor computado.
+A segunda foi a modificação das regras para constantes booleanas na gramática,
+juntando ambas em um único token. Seu valor vai ser retornado internamente no token.
+No código abaixo, onde existe ``BOOLVAL" existiam duas regras, ``TRUE" e ``FALSE".
+
+\begin{lstlisting}[basicstyle=\small]
+basic_value: 
+    INT
+    | FLOAT
+    | BOOLVAL
+    | ID
+    | '(' ')'
+\end{lstlisting}
+
+O resto da gramática continua exatamente como dito no primeiro relatório.
+
+\section{Descrição dos arquivos de teste}
+
+Existem 4 arquivos de teste contidos na pasta \emph{testes}.
+\begin{itemize}
+    \item O arquivo \emph{correto1.txt} mostra um programa simples da linguagem. Observar os operadores e os identificadores com números.
+    \item O arquivo \emph{correto2.txt} contém mais alguns exemplos, como constantes booleanas, comentários e erros sendo ignorados dentro dos comentários, 
+        em especial, identificador começando com underscore.
+    \item O arquivo \emph{incorreto1.txt} já contém alguns erros. Identificadores começando com underscore e caracteres inválidos estão presentes.
+    \item O arquivo \emph{incorreto2.txt} também contém alguns erros. Em especial vale notar que \emph{\#} não inicia um comentário,
+        \emph{x - -} não retorna dois tokens, mas três. Identificadores não podem começar com números e nem underscores.
 \end{itemize}
 
+\section{Dificuldades encontradas}
 
-Aqui, vemos que o valor da expressão \emph{if-then-else} está sendo atribuída à uma variável 
-\emph{aux}, diferente da expressão while, que não tem seu valor atribuído a nada.
-Isto se deve ao uso da palavra-chave \emph{yield}, que faz com que estas estruturas tenham retornem 
-um valor no contexto imperativo. No caso do \emph{if}, ambas as branches precisam
-de um \emph{yield}, e o tipo deve ser compatível.
-Caso o \emph{yield} não seja usado, como no caso do \emph{while}, a expressão retorna o valor 
-unitário, "()".
+Não foram encontradas muitas dificuldades no desenvolvimento do trabalho. A única que vale a pena
+ser mencionada é a identificação de erros que o analisador não percebe imediatamente.
+Um exemplo é identificar números seguidos de letras como um erro léxico. O analisador léxico retorna dois tokens,
+\textless T\_NUM\textgreater e \textless T\_ID\textgreater, ao invés de cair na regra de token não identificado. Para tratar este tipo de erro, uma regra foi
+adicionada para cada um.
 
-Vale ressaltar que o \emph{yield} não funciona da mesma maneira que o \emph{return} das linguagens 
-tradicionais, pois não pode ser usado para terminar a execução no meio de um bloco.
-Diferentemente, ele é opcional, e só pode ser usado como última instrução de uma estrutura de 
-loop/condição.
-Vemos também que a função retorna o valor de \emph{sum}, pois é a última linha a ser executada.
+\section{Referências Bibliográficas}
+[1] The Haskell 98 Report - https://www.haskell.org/onlinereport/index.html $^1$
 
+$^1$ Utilizado como referência para estruturas da linguagem Haskell e predecências de operadores.
 
-O uso de estruturas imperativas e modificação de variáveis 
-internas não afeta a 
-\emph{previsibilidade} da função. Para os mesmo valores de 
-entrada, ela sempre retorna o mesmo 
-resultado.
-
-\section{Gramática da linguagem}
-
-Abaixo encontra-se a gramática para a linguagem. Alguns detalhes importantes:
-\begin{itemize}[leftmargin=.5in]
-\item O uso de `;' para delimitar extensão das declarações de
-função e statments no caso imperativo. 
-\item O uso das variáveis 
-do tipo \emph{op\_precN}. Nelas, \emph{N} representa o nível de 
-precedência do operador, em ordem crescente. 
-\item Notar também a variável \emph{procdecl}, referente à declaração procedural de função.
-\end{itemize}
+\section{Anexo: Gramática}
 
 \begin{lstlisting}[basicstyle=\small]
 program:  
@@ -181,7 +183,7 @@ basic_value:
     | TRUE
     | FALSE
     | ID
-    | `(' `)'
+    | '(' ')'
 
 list_value:
     arg_value ':' list_value
@@ -205,7 +207,7 @@ basic_type:
     | BOOL
     | '[' types ']' 
     | ID
-    | `(' `)'
+    | '(' ')'
 
 types:
     basic_type
@@ -268,13 +270,14 @@ op_prec8:
     | '(' expr ')'
     | '-' expr
 
-list_expr:
-    | '[' exprs ']'
-    | '[' ']'
-    
 exprs:
     expr
     | expr ',' exprs
+
+
+list_expr:
+    | '[' exprs ']'
+    | '[' ']'
 
 appexp:
     ID expr
@@ -295,16 +298,20 @@ stmts:
 stmt:
     basic_value '<-' expr ';'
     | basic_value '<-' while_expr ';'
+    | basic_value '<-' io_stmt ';'
     | expr ';'
     | while_expr ';'
+    | io_stmt ';'
+
+io_stmt:
+    | 'readInt'
+    | 'readFloat'
+    | 'readBool'
+    | 'print' expr
 
 while_expr:
     'while' '(' expr ')' '{' stmts '}' 
 \end{lstlisting}
 
-\section{Referências Bibliográficas}
-[1] The Haskell 98 Report - https://www.haskell.org/onlinereport/index.html $^1$
-
-$^1$ Utilizado como referência para estruturas da linguagem Haskell e predecências de operadores.
 
 \end{document}

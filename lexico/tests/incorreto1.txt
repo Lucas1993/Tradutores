@@ -1,7 +1,4 @@
-_function [] = 0;
-___9321
-9a
-9a9
-9_a
-9_9
-_function xs = if (pred? True) then True else False
+_function [] = False;
+_function xs = if (pred? True) then { True } else { False };
+
+func2 x = x + 9_9;

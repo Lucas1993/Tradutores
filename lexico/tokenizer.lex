@@ -47,8 +47,7 @@
 #define T_ID             42 
 #define T_NUMBER         43 
 #define T_FLOATNUM       44
-#define NEWLINE          45
-#define WHITE            46
+#define T_BOOLVAL        45
 
 int line = 1;
 int col = 1;
@@ -103,6 +102,7 @@ READINT       "readInt"
 READFLOAT     "readFloat"
 READBOOL      "readBool"
 PRINT         "print"
+BOOLVAL       ("True"|"False")
 LETTER        [a-zA-Z]
 NUMBER        [0-9]
 NL            [\n\r]
@@ -114,8 +114,8 @@ NL            [\n\r]
 
 "/*"                                        { BEGIN(INCOMMENT); }
 <INCOMMENT>"*/"                             { BEGIN(INITIAL); }
+<INCOMMENT>"\n"                             { line += 1; }
 <INCOMMENT>.                                { col += yyleng; }
-<INCOMMENT>\n                               { line += 1; }
 _+{LETTER}({NUMBER}|{LETTER}|_)*            { return -1; }
 _+{NUMBER}({NUMBER}|{LETTER}|_)*            { return -1; }
 {NUMBER}+({LETTER}|_)({NUMBER}|{LETTER}|_)* { return -1; }
@@ -160,6 +160,7 @@ _+{NUMBER}({NUMBER}|{LETTER}|_)*            { return -1; }
 {READFLOAT}                                 { return T_READFLOAT; }
 {READBOOL}                                  { return T_READBOOL; }
 {PRINT}                                     { return T_PRINT; }
+{BOOLVAL}                                   { return T_BOOLVAL; }
 {LETTER}({NUMBER}|{LETTER}|_)*              { return T_ID; }
 {NUMBER}+                                   { return T_NUMBER; }
 {NUMBER}+"."{NUMBER}+                       { return T_FLOATNUM; }
@@ -170,8 +171,13 @@ _+{NUMBER}({NUMBER}|{LETTER}|_)*            { return -1; }
 
 %%
 
+int yywrap() { return 1; }
+
 int main(int argc, char *argv[]) {
-	yyin = fopen(argv[1], "r");
+    if(argc > 1) {
+        yyin = fopen(argv[1], "r");
+    }
+
     list_error_t* cur = NULL;
     int token = 0;
 
@@ -194,6 +200,7 @@ int main(int argc, char *argv[]) {
     }
 
     cur = error_list_root;
+    // Printando erros
     while(cur != NULL) {
         printf("\n%d:%d Token não identificado: \'%s\'", cur->erro->line, cur->erro->col, cur->erro->token); 
         cur = cur->next;
@@ -207,17 +214,24 @@ void handle_token(int token) {
     static char const* tokens[] = {0, "T_LCBRACKET", "T_RCBRACKET" , "T_LPAREN" , "T_RPAREN" , "T_COLON" , "T_LARROW" , "T_RARROW" , "T_NOTEQUAL" , "T_EQUALS", "T_PLUS", "T_MINUS", "T_DIV",
     "T_STAR" , "T_PERCENT" , "T_UNDERSCORE" , "T_DOUBLECOLON" , "T_LBRACKET" , "T_RBRACKET" , "T_SEMICOLON" , "T_APPEND" , "T_AND" , "T_OR" , "T_LESS" , "T_LESSEQ" , "T_MORE" , "T_MOREEQ" ,
     "T_ATRIB" , "T_COMMA" , "T_YIELD" , "T_INTEGER" , "T_FLOAT" , "T_BOOLEAN" , "T_DO" , "T_IF" , "T_THEN" , "T_ELSE" , "T_WHILE" , "T_READINT" , "T_READFLOAT" , "T_READBOOL" , "T_PRINT" , 
-    "T_ID" , "T_NUMBER" , "T_FLOATNUM"};
+    "T_ID" , "T_NUMBER" , "T_FLOATNUM", "T_BOOLVAL"};
 
-    if(token == 42) {
+    if(token == 42) { // Identificadores são impressos num par junto com o token
         printf("<%s, '%s'>", tokens[token], yytext);
-    } else if(token == 43) {
+
+    } else if(token == 43) { // Inteiros são impressos num par junto com o token
         printf("<%s, %d>", tokens[token], atoi(yytext));
-    } else if(token == 44) {
+
+    } else if(token == 44) { // Floats são impressos num par junto com o token
         printf("<%s, %.2f>", tokens[token], atof(yytext));
-    } else if(token > 0 && token <= 44) {
+
+    } else if(token == 45) { // Booleanos são impressos num par junto com o token
+        printf("<%s, %s>", tokens[token], yytext);
+
+    } else if(token > 0 && token <= 46) {
         printf("<%s>", tokens[token]);
-    } else {
+
+    } else { // Adicionando erros à lista de erros
         comp_error_t* err = make_error(0, yytext, line, col);
         add_error(&error_list_root, err);
     }
