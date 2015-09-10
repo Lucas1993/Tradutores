@@ -162,8 +162,8 @@ _+{NUMBER}({NUMBER}|{LETTER}|_)*            { return -1; }
 {PRINT}                                     { return T_PRINT; }
 {BOOLVAL}                                   { return T_BOOLVAL; }
 {LETTER}({NUMBER}|{LETTER}|_)*              { return T_ID; }
-{NUMBER}+                                   { return T_NUMBER; }
-{NUMBER}+"."{NUMBER}+                       { return T_FLOATNUM; }
+"-"?{NUMBER}+                               { return T_NUMBER; }
+"-"?{NUMBER}+"."{NUMBER}+                   { return T_FLOATNUM; }
 {WS}+                                       { col += yyleng; BEGIN(INITIAL); }
 {NL}                                        { col = 1; line++; BEGIN(INITIAL); printf("\n");}
 .                                           { return -1; }
