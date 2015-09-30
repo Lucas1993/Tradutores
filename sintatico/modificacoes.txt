@@ -1,0 +1,10 @@
+Modificações feitas na gramática
+================================
+
+Conflito de reduce/reduce
+ - List value reescrito: unfold no arg_value
+
+Outros:
+ - Statement mudado: basic_value para ID
+ - basic_type: list_type mudado pra fazer sentido
+ - appexpr: mudado ID para expr para permitir todos os tipos de aplicações
