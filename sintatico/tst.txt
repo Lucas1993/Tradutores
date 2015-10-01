@@ -1,44 +1,4 @@
-%{
-#include <stdio.h>
 
-void yyerror(const char *str)
-{    fprintf(stderr,"error: %s\n",str);}
-%}
-
-%token ID
-%token WILDSCORE
-%token FLOAT
-%token BOOLVAL
-%token BOOL
-%token NUMBER
-%token FLOATNUM
-%token INTEGER
-%token IF
-%token ELSE
-%token THEN
-%token WHILE
-%token WHERE
-%token YIELD
-%token DO
-%token PRINT
-%token READBOOL
-%token READFLOAT
-%token READINT
-%token RARROW
-%token LARROW
-%token DIFF
-%token EQUALS
-%token DOUBLECOLON
-%token APPEND
-%token AND
-%token OR
-%token LEQ
-%token GEQ
-
-
-%start program
-
-%%
 program:  
     line_elems
 	;
@@ -145,22 +105,22 @@ yieldexpr:
 	;
 
 op_prec1:
-     op_prec2 OR op_prec1
+     op_prec1 OR op_prec2
      | op_prec2
 	;
 
 op_prec2:
-     op_prec3 AND op_prec2
+     op_prec2 AND op_prec3
      | op_prec3
 	;
 
 op_prec3:
-     op_prec4 EQUALS op_prec3
-     | op_prec4 DIFF op_prec3
-     | op_prec4 '<' op_prec3
-     | op_prec4 LEQ op_prec3
-     | op_prec4 '>' op_prec3
-     | op_prec4 GEQ op_prec3
+     op_prec3 EQUALS op_prec4
+     | op_prec3 DIFF op_prec4
+     | op_prec3 '<' op_prec4
+     | op_prec3 LEQ op_prec4
+     | op_prec3 '>' op_prec4
+     | op_prec3 GEQ op_prec4
      | op_prec4
 	;
 
@@ -240,15 +200,3 @@ io_stmt:
 while_expr:
     WHILE '(' expr ')' '{' stmts '}' 
 	;
-%%
-
-int main(int argc, char** argv) {
-
-    /*if(argc > 1) {*/
-        /*yyin = fopen(argv[1], "r");*/
-    /*}*/
-
-    yyparse();
-
-    return 0;
-}

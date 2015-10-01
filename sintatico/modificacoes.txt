@@ -8,3 +8,5 @@ Outros:
  - Statement mudado: basic_value para ID
  - basic_type: list_type mudado pra fazer sentido
  - appexpr: mudado ID para expr para permitir todos os tipos de aplicações
+ - built_value_list: adicionado nova regra para virgulas
+ - operadores: todos à esquerda

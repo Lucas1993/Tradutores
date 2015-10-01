@@ -34,7 +34,7 @@
 # define YY_YY_PARSER_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -47,12 +47,33 @@ extern int yydebug;
   {
     ID = 258,
     WILDSCORE = 259,
-    INT = 260,
-    FLOAT = 261,
-    BOOLVAL = 262,
-    BOOL = 263,
-    FLOAT_T = 264,
-    INTEGER = 265
+    FLOAT = 260,
+    BOOLVAL = 261,
+    BOOL = 262,
+    NUMBER = 263,
+    FLOATNUM = 264,
+    INTEGER = 265,
+    IF = 266,
+    ELSE = 267,
+    THEN = 268,
+    WHILE = 269,
+    WHERE = 270,
+    YIELD = 271,
+    DO = 272,
+    PRINT = 273,
+    READBOOL = 274,
+    READFLOAT = 275,
+    READINT = 276,
+    RARROW = 277,
+    LARROW = 278,
+    DIFF = 279,
+    EQUALS = 280,
+    DOUBLECOLON = 281,
+    APPEND = 282,
+    AND = 283,
+    OR = 284,
+    LEQ = 285,
+    GEQ = 286
   };
 #endif
 
