@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include "ast.h"
 #include "list_error.h"
 #include "parser.tab.h"
 
@@ -113,7 +114,7 @@ _+{R_NUMBER}({R_NUMBER}|{R_LETTER}|_)*              { return -1; }
 {R_READBOOL}                                        { return READBOOL; }
 {R_PRINT}                                           { return PRINT; }
 {R_BOOLVAL}                                         { return BOOLVAL; }
-{R_LETTER}({R_NUMBER}|{R_LETTER}|_)*                { return ID; }
+{R_LETTER}({R_NUMBER}|{R_LETTER}|_)*                { yylval.str = strdup(yytext); return ID; }
 {R_NUMBER}+                                         { return NUMBER; }
 {R_NUMBER}+'.'{R_NUMBER}+                           { return FLOATNUM; }
 {WS}+                                               { col += yyleng; BEGIN(INITIAL); }

@@ -65,11 +65,16 @@
 #line 1 "parser.y" /* yacc.c:339  */
 
 #include <stdio.h>
+#include <string.h>
+#include "ast.h"
+
+/*Macro para alocar e inicializar a struct toda com 0*/
+#define NEW(TYPE) memset(malloc(sizeof(TYPE)), 0, sizeof(TYPE))
 
 void yyerror(const char *str)
 {    fprintf(stderr,"error: %s\n",str);}
 
-#line 73 "parser.tab.c" /* yacc.c:339  */
+#line 78 "parser.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -138,7 +143,40 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE YYSTYPE;
+union YYSTYPE
+{
+#line 43 "parser.y" /* yacc.c:355  */
+
+    while_t* while_f;          
+    io_t* io_f;             
+    stmt_t* stmt_f;           
+    stmts_t* stmts_f;          
+    proc_t* proc_f;           
+    list_t* list_f;           
+    appexpr_t* appexpr_f;        
+    where_t* where_f;          
+    exprs_t* exprs_f;       
+    op_t* op_f;             
+    yieldexpr_t* yieldexpr_f;      
+    ifexpr_t* ifexpr_f;         
+    expr_t* expr_f;           
+    basic_type_t* basic_type_f;     
+    funtype_t* funtype_f;        
+    funtype_decl_t* funtype_decl_f;   
+    basic_val_t* basic_val_f;      
+    arg_t* arg_f;            
+    fun_t* fun_f;            
+    lines_t* lines_f;          
+    line_t* line_f;           
+    args_t* args_f;           
+    program_t* program_f;        
+    list_args_t* list_args_f;      
+    built_list_val_t* built_list_val_f; 
+    char* str;
+
+#line 179 "parser.tab.c" /* yacc.c:355  */
+};
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -152,7 +190,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 156 "parser.tab.c" /* yacc.c:358  */
+#line 194 "parser.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -450,18 +488,18 @@ static const yytype_uint8 yytranslate[] =
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_uint16 yyrline[] =
 {
-       0,    43,    43,    47,    48,    52,    53,    54,    58,    59,
-      60,    61,    65,    66,    67,    71,    72,    73,    77,    78,
-      79,    80,    81,    85,    87,    88,    92,    93,    97,    98,
-     102,   106,   107,   108,   112,   113,   114,   115,   116,   117,
-     121,   122,   126,   127,   131,   132,   133,   134,   138,   142,
-     143,   144,   148,   149,   153,   154,   158,   159,   160,   161,
-     162,   163,   164,   168,   169,   170,   174,   175,   176,   180,
-     181,   185,   186,   187,   191,   192,   193,   194,   198,   199,
-     203,   204,   209,   213,   214,   215,   216,   220,   221,   225,
-     226,   227,   228,   229,   230,   234,   235,   236,   237,   241
+       0,   112,   112,   116,   117,   121,   122,   123,   127,   128,
+     129,   130,   134,   135,   136,   140,   141,   142,   146,   147,
+     148,   149,   150,   154,   156,   157,   161,   162,   166,   167,
+     171,   175,   176,   177,   181,   182,   183,   184,   185,   186,
+     190,   191,   195,   196,   200,   201,   202,   203,   207,   211,
+     212,   213,   217,   225,   234,   242,   251,   259,   267,   275,
+     283,   291,   299,   308,   316,   324,   333,   341,   349,   358,
+     359,   368,   369,   370,   379,   385,   391,   397,   406,   411,
+     421,   424,   431,   439,   446,   454,   460,   470,   475,   484,
+     491,   498,   505,   511,   517,   526,   531,   536,   541,   550
 };
 #endif
 
@@ -1392,8 +1430,523 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
-#line 1397 "parser.tab.c" /* yacc.c:1646  */
+        case 52:
+#line 217 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_OR;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1444 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 53:
+#line 225 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_NEXT;
+        tmp->opt.opt1 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    }
+#line 1455 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 54:
+#line 234 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_AND;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1468 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 55:
+#line 242 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_NEXT;
+        tmp->opt.opt1 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    }
+#line 1479 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 56:
+#line 251 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_EQ;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1492 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 57:
+#line 259 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_DIFF;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1505 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 58:
+#line 267 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_LESS;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1518 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 59:
+#line 275 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_LEQ;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1531 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 60:
+#line 283 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_GREATER;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1544 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 61:
+#line 291 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_GEQ;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1557 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 62:
+#line 299 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_NEXT;
+        tmp->opt.opt1 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    }
+#line 1568 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 63:
+#line 308 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_CONS;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1581 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 64:
+#line 316 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_APPEND;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1594 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 65:
+#line 324 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_NEXT;
+        tmp->opt.opt1 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    }
+#line 1605 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 66:
+#line 333 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_PLUS;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1618 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 67:
+#line 341 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_MINUS;
+        tmp->opt.opt1 = (yyvsp[-2].op_f);
+        tmp->opt2 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    
+    }
+#line 1631 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 68:
+#line 349 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_NEXT;
+        tmp->opt.opt1 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    }
+#line 1642 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 70:
+#line 359 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_NEXT;
+        tmp->opt.opt1 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+     }
+#line 1653 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 73:
+#line 370 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_NEXT;
+        tmp->opt.opt1 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    }
+#line 1664 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 74:
+#line 379 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_BVALUE;
+        tmp->opt.bval = (yyvsp[0].basic_val_f);
+        (yyval.op_f) = tmp;
+    }
+#line 1675 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 75:
+#line 385 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_LIST;
+        tmp->opt.lexpr = (yyvsp[0].exprs_f);
+        (yyval.op_f) = tmp;
+    }
+#line 1686 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 76:
+#line 391 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_EXPR;
+        tmp->opt.expr = (yyvsp[-1].expr_f);
+        (yyval.op_f) = tmp;
+    }
+#line 1697 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 77:
+#line 397 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_NEG;
+        tmp->opt.opt1 = (yyvsp[0].op_f);
+        (yyval.op_f) = tmp;
+    }
+#line 1708 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 78:
+#line 406 "parser.y" /* yacc.c:1646  */
+    {
+        exprs_t* tmp = NEW(exprs_t);
+        tmp->expr = (yyvsp[0].expr_f);
+        (yyval.exprs_f) = tmp;
+    }
+#line 1718 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 79:
+#line 411 "parser.y" /* yacc.c:1646  */
+    {
+        exprs_t* tmp = NEW(exprs_t);
+        tmp->expr = (yyvsp[-2].expr_f);
+        tmp->next = (yyvsp[0].exprs_f);
+        (yyval.exprs_f) = tmp;
+    
+    }
+#line 1730 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 80:
+#line 421 "parser.y" /* yacc.c:1646  */
+    {
+        (yyval.exprs_f) = (yyvsp[-1].exprs_f);
+     }
+#line 1738 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 81:
+#line 424 "parser.y" /* yacc.c:1646  */
+    {
+        (yyval.exprs_f) = NEW(exprs_t);
+    }
+#line 1746 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 82:
+#line 431 "parser.y" /* yacc.c:1646  */
+    {
+        where_t* tmp = NEW(where_t);
+        tmp->lines = (yyvsp[-1].lines_f);
+        (yyval.where_f) = tmp;
+    }
+#line 1756 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 83:
+#line 439 "parser.y" /* yacc.c:1646  */
+    { 
+        proc_t* tmp = NEW(proc_t);
+        tmp->label = (yyvsp[-6].str);
+        tmp->args = (yyvsp[-5].args_f);
+        tmp->stmts = (yyvsp[-1].stmts_f);
+        (yyval.proc_f) = tmp;
+    }
+#line 1768 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 84:
+#line 446 "parser.y" /* yacc.c:1646  */
+    { 
+        proc_t* tmp = NEW(proc_t);
+        tmp->label = (yyvsp[-7].str);
+        tmp->args = (yyvsp[-6].args_f);
+        tmp->stmts = (yyvsp[-2].stmts_f);
+        tmp->where_exp = (yyvsp[0].where_f);
+        (yyval.proc_f) = tmp;
+    }
+#line 1781 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 85:
+#line 454 "parser.y" /* yacc.c:1646  */
+    { 
+        proc_t* tmp = NEW(proc_t);
+        tmp->label = (yyvsp[-5].str);
+        tmp->stmts = (yyvsp[-1].stmts_f);
+        (yyval.proc_f) = tmp;
+    }
+#line 1792 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 86:
+#line 460 "parser.y" /* yacc.c:1646  */
+    { 
+        proc_t* tmp = NEW(proc_t);
+        tmp->label = (yyvsp[-6].str);
+        tmp->stmts = (yyvsp[-2].stmts_f);
+        tmp->where_exp = (yyvsp[0].where_f);
+        (yyval.proc_f) = tmp;
+    }
+#line 1804 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 87:
+#line 470 "parser.y" /* yacc.c:1646  */
+    {
+        stmts_t* tmp = NEW(stmts_t);
+        tmp->stmt = (yyvsp[0].stmt_f);
+        (yyval.stmts_f) = tmp;
+    }
+#line 1814 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 88:
+#line 475 "parser.y" /* yacc.c:1646  */
+    {
+        stmts_t* tmp = NEW(stmts_t);
+        tmp->stmt = (yyvsp[-1].stmt_f);
+        tmp->next = (yyvsp[0].stmts_f);
+        (yyval.stmts_f) = tmp;
+    }
+#line 1825 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 89:
+#line 484 "parser.y" /* yacc.c:1646  */
+    {
+       stmt_t* tmp = NEW(stmt_t);
+       tmp->stmt_type = STMT_EXPR;
+       tmp->lhs = (yyvsp[-3].str);
+       tmp->body.expr = (yyvsp[-1].expr_f);
+       (yyval.stmt_f) = tmp;
+    }
+#line 1837 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 90:
+#line 491 "parser.y" /* yacc.c:1646  */
+    {
+       stmt_t* tmp = NEW(stmt_t);
+       tmp->stmt_type = STMT_WH;
+       tmp->lhs = (yyvsp[-3].str);
+       tmp->body.while_expr = (yyvsp[-1].while_f);
+       (yyval.stmt_f) = tmp;
+    }
+#line 1849 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 91:
+#line 498 "parser.y" /* yacc.c:1646  */
+    {
+       stmt_t* tmp = NEW(stmt_t);
+       tmp->stmt_type = STMT_IO;
+       tmp->lhs = (yyvsp[-3].str);
+       tmp->body.io_expr = (yyvsp[-1].io_f);
+       (yyval.stmt_f) = tmp;
+    }
+#line 1861 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 92:
+#line 505 "parser.y" /* yacc.c:1646  */
+    {
+       stmt_t* tmp = NEW(stmt_t);
+       tmp->stmt_type = STMT_EXPR;
+       tmp->body.expr = (yyvsp[-1].expr_f);
+       (yyval.stmt_f) = tmp;
+    }
+#line 1872 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 93:
+#line 511 "parser.y" /* yacc.c:1646  */
+    {
+       stmt_t* tmp = NEW(stmt_t);
+       tmp->stmt_type = STMT_WH;
+       tmp->body.while_expr = (yyvsp[-1].while_f);
+       (yyval.stmt_f) = tmp;
+    }
+#line 1883 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 94:
+#line 517 "parser.y" /* yacc.c:1646  */
+    {
+       stmt_t* tmp = NEW(stmt_t);
+       tmp->stmt_type = STMT_IO;
+       tmp->body.io_expr = (yyvsp[-1].io_f);
+       (yyval.stmt_f) = tmp;
+    }
+#line 1894 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 95:
+#line 526 "parser.y" /* yacc.c:1646  */
+    {
+        io_t* tmp = NEW(io_t);
+        tmp->opt = I_READINT;
+        (yyval.io_f) = tmp;
+    }
+#line 1904 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 96:
+#line 531 "parser.y" /* yacc.c:1646  */
+    {
+        io_t* tmp = NEW(io_t);
+        tmp->opt = I_READFLOAT;
+        (yyval.io_f) = tmp;
+    }
+#line 1914 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 97:
+#line 536 "parser.y" /* yacc.c:1646  */
+    {
+        io_t* tmp = NEW(io_t);
+        tmp->opt = I_READBOOL;
+        (yyval.io_f) = tmp;
+    }
+#line 1924 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 98:
+#line 541 "parser.y" /* yacc.c:1646  */
+    {
+        io_t* tmp = NEW(io_t);
+        tmp->opt = I_PRINT;
+        tmp->expr = (yyvsp[0].expr_f);
+        (yyval.io_f) = tmp;
+    }
+#line 1935 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 99:
+#line 550 "parser.y" /* yacc.c:1646  */
+    { 
+                while_t* tmp = NEW(while_t);
+                tmp->expr = (yyvsp[-4].expr_f);
+                tmp->stmts = (yyvsp[-1].stmts_f);
+                (yyval.while_f) = tmp;
+    }
+#line 1946 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+
+#line 1950 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1621,7 +2174,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 243 "parser.y" /* yacc.c:1906  */
+#line 557 "parser.y" /* yacc.c:1906  */
 
 
 int main(int argc, char** argv) {

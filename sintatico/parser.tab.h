@@ -79,7 +79,40 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE YYSTYPE;
+union YYSTYPE
+{
+#line 43 "parser.y" /* yacc.c:1909  */
+
+    while_t* while_f;          
+    io_t* io_f;             
+    stmt_t* stmt_f;           
+    stmts_t* stmts_f;          
+    proc_t* proc_f;           
+    list_t* list_f;           
+    appexpr_t* appexpr_f;        
+    where_t* where_f;          
+    exprs_t* exprs_f;       
+    op_t* op_f;             
+    yieldexpr_t* yieldexpr_f;      
+    ifexpr_t* ifexpr_f;         
+    expr_t* expr_f;           
+    basic_type_t* basic_type_f;     
+    funtype_t* funtype_f;        
+    funtype_decl_t* funtype_decl_f;   
+    basic_val_t* basic_val_f;      
+    arg_t* arg_f;            
+    fun_t* fun_f;            
+    lines_t* lines_f;          
+    line_t* line_f;           
+    args_t* args_f;           
+    program_t* program_f;        
+    list_args_t* list_args_f;      
+    built_list_val_t* built_list_val_f; 
+    char* str;
+
+#line 115 "parser.tab.h" /* yacc.c:1909  */
+};
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
