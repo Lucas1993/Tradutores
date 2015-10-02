@@ -13,7 +13,7 @@ fl: tokenizer.lex
 	flex tokenizer.lex
 
 bis: parser.y
-	bison parser.y -d -t 
+	bison parser.y -d -v -t 
 
 clean:
 	rm -rf *.o *.out parser.tab.* *.yy.c *.output

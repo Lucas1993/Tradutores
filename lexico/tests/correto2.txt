@@ -1,7 +1,7 @@
 /* Exemplo de código correto! Comentários ignorados: _teste */
 incListBy :: Integer -> [Integer] -> [Integer];
 incListBy 0 xs = xs;
-incListBy _ [] = [];
+incListBy _ [] = []; 
 incListBy i xs = do {
     ys <- [];
     while( xs /= [] ) {
@@ -14,4 +14,4 @@ incListBy i xs = do {
     rev x:xs = (rev xs) ++ [x];
 }
 
-constBoolFunc = True
+constBoolFunc = True; 

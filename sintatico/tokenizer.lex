@@ -69,7 +69,7 @@ NL            [\n\r]
 
 "/*"                                                { BEGIN(INCOMMENT); }
 <INCOMMENT>"*/"                                     { BEGIN(INITIAL); }
-<INCOMMENT>"\n"                                     { line += 1; }
+<INCOMMENT>"\n"                                     { col = 1; line += 1; }
 <INCOMMENT>.                                        { col += yyleng; }
 _+{R_LETTER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; lex_error(); }
 _+{R_NUMBER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; lex_error(); }
@@ -88,7 +88,7 @@ _+{R_NUMBER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; lex_error()
 {R_DIV}                                             { col += yyleng; return '/'; }
 {R_STAR}                                            { col += yyleng; return '*'; }
 {R_PERCENT}                                         { col += yyleng; return '%'; }
-{R_UNDERSCORE}                                      { col += yyleng; return '_'; }
+{R_UNDERSCORE}                                      { col += yyleng; return WILDSCORE; }
 {R_DOUBLECOLON}                                     { col += yyleng; return DOUBLECOLON; }
 {R_LBRACKET}                                        { col += yyleng; return '['; }
 {R_RBRACKET}                                        { col += yyleng; return ']'; }
@@ -116,10 +116,10 @@ _+{R_NUMBER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; lex_error()
 {R_READFLOAT}                                       { col += yyleng; return READFLOAT; }
 {R_READBOOL}                                        { col += yyleng; return READBOOL; }
 {R_PRINT}                                           { col += yyleng; return PRINT; }
-{R_BOOLVAL}                                         { col += yyleng; return BOOLVAL; }
+{R_BOOLVAL}                                         { col += yyleng; yylval.boolval = strcmp("True", yytext) != 0; return BOOLVAL; }
 {R_LETTER}({R_NUMBER}|{R_LETTER}|_)*                { col += yyleng; yylval.str = strdup(yytext); return ID; }
-{R_NUMBER}+                                         { col += yyleng; return NUMBER; }
-{R_NUMBER}+'.'{R_NUMBER}+                           { col += yyleng; return FLOATNUM; }
+{R_NUMBER}+                                         { col += yyleng; yylval.intval = atoi(yytext); return NUMBER; }
+{R_NUMBER}+'.'{R_NUMBER}+                           { col += yyleng; yylval.floatval = atof(yytext); return FLOATNUM; }
 {WS}+                                               { col += yyleng; BEGIN(INITIAL); }
 {NL}                                                { col = 1; line++; BEGIN(INITIAL);}
 .                                                   { lex_error(); }

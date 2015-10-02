@@ -24,6 +24,7 @@ typedef struct list_args_t      list_args_t;
 typedef struct built_list_val_t built_list_val_t;
 typedef struct nonapp_t         nonapp_t;
 typedef struct list_value_t     list_value_t;
+typedef struct id_list_t        id_list_t;
 
 struct program_t {
     lines_t* lines; 
@@ -65,12 +66,13 @@ struct arg_t {
 };
 
 struct basic_val_t {
-    enum { BINT, BFLOAT, BBOOL, BLABEL, BUNIT } valtype ;
+    enum { BINT, BFLOAT, BBOOL, BLABEL, BID, BUNIT } valtype ;
     union {
         int intval;
         float floatval;
         int boolval;
         char* label;
+        id_list_t* ids;
     } val;
 };
 
@@ -109,6 +111,7 @@ struct funtype_t {
 
 struct basic_type_t {
     enum { BT_INTEGER, BT_FLOAT, BT_BOOL, BT_LIST, BT_VAR, BT_UNIT } whichtype;
+    char* label;
     basic_type_t* internal_list_type;
 };
 
@@ -174,6 +177,11 @@ struct nonapp_t {
         basic_val_t* bvalue;
         expr_t* expr;
     } n_tp;
+};
+
+struct id_list_t {
+    char* label;
+    id_list_t* next;
 };
 
 struct proc_t {

@@ -10,3 +10,8 @@ Outros:
  - appexpr: mudado ID para expr para permitir todos os tipos de aplicações
  - built_value_list: adicionado nova regra para virgulas
  - operadores: todos à esquerda
+
+
+Corrigir:
+    Stmt: x:xs <- 2 não funciona!
+    x:xs também não funciona na passagem de argumentos?

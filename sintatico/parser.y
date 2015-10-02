@@ -9,6 +9,15 @@
 void yyerror(const char *str) {    
     printf("%d:%d: %s\n", line, col, str);
 }
+
+enum {
+         WHILE_T, IO_T, STMT_T, STMTS_T, ID_LIST_T, PROC_T, APPEXPR_T, NONAPP_T, WHERE_T, EXPRS_T, OP_T,
+         YIELDEXPR_T, IFEXPR_T, EXPR_T, BASIC_TYPE_T, FUNTYPE_T, FUNTYPE_DECL_T, BASIC_VAL_T, ARG_T, 
+         FUN_T, LINES_T, LINE_T, ARGS_T, PROGRAM_T, LIST_ARGS_T, BUILT_LIST_VAL_T, LIST_VALUE_T }
+ union_type;
+
+void print_tree(YYSTYPE node, char node_type, int lvl);
+
 %}
 
 %error-verbose
@@ -48,6 +57,7 @@ void yyerror(const char *str) {
     io_t* io_f;             
     stmt_t* stmt_f;           
     stmts_t* stmts_f;          
+    id_list_t* id_list_f;
     proc_t* proc_f;           
     appexpr_t* appexpr_f;        
     nonapp_t* nonapp_f;        
@@ -81,6 +91,7 @@ void yyerror(const char *str) {
 %type    <io_f> io_stmt
 %type    <stmt_f> stmt
 %type    <stmts_f>stmts
+%type    <id_list_f> id_list
 %type    <proc_f> procdecl
 %type    <appexpr_f> appexpr
 %type    <nonapp_f> nonapp
@@ -120,6 +131,9 @@ program:
     line_elems {
         program_t* tmp = NEW(program_t);
         tmp->lines = $1;
+        YYSTYPE node;
+        node.program_f = tmp;
+        print_tree(node, PROGRAM_T, 0);
         $$ = tmp;
     }
 	;
@@ -202,6 +216,12 @@ args:
         $$ = tmp;
     
     }
+    | WILDSCORE args  {
+        args_t* tmp = NEW(args_t);
+        tmp->next = $2;
+        $$ = tmp;
+    
+    }
     | arg_value {
         args_t* tmp = NEW(args_t);
         tmp->arg = $1;
@@ -235,6 +255,20 @@ arg_value:
     }
 	;
 
+id_list:
+       ID ':' id_list {
+            id_list_t* tmp = NEW(id_list_t);
+            tmp->label = $1;
+            tmp->next = $3;
+            $$ = tmp;
+      }
+      | ID {
+            id_list_t* tmp = NEW(id_list_t);
+            tmp->label = $1;
+            $$ = tmp; 
+      }
+      ;
+
 basic_value: 
     NUMBER {
         basic_val_t* tmp = NEW(basic_val_t);
@@ -260,6 +294,12 @@ basic_value:
         tmp->val.label = $1;
         $$ = tmp; 
     }
+    /*| '(' id_list ')' {*/
+        /*basic_val_t* tmp = NEW(basic_val_t);*/
+        /*tmp->valtype = BID;*/
+        /*tmp->val.ids = $2;*/
+        /*$$ = tmp; */
+    /*}*/
     | '(' ')' {
         basic_val_t* tmp = NEW(basic_val_t);
         tmp->valtype = BUNIT;
@@ -388,6 +428,7 @@ basic_type:
     | ID {
         basic_type_t* tmp = NEW(basic_type_t);
         tmp->whichtype = BT_VAR;
+        tmp->label = $1;
         $$ = tmp;
     }
     | '(' ')' {
@@ -711,6 +752,7 @@ where_exp:
     }
 	;
 
+
 procdecl:
     ID args '=' DO '{' stmts '}' { 
         proc_t* tmp = NEW(proc_t);
@@ -764,7 +806,7 @@ stmt:
        tmp->body.expr = $3;
        $$ = tmp;
     }
-    | ID LARROW while_expr ';' {
+    | ID LARROW while_expr {
        stmt_t* tmp = NEW(stmt_t);
        tmp->stmt_type = STMT_WH;
        tmp->lhs = $1;
@@ -784,7 +826,7 @@ stmt:
        tmp->body.expr = $1;
        $$ = tmp;
     }
-    | while_expr ';'{
+    | while_expr {
        stmt_t* tmp = NEW(stmt_t);
        tmp->stmt_type = STMT_WH;
        tmp->body.while_expr = $1;
@@ -845,15 +887,10 @@ void print_errors() {
 
 }
 
-enum {
-         WHILE_T, IO_T, STMT_T, STMTS_T, PROC_T, APPEXPR_T, NONAPP_T, WHERE_T, EXPRS_T, OP_T,
-         YIELDEXPR_T, IFEXPR_T, EXPR_T, BASIC_TYPE_T, FUNTYPE_T, FUNTYPE_DECL_T, BASIC_VAL_T, ARG_T, 
-         FUN_T, LINES_T, LINE_T, ARGS_T, PROGRAM_T, LIST_ARGS_T, BUILT_LIST_VAL_T, LIST_VALUE_T }
- union_type;
 
 void ident(int lvl) {
     while(lvl) {
-        printf(" ");
+        printf("|");
         lvl--;
     }
 }
@@ -869,6 +906,8 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
             print_tree(tmp, EXPR_T, lvl + 1);
             ident(lvl + 1); printf("| )\n");
             ident(lvl + 1); printf("| {\n");
+            memset(&tmp, 0, sizeof(YYSTYPE));
+            tmp.stmts_f = node.while_f->stmts;
             print_tree(tmp, STMTS_T, lvl + 1);
             ident(lvl + 1); printf("| }\n");
             break;
@@ -898,22 +937,27 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
             ident(lvl); printf("| stmt\n");
             switch(node.stmt_f->stmt_type) {
                 case STMT_EXPR:
-                    ident(lvl + 1); printf("| ID, %s\n", node.stmt_f->lhs);
-                    ident(lvl + 1); printf("| LARROW\n");
+                    if(node.stmt_f->lhs != NULL) {
+                        ident(lvl + 1); printf("| ID, %s\n", node.stmt_f->lhs);
+                        ident(lvl + 1); printf("| LARROW\n");
+                    }
                     tmp.expr_f = node.stmt_f->body.expr;
                     print_tree(tmp, EXPR_T, lvl + 1);
                     ident(lvl + 1); printf("| ;\n");
                     break;
                 case STMT_WH:
+                    if(node.stmt_f->lhs != NULL) {
                     ident(lvl + 1); printf("| ID, %s\n", node.stmt_f->lhs);
                     ident(lvl + 1); printf("| LARROW\n");
+                    }
                     tmp.while_f = node.stmt_f->body.while_expr;
                     print_tree(tmp, WHILE_T, lvl + 1);
-                    ident(lvl + 1); printf("| ;\n");
                     break;
                 case STMT_IO:
+                    if(node.stmt_f->lhs != NULL) {
                     ident(lvl + 1); printf("| ID, %s\n", node.stmt_f->lhs);
                     ident(lvl + 1); printf("| LARROW\n");
+                    }
                     tmp.io_f = node.stmt_f->body.io_expr;
                     print_tree(tmp, IO_T, lvl + 1);
                     ident(lvl + 1); printf("| ;\n");
@@ -935,6 +979,17 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                 print_tree(tmp, STMTS_T, lvl + 1);
             }
             break;
+        case ID_LIST_T:
+            ident(lvl); printf("| id_list\n");
+
+            ident(lvl + 1); printf("| ID, %s\n", node.id_list_f->label);
+
+            if(node.id_list_f->next != NULL) {
+                tmp.id_list_f = node.id_list_f->next;
+                print_tree(tmp, ID_LIST_T, lvl + 1);
+            }
+            break;
+            break;
         case PROC_T:
             ident(lvl); printf("| procdecl\n");
             ident(lvl + 1); printf("| ID, %s\n", node.proc_f->label);
@@ -943,13 +998,13 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                 print_tree(tmp, ARGS_T, lvl + 1);
             }
             memset(&tmp, 0, sizeof(YYSTYPE));
-            ident(lvl + 1); printf("| = ");
-            ident(lvl + 1); printf("| DO ");
+            ident(lvl + 1); printf("| = \n");
+            ident(lvl + 1); printf("| DO \n");
 
-            ident(lvl + 1); printf("| { ");
+            ident(lvl + 1); printf("| { \n");
             tmp.stmts_f = node.proc_f->stmts;
             print_tree(tmp, STMTS_T, lvl + 1);
-            ident(lvl + 1); printf("| } ");
+            ident(lvl + 1); printf("| } \n");
             memset(&tmp, 0, sizeof(YYSTYPE));
 
             if(node.proc_f->where_exp != NULL) {
@@ -1135,12 +1190,13 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                     ident(lvl + 1); printf("| )\n");
                     break;
                 case BT_VAR:
-                    tmp.yieldexpr_f = node.expr_f->tp.yieldexpr;
-                    print_tree(tmp, YIELDEXPR_T, lvl + 1);
+                    ident(lvl + 1); printf("| ID, %s \n", node.basic_type_f->label);
                     break;
                 case BT_LIST:
-                    tmp.yieldexpr_f = node.expr_f->tp.yieldexpr;
-                    print_tree(tmp, YIELDEXPR_T, lvl + 1);
+                    tmp.basic_type_f = node.basic_type_f->internal_list_type;
+                    ident(lvl + 1); printf("| [\n");
+                    print_tree(tmp, BASIC_TYPE_T, lvl + 1);
+                    ident(lvl + 1); printf("| ]\n");
                     break;
                 default:
                     printf("ERRO!");
@@ -1193,8 +1249,12 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                         ident(lvl + 1); printf("| BOOLVAL, False\n");
                     }
                     break;
+                case BID:
+                    tmp.id_list_f = node.basic_val_f->val.ids;
+                    print_tree(tmp, ID_LIST_T, lvl + 1);
+                    break;
                 case BLABEL:
-                    ident(lvl + 1); printf("| ID, %s\n", node.basic_val_f->val.label);
+                    ident(lvl + 1); printf("| ID, %s \n", node.basic_val_f->val.label);
                     break;
                 case BUNIT:
                     ident(lvl + 1); printf("| ( \n");;
@@ -1237,12 +1297,10 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                 print_tree(tmp, ARGS_T, lvl + 1);
             }
             memset(&tmp, 0, sizeof(YYSTYPE));
-            ident(lvl + 1); printf("| = ");
+            ident(lvl + 1); printf("| = \n");
 
-            ident(lvl + 1); printf("| { ");
             tmp.expr_f = node.fun_f->expr;
-            print_tree(tmp, STMTS_T, lvl + 1);
-            ident(lvl + 1); printf("| } ");
+            print_tree(tmp, EXPR_T, lvl + 1);
             memset(&tmp, 0, sizeof(YYSTYPE));
 
             if(node.proc_f->where_exp != NULL) {
@@ -1290,6 +1348,10 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                 }
             } else {
                 ident(lvl + 1); printf("| WILDSCORE\n");
+                if(node.args_f->next != NULL) {
+                    tmp.args_f = node.args_f->next;
+                    print_tree(tmp, ARGS_T, lvl + 1);
+                }
             }
             break;
         case PROGRAM_T:

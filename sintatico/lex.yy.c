@@ -847,7 +847,7 @@ case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
 #line 72 "tokenizer.lex"
-{ line += 1; }
+{ col = 1; line += 1; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
@@ -942,7 +942,7 @@ YY_RULE_SETUP
 case 22:
 YY_RULE_SETUP
 #line 91 "tokenizer.lex"
-{ col += yyleng; return '_'; }
+{ col += yyleng; return WILDSCORE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
@@ -1082,7 +1082,7 @@ YY_RULE_SETUP
 case 50:
 YY_RULE_SETUP
 #line 119 "tokenizer.lex"
-{ col += yyleng; return BOOLVAL; }
+{ col += yyleng; yylval.boolval = strcmp("True", yytext) != 0; return BOOLVAL; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
@@ -1092,12 +1092,12 @@ YY_RULE_SETUP
 case 52:
 YY_RULE_SETUP
 #line 121 "tokenizer.lex"
-{ col += yyleng; return NUMBER; }
+{ col += yyleng; yylval.intval = atoi(yytext); return NUMBER; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
 #line 122 "tokenizer.lex"
-{ col += yyleng; return FLOATNUM; }
+{ col += yyleng; yylval.floatval = atof(yytext); return FLOATNUM; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
