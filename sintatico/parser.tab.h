@@ -89,7 +89,6 @@ union YYSTYPE
     stmt_t* stmt_f;           
     stmts_t* stmts_f;          
     proc_t* proc_f;           
-    list_t* list_f;           
     appexpr_t* appexpr_f;        
     nonapp_t* nonapp_f;        
     where_t* where_f;          
@@ -116,7 +115,7 @@ union YYSTYPE
     float floatval;
     int boolval;
 
-#line 120 "parser.tab.h" /* yacc.c:1909  */
+#line 119 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

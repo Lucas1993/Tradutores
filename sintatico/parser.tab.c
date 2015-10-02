@@ -154,7 +154,6 @@ union YYSTYPE
     stmt_t* stmt_f;           
     stmts_t* stmts_f;          
     proc_t* proc_f;           
-    list_t* list_f;           
     appexpr_t* appexpr_f;        
     nonapp_t* nonapp_f;        
     where_t* where_f;          
@@ -181,7 +180,7 @@ union YYSTYPE
     float floatval;
     int boolval;
 
-#line 185 "parser.tab.c" /* yacc.c:355  */
+#line 184 "parser.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -196,7 +195,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 200 "parser.tab.c" /* yacc.c:358  */
+#line 199 "parser.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -438,16 +437,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  22
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   362
+#define YYLAST   359
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  49
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  35
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  100
+#define YYNRULES  101
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  189
+#define YYNSTATES  191
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -496,17 +495,17 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   121,   121,   129,   135,   143,   149,   155,   164,   172,
-     181,   188,   199,   206,   212,   218,   225,   231,   240,   246,
-     252,   258,   264,   272,   279,   287,   294,   304,   309,   318,
-     321,   329,   339,   345,   351,   361,   366,   371,   376,   382,
-     387,   395,   403,   413,   419,   428,   435,   441,   447,   456,
-     466,   472,   478,   487,   495,   504,   512,   521,   529,   537,
-     545,   553,   561,   569,   578,   586,   594,   603,   611,   619,
-     628,   629,   638,   639,   640,   649,   655,   661,   667,   676,
-     681,   691,   694,   701,   709,   716,   724,   730,   740,   745,
-     754,   761,   768,   775,   781,   787,   796,   801,   806,   811,
-     820
+       0,   120,   120,   128,   134,   142,   148,   154,   163,   171,
+     180,   187,   198,   205,   211,   217,   224,   230,   239,   245,
+     251,   257,   263,   271,   278,   286,   293,   303,   308,   317,
+     320,   328,   338,   344,   350,   357,   367,   372,   377,   382,
+     388,   393,   401,   409,   419,   425,   434,   441,   447,   453,
+     462,   472,   478,   484,   493,   501,   510,   518,   527,   535,
+     543,   551,   559,   567,   575,   584,   592,   600,   609,   617,
+     625,   634,   635,   644,   645,   646,   655,   661,   667,   673,
+     682,   687,   697,   700,   707,   715,   722,   730,   736,   746,
+     751,   760,   767,   774,   781,   787,   793,   802,   807,   812,
+     817,   826
 };
 #endif
 
@@ -544,12 +543,12 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -116
+#define YYPACT_NINF -117
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-116)))
+  (!!((Yystate) == (-117)))
 
-#define YYTABLE_NINF -45
+#define YYTABLE_NINF -46
 
 #define yytable_value_is_error(Yytable_value) \
   0
@@ -558,25 +557,26 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      10,   263,    18,  -116,    10,  -116,  -116,  -116,  -116,   -15,
-    -116,  -116,  -116,     7,    44,   271,   248,    -8,   284,    -9,
-    -116,  -116,  -116,  -116,   295,  -116,  -116,  -116,  -116,   304,
-     323,    -1,    12,   228,    48,     3,   160,   204,    99,   103,
-     193,   193,    -7,  -116,  -116,  -116,     9,    59,    49,   -16,
-      31,    28,  -116,  -116,   -15,  -116,    53,  -116,    51,    56,
-     213,  -116,   295,    61,    -9,  -116,  -116,    63,    64,    62,
-    -116,     7,    88,   193,  -116,  -116,   140,    68,  -116,    71,
-      75,   160,  -116,  -116,   160,  -116,  -116,  -116,    94,  -116,
-    -116,    99,    99,    99,    99,    99,    99,    99,    99,    99,
-      99,    99,    99,    99,    99,    99,  -116,   316,   102,    95,
-       0,  -116,  -116,  -116,  -116,   105,   119,   113,   228,  -116,
-    -116,  -116,   117,   111,   140,   120,   122,   328,   228,  -116,
-     127,   129,    10,  -116,  -116,  -116,  -116,  -116,  -116,  -116,
-    -116,  -116,  -116,    31,    31,    28,  -116,  -116,  -116,   295,
-     140,  -116,  -116,   228,   172,   228,  -116,  -116,   142,  -116,
-    -116,  -116,  -116,  -116,  -116,   124,  -116,   126,   131,   146,
-     149,   151,   152,  -116,  -116,   142,   177,  -116,  -116,  -116,
-     158,  -116,   163,   140,   228,   159,   167,  -116,  -116
+      11,   248,    26,  -117,    11,  -117,  -117,  -117,  -117,    -8,
+    -117,  -117,  -117,   308,    21,   260,    71,     1,   275,     0,
+    -117,  -117,  -117,  -117,   283,  -117,  -117,  -117,  -117,   293,
+     316,    10,    25,   228,     7,    13,   160,   204,    51,   104,
+     193,   193,     2,  -117,  -117,  -117,    27,    33,   309,    46,
+      30,   -36,  -117,  -117,    -8,  -117,    43,  -117,    42,    49,
+     213,  -117,   283,    54,     0,  -117,  -117,    57,    58,    56,
+    -117,   308,    85,   193,  -117,  -117,   140,    64,  -117,    67,
+      62,   160,  -117,  -117,   160,  -117,  -117,  -117,    63,  -117,
+    -117,    51,    51,    51,    51,    51,    51,    51,    51,    51,
+      51,    51,    51,    51,    51,    51,  -117,   298,    75,    95,
+      16,  -117,   114,  -117,  -117,    97,   116,   110,   228,  -117,
+    -117,  -117,   112,   106,   140,   117,   119,   237,   228,  -117,
+     118,   120,    11,  -117,  -117,  -117,  -117,  -117,  -117,  -117,
+    -117,  -117,  -117,    30,    30,   -36,  -117,  -117,  -117,   283,
+     140,  -117,  -117,   308,   228,   172,   228,  -117,  -117,   142,
+    -117,  -117,  -117,  -117,  -117,  -117,   121,  -117,   123,  -117,
+     124,   134,   137,   146,   147,  -117,  -117,   142,   175,  -117,
+    -117,  -117,   144,  -117,   149,   140,   228,   157,   159,  -117,
+    -117
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -586,32 +586,33 @@ static const yytype_uint8 yydefact[] =
 {
        0,     0,     0,     2,     4,     5,     7,     6,    21,    14,
       20,    18,    19,     0,     0,     0,     0,     0,    13,    16,
-      15,    26,     1,     3,     0,    39,    36,    37,    35,     0,
-       0,     0,    32,     0,     0,     0,     0,     0,     0,    75,
-      46,     0,     0,    47,    48,    45,    54,    56,    63,    66,
-      69,    71,    74,    76,     0,    22,     0,    29,    27,     0,
-       0,    12,     0,     0,     0,    25,    40,     0,     0,     0,
-      31,     0,     0,    51,    50,    52,     0,     0,    82,    79,
-       0,     0,    75,    78,     0,    43,    41,    42,     0,    10,
+      15,    26,     1,     3,     0,    40,    37,    38,    36,     0,
+       0,     0,    32,     0,     0,     0,     0,     0,     0,    76,
+      47,     0,     0,    48,    49,    46,    55,    57,    64,    67,
+      70,    72,    75,    77,     0,    22,     0,    29,    27,     0,
+       0,    12,     0,     0,     0,    25,    41,     0,     0,     0,
+      31,     0,     0,    52,    51,    53,     0,     0,    83,    80,
+       0,     0,    76,    79,     0,    44,    42,    43,     0,    10,
       11,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,    17,     0,    30,     0,
-       0,    23,    33,    38,    34,     0,    21,     0,     0,    98,
-      97,    96,     0,     0,    88,     0,     0,    77,     0,    81,
-       0,     0,     0,    53,    55,    58,    57,    60,    62,    59,
-      61,    65,    64,    67,    68,    70,    72,    73,    28,     0,
-       0,     8,     9,     0,     0,     0,    99,    93,    86,    89,
-      95,    94,    80,    77,    44,     0,    24,     0,     0,     0,
-       0,     0,     0,    87,    83,    84,     0,    90,    92,    91,
-       0,    85,     0,     0,     0,     0,     0,   100,    49
+       0,    23,    33,    39,    34,     0,    21,     0,     0,    99,
+      98,    97,     0,     0,    89,     0,     0,    78,     0,    82,
+       0,     0,     0,    54,    56,    59,    58,    61,    63,    60,
+      62,    66,    65,    68,    69,    71,    73,    74,    28,     0,
+       0,     8,     9,     0,     0,     0,     0,   100,    94,    87,
+      90,    96,    95,    81,    78,    45,     0,    24,     0,    35,
+       0,     0,     0,     0,     0,    88,    84,    85,     0,    91,
+      93,    92,     0,    86,     0,     0,     0,     0,     0,   101,
+      50
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-    -116,  -116,    -2,  -116,  -116,   186,   -12,    24,   -17,   104,
-    -116,  -116,   -13,   184,   189,    -4,   -14,   191,  -116,   -28,
-     134,   249,   -69,  -116,   -18,   115,   -33,   100,  -116,  -109,
-    -116,  -115,  -116,    78,    79
+    -117,  -117,    -2,  -117,  -117,   185,   -12,    24,   -17,   101,
+    -117,  -117,   -20,   174,   177,    61,   -14,   180,  -117,   -28,
+     126,   261,   -79,  -117,   -18,   122,   -33,    98,  -117,  -109,
+    -117,  -116,  -117,    68,    73
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -628,84 +629,82 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int16 yytable[] =
 {
-      42,   152,    23,    56,    58,    83,    75,    65,    88,   159,
-      25,    99,    26,     1,    27,    88,    67,    28,    22,    72,
-     100,    24,    77,    79,    60,    19,    89,    62,   101,   102,
-     141,   142,    70,   151,    71,   167,    86,    87,    91,    19,
-      19,    29,    19,    76,    30,   111,   110,     8,    64,   173,
-      10,     8,    11,    12,    10,    33,    11,    12,   114,    33,
-      34,    35,    82,   133,    85,    85,   181,   130,   185,    86,
-     131,   146,   147,    93,    94,   104,   105,   103,    36,    95,
-      96,    37,    36,   143,   144,    37,    64,    92,   106,    38,
-     107,    97,    98,    38,   108,    58,    55,    85,   112,    66,
-     113,   115,     8,   127,   156,    10,   -43,    11,    12,   -43,
-     128,   -43,   -43,   129,    79,    82,    82,    82,    82,    82,
+      42,   152,    23,    56,    58,    83,    75,    65,   160,    67,
+       8,   104,   105,    10,     1,    11,    12,    88,    33,    72,
+     141,   142,    77,    79,     8,    19,    22,    10,    24,    11,
+      12,    88,    33,    60,   168,    89,    62,    34,    35,    19,
+      19,    36,    19,    70,    37,   111,   110,    71,    64,   151,
+     175,   114,    38,    76,     8,    36,    91,    10,    37,    11,
+      12,    92,    82,   133,    85,    85,    38,   130,   183,   187,
+     131,   146,   147,    99,     8,    54,   103,    10,   106,    11,
+      12,   107,   100,   143,   144,    81,    64,   108,    37,    55,
+     101,   102,   112,    66,   113,    58,    38,    85,   115,   127,
+     129,    86,    87,   132,   157,    15,   128,   -44,    16,    57,
+     -44,   149,   -44,   -44,    79,    82,    82,    82,    82,    82,
       82,    82,    82,    82,    82,    82,    82,    82,    82,    82,
-     165,    19,   166,    81,   132,   150,    37,   -43,   149,   168,
-     169,   172,   154,   116,    38,   153,    10,   155,    11,    12,
-     157,    33,   158,   160,   117,   161,    34,    88,   118,   119,
-     120,   121,   163,     8,   164,   174,    10,   175,    11,    12,
-     186,    33,   176,    64,    36,     8,    34,    37,    10,   177,
-      11,    12,   178,    33,   179,    38,   117,   180,    34,   182,
-     118,   119,   120,   121,    36,    55,     8,    37,   183,    10,
-     187,    11,    12,   184,    61,    38,    36,     8,   188,    37,
-      10,   148,    11,    12,    69,    33,     8,    38,   145,    10,
-      34,    11,    12,    73,    33,    74,   134,    84,   162,    34,
-     109,     8,   170,   171,    10,     0,    11,    12,    36,    33,
-       0,    37,    78,     0,    34,     0,     0,    36,     0,    38,
-      37,     8,    54,     0,    10,     0,    11,    12,    38,     0,
-       0,     0,    36,     0,     0,    37,     8,     9,     0,    10,
-       0,    11,    12,    38,     8,    54,     0,    10,     0,    11,
-      12,     0,    15,     0,     0,    16,    57,     8,     9,    13,
-      10,     0,    11,    12,     0,    14,     0,    15,     8,    54,
-      16,    10,     0,    11,    12,    15,    55,    25,    16,    26,
-       0,    27,     0,     0,    28,     0,     0,     0,    15,     8,
-      54,    16,    10,     0,    11,    12,    25,     0,    26,    63,
-      27,   -44,    16,    28,   -44,     0,   -44,   -44,    29,    66,
-       0,    30,   135,   136,   137,   138,   139,   140,     0,     0,
-      15,     0,     0,    16,     0,     0,     0,    68,     0,     0,
-      30,     0,   -44
+     166,    19,   167,   169,    86,   150,   153,   154,   -44,   155,
+     170,   171,   174,   116,   156,   158,    10,   159,    11,    12,
+     161,    33,   162,   164,   117,   165,    34,    88,   118,   119,
+     120,   121,   176,     8,   177,   178,    10,   179,    11,    12,
+     180,    33,   188,    64,    36,     8,    34,    37,    10,   181,
+      11,    12,   182,    33,   185,    38,   117,   184,    34,   186,
+     118,   119,   120,   121,    36,    55,     8,    37,   189,    10,
+     190,    11,    12,    61,    69,    38,    36,     8,   148,    37,
+      10,    73,    11,    12,    74,    33,     8,    38,   134,    10,
+      34,    11,    12,   172,    33,   145,   163,    84,   173,    34,
+     109,     8,     0,     0,    10,     0,    11,    12,    36,    33,
+     -45,    37,    78,   -45,    34,   -45,   -45,    36,     0,    38,
+      37,     8,     9,     0,    10,     0,    11,    12,    38,     0,
+       0,     0,    36,     8,    54,    37,    10,     0,    11,    12,
+       0,   -45,     0,    38,    13,     0,     0,     0,     8,     9,
+      14,    10,    15,    11,    12,    16,     8,    54,     0,    10,
+       0,    11,    12,     0,    15,    55,    25,    16,    26,     0,
+      27,     8,    54,    28,    10,     0,    11,    12,     0,    15,
+       0,    25,    16,    26,     0,    27,     0,    63,    28,    25,
+      16,    26,     0,    27,     0,     0,    28,    29,    66,     0,
+      30,     0,    15,    93,    94,    16,     0,     0,     0,    95,
+      96,     0,    29,     0,     0,    30,     0,     0,     0,     0,
+      68,    97,    98,    30,   135,   136,   137,   138,   139,   140
 };
 
 static const yytype_int16 yycheck[] =
 {
-      14,   110,     4,    15,    16,    38,    34,    24,    15,   124,
-       3,    27,     5,     3,     7,    15,    29,    10,     0,    33,
-      36,    36,    36,    37,    32,     1,    33,    36,    44,    45,
-      99,   100,    33,    33,    22,   150,    40,    41,    29,    15,
-      16,    34,    18,    40,    37,    62,    60,     3,    24,   158,
-       6,     3,     8,     9,     6,    11,     8,     9,    71,    11,
-      16,    17,    38,    91,    40,    41,   175,    81,   183,    73,
-      84,   104,   105,    24,    25,    47,    48,    46,    34,    30,
-      31,    37,    34,   101,   102,    37,    62,    28,    35,    45,
-      39,    42,    43,    45,    38,   107,    35,    73,    35,    35,
-      38,    13,     3,    35,   118,     6,     3,     8,     9,     6,
-      39,     8,     9,    38,   128,    91,    92,    93,    94,    95,
+      14,   110,     4,    15,    16,    38,    34,    24,   124,    29,
+       3,    47,    48,     6,     3,     8,     9,    15,    11,    33,
+      99,   100,    36,    37,     3,     1,     0,     6,    36,     8,
+       9,    15,    11,    32,   150,    33,    36,    16,    17,    15,
+      16,    34,    18,    33,    37,    62,    60,    22,    24,    33,
+     159,    71,    45,    40,     3,    34,    29,     6,    37,     8,
+       9,    28,    38,    91,    40,    41,    45,    81,   177,   185,
+      84,   104,   105,    27,     3,     4,    46,     6,    35,     8,
+       9,    39,    36,   101,   102,    34,    62,    38,    37,    35,
+      44,    45,    35,    35,    38,   107,    45,    73,    13,    35,
+      38,    40,    41,    40,   118,    34,    39,     3,    37,    38,
+       6,    36,     8,     9,   128,    91,    92,    93,    94,    95,
       96,    97,    98,    99,   100,   101,   102,   103,   104,   105,
-     132,   107,   149,    34,    40,    40,    37,    34,    36,   153,
-     154,   155,    23,     3,    45,    40,     6,    34,     8,     9,
-      33,    11,    41,    33,    14,    33,    16,    15,    18,    19,
-      20,    21,    35,     3,    35,    41,     6,    41,     8,     9,
-     184,    11,    41,   149,    34,     3,    16,    37,     6,    33,
-       8,     9,    33,    11,    33,    45,    14,    35,    16,    12,
-      18,    19,    20,    21,    34,    35,     3,    37,    40,     6,
-      41,     8,     9,    40,    18,    45,    34,     3,    41,    37,
-       6,   107,     8,     9,    30,    11,     3,    45,   103,     6,
-      16,     8,     9,    34,    11,    34,    92,    34,   128,    16,
-      17,     3,   154,   154,     6,    -1,     8,     9,    34,    11,
-      -1,    37,    38,    -1,    16,    -1,    -1,    34,    -1,    45,
+     132,   107,   149,   153,    73,    40,    22,    40,    34,    23,
+     154,   155,   156,     3,    34,    33,     6,    41,     8,     9,
+      33,    11,    33,    35,    14,    35,    16,    15,    18,    19,
+      20,    21,    41,     3,    41,    41,     6,    33,     8,     9,
+      33,    11,   186,   149,    34,     3,    16,    37,     6,    33,
+       8,     9,    35,    11,    40,    45,    14,    12,    16,    40,
+      18,    19,    20,    21,    34,    35,     3,    37,    41,     6,
+      41,     8,     9,    18,    30,    45,    34,     3,   107,    37,
+       6,    34,     8,     9,    34,    11,     3,    45,    92,     6,
+      16,     8,     9,   155,    11,   103,   128,    34,   155,    16,
+      17,     3,    -1,    -1,     6,    -1,     8,     9,    34,    11,
+       3,    37,    38,     6,    16,     8,     9,    34,    -1,    45,
       37,     3,     4,    -1,     6,    -1,     8,     9,    45,    -1,
-      -1,    -1,    34,    -1,    -1,    37,     3,     4,    -1,     6,
-      -1,     8,     9,    45,     3,     4,    -1,     6,    -1,     8,
-       9,    -1,    34,    -1,    -1,    37,    38,     3,     4,    26,
-       6,    -1,     8,     9,    -1,    32,    -1,    34,     3,     4,
-      37,     6,    -1,     8,     9,    34,    35,     3,    37,     5,
-      -1,     7,    -1,    -1,    10,    -1,    -1,    -1,    34,     3,
-       4,    37,     6,    -1,     8,     9,     3,    -1,     5,    34,
-       7,     3,    37,    10,     6,    -1,     8,     9,    34,    35,
-      -1,    37,    93,    94,    95,    96,    97,    98,    -1,    -1,
-      34,    -1,    -1,    37,    -1,    -1,    -1,    34,    -1,    -1,
-      37,    -1,    34
+      -1,    -1,    34,     3,     4,    37,     6,    -1,     8,     9,
+      -1,    34,    -1,    45,    26,    -1,    -1,    -1,     3,     4,
+      32,     6,    34,     8,     9,    37,     3,     4,    -1,     6,
+      -1,     8,     9,    -1,    34,    35,     3,    37,     5,    -1,
+       7,     3,     4,    10,     6,    -1,     8,     9,    -1,    34,
+      -1,     3,    37,     5,    -1,     7,    -1,    34,    10,     3,
+      37,     5,    -1,     7,    -1,    -1,    10,    34,    35,    -1,
+      37,    -1,    34,    24,    25,    37,    -1,    -1,    -1,    30,
+      31,    -1,    34,    -1,    -1,    37,    -1,    -1,    -1,    -1,
+      34,    42,    43,    37,    93,    94,    95,    96,    97,    98
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -727,10 +726,11 @@ static const yytype_uint8 yystos[] =
       20,    21,    65,    80,    81,    82,    83,    35,    39,    38,
       65,    65,    40,    68,    69,    70,    70,    70,    70,    70,
       70,    71,    71,    73,    73,    74,    75,    75,    58,    36,
-      40,    33,    78,    40,    23,    34,    65,    33,    41,    80,
-      33,    33,    76,    35,    35,    51,    57,    80,    65,    65,
-      82,    83,    65,    78,    41,    41,    41,    33,    33,    33,
-      35,    78,    12,    40,    40,    80,    65,    41,    41
+      40,    33,    78,    22,    40,    23,    34,    65,    33,    41,
+      80,    33,    33,    76,    35,    35,    51,    57,    80,    61,
+      65,    65,    82,    83,    65,    78,    41,    41,    41,    33,
+      33,    33,    35,    78,    12,    40,    40,    80,    65,    41,
+      41
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -739,14 +739,14 @@ static const yytype_uint8 yyr1[] =
        0,    49,    50,    51,    51,    52,    52,    52,    53,    53,
       53,    53,    54,    54,    54,    55,    55,    55,    56,    56,
       56,    56,    56,    57,    57,    57,    57,    58,    58,    59,
-      59,    60,    61,    61,    61,    62,    62,    62,    62,    62,
-      62,    63,    63,    64,    64,    65,    65,    65,    65,    66,
-      67,    67,    67,    68,    68,    69,    69,    70,    70,    70,
-      70,    70,    70,    70,    71,    71,    71,    72,    72,    72,
-      73,    73,    74,    74,    74,    75,    75,    75,    75,    76,
-      76,    77,    77,    78,    79,    79,    79,    79,    80,    80,
-      81,    81,    81,    81,    81,    81,    82,    82,    82,    82,
-      83
+      59,    60,    61,    61,    61,    61,    62,    62,    62,    62,
+      62,    62,    63,    63,    64,    64,    65,    65,    65,    65,
+      66,    67,    67,    67,    68,    68,    69,    69,    70,    70,
+      70,    70,    70,    70,    70,    71,    71,    71,    72,    72,
+      72,    73,    73,    74,    74,    74,    75,    75,    75,    75,
+      76,    76,    77,    77,    78,    79,    79,    79,    79,    80,
+      80,    81,    81,    81,    81,    81,    81,    82,    82,    82,
+      82,    83
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -755,14 +755,14 @@ static const yytype_uint8 yyr2[] =
        0,     2,     1,     2,     1,     1,     1,     1,     5,     5,
        4,     4,     2,     1,     1,     1,     1,     3,     1,     1,
        1,     1,     2,     3,     5,     3,     1,     1,     3,     2,
-       3,     4,     1,     3,     3,     1,     1,     1,     3,     1,
-       2,     2,     2,     1,     3,     1,     1,     1,     1,    10,
-       2,     2,     2,     3,     1,     3,     1,     3,     3,     3,
-       3,     3,     3,     1,     3,     3,     1,     3,     3,     1,
-       3,     1,     3,     3,     1,     1,     1,     3,     2,     1,
-       3,     3,     2,     4,     7,     8,     6,     7,     1,     2,
-       4,     4,     4,     2,     2,     2,     1,     1,     1,     2,
-       7
+       3,     4,     1,     3,     3,     5,     1,     1,     1,     3,
+       1,     2,     2,     2,     1,     3,     1,     1,     1,     1,
+      10,     2,     2,     2,     3,     1,     3,     1,     3,     3,
+       3,     3,     3,     3,     1,     3,     3,     1,     3,     3,
+       1,     3,     1,     3,     3,     1,     1,     1,     3,     2,
+       1,     3,     3,     2,     4,     7,     8,     6,     7,     1,
+       2,     4,     4,     4,     2,     2,     2,     1,     1,     1,
+       2,     7
 };
 
 
@@ -1439,7 +1439,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 121 "parser.y" /* yacc.c:1646  */
+#line 120 "parser.y" /* yacc.c:1646  */
     {
         program_t* tmp = NEW(program_t);
         tmp->lines = (yyvsp[0].lines_f);
@@ -1449,7 +1449,7 @@ yyreduce:
     break;
 
   case 3:
-#line 129 "parser.y" /* yacc.c:1646  */
+#line 128 "parser.y" /* yacc.c:1646  */
     {
         lines_t* tmp = NEW(lines_t);
         tmp->line = (yyvsp[-1].line_f);
@@ -1460,7 +1460,7 @@ yyreduce:
     break;
 
   case 4:
-#line 135 "parser.y" /* yacc.c:1646  */
+#line 134 "parser.y" /* yacc.c:1646  */
     {
         lines_t* tmp = NEW(lines_t);
         tmp->line = (yyvsp[0].line_f);
@@ -1470,7 +1470,7 @@ yyreduce:
     break;
 
   case 5:
-#line 143 "parser.y" /* yacc.c:1646  */
+#line 142 "parser.y" /* yacc.c:1646  */
     {
         line_t* tmp = NEW(line_t);
         tmp->opt_type = L_FUN;
@@ -1481,7 +1481,7 @@ yyreduce:
     break;
 
   case 6:
-#line 149 "parser.y" /* yacc.c:1646  */
+#line 148 "parser.y" /* yacc.c:1646  */
     {
         line_t* tmp = NEW(line_t);
         tmp->opt_type = L_PROC;
@@ -1492,7 +1492,7 @@ yyreduce:
     break;
 
   case 7:
-#line 155 "parser.y" /* yacc.c:1646  */
+#line 154 "parser.y" /* yacc.c:1646  */
     {
         line_t* tmp = NEW(line_t);
         tmp->opt_type = L_FUNTYPE;
@@ -1503,7 +1503,7 @@ yyreduce:
     break;
 
   case 8:
-#line 164 "parser.y" /* yacc.c:1646  */
+#line 163 "parser.y" /* yacc.c:1646  */
     {
         fun_t* tmp = NEW(fun_t);
         tmp->label = (yyvsp[-4].str);
@@ -1516,7 +1516,7 @@ yyreduce:
     break;
 
   case 9:
-#line 172 "parser.y" /* yacc.c:1646  */
+#line 171 "parser.y" /* yacc.c:1646  */
     {
         fun_t* tmp = NEW(fun_t);
         tmp->label = (yyvsp[-4].str);
@@ -1530,7 +1530,7 @@ yyreduce:
     break;
 
   case 10:
-#line 181 "parser.y" /* yacc.c:1646  */
+#line 180 "parser.y" /* yacc.c:1646  */
     {
         fun_t* tmp = NEW(fun_t);
         tmp->label = (yyvsp[-3].str);
@@ -1542,7 +1542,7 @@ yyreduce:
     break;
 
   case 11:
-#line 188 "parser.y" /* yacc.c:1646  */
+#line 187 "parser.y" /* yacc.c:1646  */
     {
         fun_t* tmp = NEW(fun_t);
         tmp->label = (yyvsp[-3].str);
@@ -1555,7 +1555,7 @@ yyreduce:
     break;
 
   case 12:
-#line 199 "parser.y" /* yacc.c:1646  */
+#line 198 "parser.y" /* yacc.c:1646  */
     {
         args_t* tmp = NEW(args_t);
         tmp->arg = (yyvsp[-1].arg_f);
@@ -1567,7 +1567,7 @@ yyreduce:
     break;
 
   case 13:
-#line 206 "parser.y" /* yacc.c:1646  */
+#line 205 "parser.y" /* yacc.c:1646  */
     {
         args_t* tmp = NEW(args_t);
         tmp->arg = (yyvsp[0].arg_f);
@@ -1578,7 +1578,7 @@ yyreduce:
     break;
 
   case 14:
-#line 212 "parser.y" /* yacc.c:1646  */
+#line 211 "parser.y" /* yacc.c:1646  */
     {
         (yyval.args_f) = NEW(arg_t);
     }
@@ -1586,7 +1586,7 @@ yyreduce:
     break;
 
   case 15:
-#line 218 "parser.y" /* yacc.c:1646  */
+#line 217 "parser.y" /* yacc.c:1646  */
     {
         arg_t* tmp = NEW(arg_t);
         tmp->tp = AR_LIST;
@@ -1598,7 +1598,7 @@ yyreduce:
     break;
 
   case 16:
-#line 225 "parser.y" /* yacc.c:1646  */
+#line 224 "parser.y" /* yacc.c:1646  */
     {
         arg_t* tmp = NEW(arg_t);
         tmp->tp = AR_BASIC;
@@ -1609,7 +1609,7 @@ yyreduce:
     break;
 
   case 17:
-#line 231 "parser.y" /* yacc.c:1646  */
+#line 230 "parser.y" /* yacc.c:1646  */
     {
         arg_t* tmp = NEW(arg_t);
         tmp->tp = AR_ARG;
@@ -1620,7 +1620,7 @@ yyreduce:
     break;
 
   case 18:
-#line 240 "parser.y" /* yacc.c:1646  */
+#line 239 "parser.y" /* yacc.c:1646  */
     {
         basic_val_t* tmp = NEW(basic_val_t);
         tmp->valtype = BINT;
@@ -1631,7 +1631,7 @@ yyreduce:
     break;
 
   case 19:
-#line 246 "parser.y" /* yacc.c:1646  */
+#line 245 "parser.y" /* yacc.c:1646  */
     {
         basic_val_t* tmp = NEW(basic_val_t);
         tmp->valtype = BFLOAT;
@@ -1642,7 +1642,7 @@ yyreduce:
     break;
 
   case 20:
-#line 252 "parser.y" /* yacc.c:1646  */
+#line 251 "parser.y" /* yacc.c:1646  */
     {
         basic_val_t* tmp = NEW(basic_val_t);
         tmp->valtype = BBOOL;
@@ -1653,7 +1653,7 @@ yyreduce:
     break;
 
   case 21:
-#line 258 "parser.y" /* yacc.c:1646  */
+#line 257 "parser.y" /* yacc.c:1646  */
     {
         basic_val_t* tmp = NEW(basic_val_t);
         tmp->valtype = BLABEL;
@@ -1664,7 +1664,7 @@ yyreduce:
     break;
 
   case 22:
-#line 264 "parser.y" /* yacc.c:1646  */
+#line 263 "parser.y" /* yacc.c:1646  */
     {
         basic_val_t* tmp = NEW(basic_val_t);
         tmp->valtype = BUNIT;
@@ -1674,7 +1674,7 @@ yyreduce:
     break;
 
   case 23:
-#line 272 "parser.y" /* yacc.c:1646  */
+#line 271 "parser.y" /* yacc.c:1646  */
     {
         list_value_t* tmp = NEW(list_value_t);
         tmp->ls_type = LS_BASIC;
@@ -1686,7 +1686,7 @@ yyreduce:
     break;
 
   case 24:
-#line 279 "parser.y" /* yacc.c:1646  */
+#line 278 "parser.y" /* yacc.c:1646  */
     {
         list_value_t* tmp = NEW(list_value_t);
         tmp->ls_type = LS_LIST;
@@ -1699,7 +1699,7 @@ yyreduce:
     break;
 
   case 25:
-#line 287 "parser.y" /* yacc.c:1646  */
+#line 286 "parser.y" /* yacc.c:1646  */
     {
         list_value_t* tmp = NEW(list_value_t);
         tmp->ls_type = LS_WLD;
@@ -1711,7 +1711,7 @@ yyreduce:
     break;
 
   case 26:
-#line 294 "parser.y" /* yacc.c:1646  */
+#line 293 "parser.y" /* yacc.c:1646  */
     {
         list_value_t* tmp = NEW(list_value_t);
         tmp->ls_type = LS_BLT;
@@ -1723,7 +1723,7 @@ yyreduce:
     break;
 
   case 27:
-#line 304 "parser.y" /* yacc.c:1646  */
+#line 303 "parser.y" /* yacc.c:1646  */
     {
             list_args_t* tmp = NEW(list_args_t);
             tmp->arg = (yyvsp[0].arg_f);
@@ -1733,7 +1733,7 @@ yyreduce:
     break;
 
   case 28:
-#line 309 "parser.y" /* yacc.c:1646  */
+#line 308 "parser.y" /* yacc.c:1646  */
     {
             list_args_t* tmp = NEW(list_args_t);
             tmp->arg = (yyvsp[-2].arg_f);
@@ -1744,7 +1744,7 @@ yyreduce:
     break;
 
   case 29:
-#line 318 "parser.y" /* yacc.c:1646  */
+#line 317 "parser.y" /* yacc.c:1646  */
     {
         (yyval.built_list_val_f) = NEW(built_list_val_t);
     }
@@ -1752,7 +1752,7 @@ yyreduce:
     break;
 
   case 30:
-#line 321 "parser.y" /* yacc.c:1646  */
+#line 320 "parser.y" /* yacc.c:1646  */
     {
         built_list_val_t* tmp = NEW(built_list_val_t);
         tmp->vals = (yyvsp[-1].list_args_f);
@@ -1762,7 +1762,7 @@ yyreduce:
     break;
 
   case 31:
-#line 329 "parser.y" /* yacc.c:1646  */
+#line 328 "parser.y" /* yacc.c:1646  */
     {
         funtype_decl_t* tmp = NEW(funtype_decl_t);
         tmp->label = (yyvsp[-3].str);
@@ -1774,7 +1774,7 @@ yyreduce:
     break;
 
   case 32:
-#line 339 "parser.y" /* yacc.c:1646  */
+#line 338 "parser.y" /* yacc.c:1646  */
     {
         funtype_t* tmp = NEW(funtype_t);
         tmp->typeorder = T_BASIC;
@@ -1785,7 +1785,7 @@ yyreduce:
     break;
 
   case 33:
-#line 345 "parser.y" /* yacc.c:1646  */
+#line 344 "parser.y" /* yacc.c:1646  */
     {
         funtype_t* tmp = NEW(funtype_t);
         tmp->typeorder = T_FUNC;
@@ -1796,7 +1796,7 @@ yyreduce:
     break;
 
   case 34:
-#line 351 "parser.y" /* yacc.c:1646  */
+#line 350 "parser.y" /* yacc.c:1646  */
     {
         funtype_t* tmp = NEW(funtype_t);
         tmp->typeorder = T_BASIC;
@@ -1808,68 +1808,80 @@ yyreduce:
     break;
 
   case 35:
-#line 361 "parser.y" /* yacc.c:1646  */
+#line 357 "parser.y" /* yacc.c:1646  */
+    {
+        funtype_t* tmp = NEW(funtype_t);
+        tmp->typeorder = T_FUNC;
+        tmp->tp.ftype = (yyvsp[-3].funtype_f);
+        tmp->next = (yyvsp[0].funtype_f);
+        (yyval.funtype_f) = tmp;
+    }
+#line 1820 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 36:
+#line 367 "parser.y" /* yacc.c:1646  */
     {
         basic_type_t* tmp = NEW(basic_type_t);
         tmp->whichtype = BT_INTEGER;
         (yyval.basic_type_f) = tmp;
     }
-#line 1818 "parser.tab.c" /* yacc.c:1646  */
+#line 1830 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 36:
-#line 366 "parser.y" /* yacc.c:1646  */
+  case 37:
+#line 372 "parser.y" /* yacc.c:1646  */
     {
         basic_type_t* tmp = NEW(basic_type_t);
         tmp->whichtype = BT_FLOAT;
         (yyval.basic_type_f) = tmp;
     }
-#line 1828 "parser.tab.c" /* yacc.c:1646  */
+#line 1840 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 37:
-#line 371 "parser.y" /* yacc.c:1646  */
+  case 38:
+#line 377 "parser.y" /* yacc.c:1646  */
     {
         basic_type_t* tmp = NEW(basic_type_t);
         tmp->whichtype = BT_BOOL;
         (yyval.basic_type_f) = tmp;
     }
-#line 1838 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 38:
-#line 376 "parser.y" /* yacc.c:1646  */
-    {
-        basic_type_t* tmp = NEW(basic_type_t);
-        tmp->whichtype = BT_LIST;
-        tmp->internal_list_type = (yyvsp[-1].basic_type_f);
-        (yyval.basic_type_f) = tmp;
-    }
-#line 1849 "parser.tab.c" /* yacc.c:1646  */
+#line 1850 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
 #line 382 "parser.y" /* yacc.c:1646  */
     {
         basic_type_t* tmp = NEW(basic_type_t);
-        tmp->whichtype = BT_VAR;
+        tmp->whichtype = BT_LIST;
+        tmp->internal_list_type = (yyvsp[-1].basic_type_f);
         (yyval.basic_type_f) = tmp;
     }
-#line 1859 "parser.tab.c" /* yacc.c:1646  */
+#line 1861 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 387 "parser.y" /* yacc.c:1646  */
+#line 388 "parser.y" /* yacc.c:1646  */
+    {
+        basic_type_t* tmp = NEW(basic_type_t);
+        tmp->whichtype = BT_VAR;
+        (yyval.basic_type_f) = tmp;
+    }
+#line 1871 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 41:
+#line 393 "parser.y" /* yacc.c:1646  */
     {
         basic_type_t* tmp = NEW(basic_type_t);
         tmp->whichtype = BT_UNIT;
         (yyval.basic_type_f) = tmp;
     }
-#line 1869 "parser.tab.c" /* yacc.c:1646  */
+#line 1881 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 41:
-#line 395 "parser.y" /* yacc.c:1646  */
+  case 42:
+#line 401 "parser.y" /* yacc.c:1646  */
     {
             appexpr_t* tmp = NEW(appexpr_t);
             tmp->tp = A_APP;
@@ -1878,11 +1890,11 @@ yyreduce:
             (yyval.appexpr_f) = tmp;
        
        }
-#line 1882 "parser.tab.c" /* yacc.c:1646  */
+#line 1894 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 42:
-#line 403 "parser.y" /* yacc.c:1646  */
+  case 43:
+#line 409 "parser.y" /* yacc.c:1646  */
     {
             appexpr_t* tmp = NEW(appexpr_t);
             tmp->tp = A_NAPP;
@@ -1890,33 +1902,33 @@ yyreduce:
             tmp->napp2 = (yyvsp[0].nonapp_f);
             (yyval.appexpr_f) = tmp;
        }
-#line 1894 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 43:
-#line 413 "parser.y" /* yacc.c:1646  */
-    {
-            nonapp_t* tmp = NEW(nonapp_t);
-            tmp->tp = NA_BASIC;
-            tmp->n_tp.bvalue = (yyvsp[0].basic_val_f);
-            (yyval.nonapp_f) = tmp;
-      }
-#line 1905 "parser.tab.c" /* yacc.c:1646  */
+#line 1906 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
 #line 419 "parser.y" /* yacc.c:1646  */
     {
             nonapp_t* tmp = NEW(nonapp_t);
+            tmp->tp = NA_BASIC;
+            tmp->n_tp.bvalue = (yyvsp[0].basic_val_f);
+            (yyval.nonapp_f) = tmp;
+      }
+#line 1917 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 45:
+#line 425 "parser.y" /* yacc.c:1646  */
+    {
+            nonapp_t* tmp = NEW(nonapp_t);
             tmp->tp = NA_EXPR;
             tmp->n_tp.expr = (yyvsp[-1].expr_f);
             (yyval.nonapp_f) = tmp;
       }
-#line 1916 "parser.tab.c" /* yacc.c:1646  */
+#line 1928 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 45:
-#line 428 "parser.y" /* yacc.c:1646  */
+  case 46:
+#line 434 "parser.y" /* yacc.c:1646  */
     {
         expr_t* tmp = NEW(expr_t);
         tmp->expr_tp = OP_EXPR;
@@ -1924,44 +1936,44 @@ yyreduce:
         (yyval.expr_f) = tmp;
     
     }
-#line 1928 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 46:
-#line 435 "parser.y" /* yacc.c:1646  */
-    {
-        expr_t* tmp = NEW(expr_t);
-        tmp->expr_tp = APP_EXPR;
-        tmp->tp.appexpr = (yyvsp[0].appexpr_f);
-        (yyval.expr_f) = tmp;
-    }
-#line 1939 "parser.tab.c" /* yacc.c:1646  */
+#line 1940 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
 #line 441 "parser.y" /* yacc.c:1646  */
     {
         expr_t* tmp = NEW(expr_t);
-        tmp->expr_tp = IF_EXPR;
-        tmp->tp.ifexpr = (yyvsp[0].ifexpr_f);
+        tmp->expr_tp = APP_EXPR;
+        tmp->tp.appexpr = (yyvsp[0].appexpr_f);
         (yyval.expr_f) = tmp;
     }
-#line 1950 "parser.tab.c" /* yacc.c:1646  */
+#line 1951 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
 #line 447 "parser.y" /* yacc.c:1646  */
     {
         expr_t* tmp = NEW(expr_t);
+        tmp->expr_tp = IF_EXPR;
+        tmp->tp.ifexpr = (yyvsp[0].ifexpr_f);
+        (yyval.expr_f) = tmp;
+    }
+#line 1962 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 49:
+#line 453 "parser.y" /* yacc.c:1646  */
+    {
+        expr_t* tmp = NEW(expr_t);
         tmp->expr_tp = YIELD_EXPR;
         tmp->tp.yieldexpr = (yyvsp[0].yieldexpr_f);
         (yyval.expr_f) = tmp;
     }
-#line 1961 "parser.tab.c" /* yacc.c:1646  */
+#line 1973 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 49:
-#line 456 "parser.y" /* yacc.c:1646  */
+  case 50:
+#line 462 "parser.y" /* yacc.c:1646  */
     {
         ifexpr_t* tmp = NEW(ifexpr_t);
         tmp->expr1 = (yyvsp[-8].expr_f);
@@ -1969,44 +1981,44 @@ yyreduce:
         tmp->expr3 = (yyvsp[-1].expr_f);
         (yyval.ifexpr_f) = tmp;
     }
-#line 1973 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 50:
-#line 466 "parser.y" /* yacc.c:1646  */
-    {
-        yieldexpr_t* tmp = NEW(yieldexpr_t);
-        tmp->yield_tp = Y_IF;
-        tmp->tp.ifexpr = (yyvsp[0].ifexpr_f);
-        (yyval.yieldexpr_f) = tmp;
-    }
-#line 1984 "parser.tab.c" /* yacc.c:1646  */
+#line 1985 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
 #line 472 "parser.y" /* yacc.c:1646  */
     {
         yieldexpr_t* tmp = NEW(yieldexpr_t);
-        tmp->yield_tp = Y_APP;
-        tmp->tp.appexpr = (yyvsp[0].appexpr_f);
+        tmp->yield_tp = Y_IF;
+        tmp->tp.ifexpr = (yyvsp[0].ifexpr_f);
         (yyval.yieldexpr_f) = tmp;
     }
-#line 1995 "parser.tab.c" /* yacc.c:1646  */
+#line 1996 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
 #line 478 "parser.y" /* yacc.c:1646  */
     {
         yieldexpr_t* tmp = NEW(yieldexpr_t);
+        tmp->yield_tp = Y_APP;
+        tmp->tp.appexpr = (yyvsp[0].appexpr_f);
+        (yyval.yieldexpr_f) = tmp;
+    }
+#line 2007 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 53:
+#line 484 "parser.y" /* yacc.c:1646  */
+    {
+        yieldexpr_t* tmp = NEW(yieldexpr_t);
         tmp->yield_tp = Y_OP;
         tmp->tp.op_expr = (yyvsp[0].op_f);
         (yyval.yieldexpr_f) = tmp;
     }
-#line 2006 "parser.tab.c" /* yacc.c:1646  */
+#line 2018 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 53:
-#line 487 "parser.y" /* yacc.c:1646  */
+  case 54:
+#line 493 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_OR;
@@ -2015,22 +2027,22 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2019 "parser.tab.c" /* yacc.c:1646  */
+#line 2031 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 54:
-#line 495 "parser.y" /* yacc.c:1646  */
+  case 55:
+#line 501 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_NEXT;
         tmp->opt.opt1 = (yyvsp[0].op_f);
         (yyval.op_f) = tmp;
     }
-#line 2030 "parser.tab.c" /* yacc.c:1646  */
+#line 2042 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 55:
-#line 504 "parser.y" /* yacc.c:1646  */
+  case 56:
+#line 510 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_AND;
@@ -2039,22 +2051,22 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2043 "parser.tab.c" /* yacc.c:1646  */
+#line 2055 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 56:
-#line 512 "parser.y" /* yacc.c:1646  */
+  case 57:
+#line 518 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_NEXT;
         tmp->opt.opt1 = (yyvsp[0].op_f);
         (yyval.op_f) = tmp;
     }
-#line 2054 "parser.tab.c" /* yacc.c:1646  */
+#line 2066 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 57:
-#line 521 "parser.y" /* yacc.c:1646  */
+  case 58:
+#line 527 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_EQ;
@@ -2063,11 +2075,11 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2067 "parser.tab.c" /* yacc.c:1646  */
+#line 2079 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 58:
-#line 529 "parser.y" /* yacc.c:1646  */
+  case 59:
+#line 535 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_DIFF;
@@ -2076,11 +2088,11 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2080 "parser.tab.c" /* yacc.c:1646  */
+#line 2092 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 59:
-#line 537 "parser.y" /* yacc.c:1646  */
+  case 60:
+#line 543 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_LESS;
@@ -2089,11 +2101,11 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2093 "parser.tab.c" /* yacc.c:1646  */
+#line 2105 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 60:
-#line 545 "parser.y" /* yacc.c:1646  */
+  case 61:
+#line 551 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_LEQ;
@@ -2102,11 +2114,11 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2106 "parser.tab.c" /* yacc.c:1646  */
+#line 2118 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 61:
-#line 553 "parser.y" /* yacc.c:1646  */
+  case 62:
+#line 559 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_GREATER;
@@ -2115,11 +2127,11 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2119 "parser.tab.c" /* yacc.c:1646  */
+#line 2131 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 62:
-#line 561 "parser.y" /* yacc.c:1646  */
+  case 63:
+#line 567 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_GEQ;
@@ -2128,22 +2140,22 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2132 "parser.tab.c" /* yacc.c:1646  */
+#line 2144 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 63:
-#line 569 "parser.y" /* yacc.c:1646  */
+  case 64:
+#line 575 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_NEXT;
         tmp->opt.opt1 = (yyvsp[0].op_f);
         (yyval.op_f) = tmp;
     }
-#line 2143 "parser.tab.c" /* yacc.c:1646  */
+#line 2155 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 64:
-#line 578 "parser.y" /* yacc.c:1646  */
+  case 65:
+#line 584 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_CONS;
@@ -2152,11 +2164,11 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2156 "parser.tab.c" /* yacc.c:1646  */
+#line 2168 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 65:
-#line 586 "parser.y" /* yacc.c:1646  */
+  case 66:
+#line 592 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_APPEND;
@@ -2165,22 +2177,22 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2169 "parser.tab.c" /* yacc.c:1646  */
+#line 2181 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 66:
-#line 594 "parser.y" /* yacc.c:1646  */
+  case 67:
+#line 600 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_NEXT;
         tmp->opt.opt1 = (yyvsp[0].op_f);
         (yyval.op_f) = tmp;
     }
-#line 2180 "parser.tab.c" /* yacc.c:1646  */
+#line 2192 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 67:
-#line 603 "parser.y" /* yacc.c:1646  */
+  case 68:
+#line 609 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_PLUS;
@@ -2189,11 +2201,11 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2193 "parser.tab.c" /* yacc.c:1646  */
+#line 2205 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 68:
-#line 611 "parser.y" /* yacc.c:1646  */
+  case 69:
+#line 617 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_MINUS;
@@ -2202,98 +2214,98 @@ yyreduce:
         (yyval.op_f) = tmp;
     
     }
-#line 2206 "parser.tab.c" /* yacc.c:1646  */
+#line 2218 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 69:
-#line 619 "parser.y" /* yacc.c:1646  */
+  case 70:
+#line 625 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_NEXT;
         tmp->opt.opt1 = (yyvsp[0].op_f);
         (yyval.op_f) = tmp;
     }
-#line 2217 "parser.tab.c" /* yacc.c:1646  */
+#line 2229 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 71:
-#line 629 "parser.y" /* yacc.c:1646  */
+  case 72:
+#line 635 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_NEXT;
         tmp->opt.opt1 = (yyvsp[0].op_f);
         (yyval.op_f) = tmp;
      }
-#line 2228 "parser.tab.c" /* yacc.c:1646  */
+#line 2240 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 74:
-#line 640 "parser.y" /* yacc.c:1646  */
+  case 75:
+#line 646 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
         tmp->op_tp = O_NEXT;
         tmp->opt.opt1 = (yyvsp[0].op_f);
         (yyval.op_f) = tmp;
     }
-#line 2239 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 75:
-#line 649 "parser.y" /* yacc.c:1646  */
-    {
-        op_t* tmp = NEW(op_t);
-        tmp->op_tp = O_BVALUE;
-        tmp->opt.bval = (yyvsp[0].basic_val_f);
-        (yyval.op_f) = tmp;
-    }
-#line 2250 "parser.tab.c" /* yacc.c:1646  */
+#line 2251 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
 #line 655 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
-        tmp->op_tp = O_LIST;
-        tmp->opt.lexpr = (yyvsp[0].exprs_f);
+        tmp->op_tp = O_BVALUE;
+        tmp->opt.bval = (yyvsp[0].basic_val_f);
         (yyval.op_f) = tmp;
     }
-#line 2261 "parser.tab.c" /* yacc.c:1646  */
+#line 2262 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
 #line 661 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
-        tmp->op_tp = O_EXPR;
-        tmp->opt.expr = (yyvsp[-1].expr_f);
+        tmp->op_tp = O_LIST;
+        tmp->opt.lexpr = (yyvsp[0].exprs_f);
         (yyval.op_f) = tmp;
     }
-#line 2272 "parser.tab.c" /* yacc.c:1646  */
+#line 2273 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
 #line 667 "parser.y" /* yacc.c:1646  */
     {
         op_t* tmp = NEW(op_t);
+        tmp->op_tp = O_EXPR;
+        tmp->opt.expr = (yyvsp[-1].expr_f);
+        (yyval.op_f) = tmp;
+    }
+#line 2284 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 79:
+#line 673 "parser.y" /* yacc.c:1646  */
+    {
+        op_t* tmp = NEW(op_t);
         tmp->op_tp = O_NEG;
         tmp->opt.opt1 = (yyvsp[0].op_f);
         (yyval.op_f) = tmp;
     }
-#line 2283 "parser.tab.c" /* yacc.c:1646  */
+#line 2295 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 79:
-#line 676 "parser.y" /* yacc.c:1646  */
+  case 80:
+#line 682 "parser.y" /* yacc.c:1646  */
     {
         exprs_t* tmp = NEW(exprs_t);
         tmp->expr = (yyvsp[0].expr_f);
         (yyval.exprs_f) = tmp;
     }
-#line 2293 "parser.tab.c" /* yacc.c:1646  */
+#line 2305 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 80:
-#line 681 "parser.y" /* yacc.c:1646  */
+  case 81:
+#line 687 "parser.y" /* yacc.c:1646  */
     {
         exprs_t* tmp = NEW(exprs_t);
         tmp->expr = (yyvsp[-2].expr_f);
@@ -2301,37 +2313,37 @@ yyreduce:
         (yyval.exprs_f) = tmp;
     
     }
-#line 2305 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 81:
-#line 691 "parser.y" /* yacc.c:1646  */
-    {
-        (yyval.exprs_f) = (yyvsp[-1].exprs_f);
-     }
-#line 2313 "parser.tab.c" /* yacc.c:1646  */
+#line 2317 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 694 "parser.y" /* yacc.c:1646  */
+#line 697 "parser.y" /* yacc.c:1646  */
     {
-        (yyval.exprs_f) = NEW(exprs_t);
-    }
-#line 2321 "parser.tab.c" /* yacc.c:1646  */
+        (yyval.exprs_f) = (yyvsp[-1].exprs_f);
+     }
+#line 2325 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 701 "parser.y" /* yacc.c:1646  */
+#line 700 "parser.y" /* yacc.c:1646  */
+    {
+        (yyval.exprs_f) = NEW(exprs_t);
+    }
+#line 2333 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 84:
+#line 707 "parser.y" /* yacc.c:1646  */
     {
         where_t* tmp = NEW(where_t);
         tmp->lines = (yyvsp[-1].lines_f);
         (yyval.where_f) = tmp;
     }
-#line 2331 "parser.tab.c" /* yacc.c:1646  */
+#line 2343 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 84:
-#line 709 "parser.y" /* yacc.c:1646  */
+  case 85:
+#line 715 "parser.y" /* yacc.c:1646  */
     { 
         proc_t* tmp = NEW(proc_t);
         tmp->label = (yyvsp[-6].str);
@@ -2339,11 +2351,11 @@ yyreduce:
         tmp->stmts = (yyvsp[-1].stmts_f);
         (yyval.proc_f) = tmp;
     }
-#line 2343 "parser.tab.c" /* yacc.c:1646  */
+#line 2355 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 85:
-#line 716 "parser.y" /* yacc.c:1646  */
+  case 86:
+#line 722 "parser.y" /* yacc.c:1646  */
     { 
         proc_t* tmp = NEW(proc_t);
         tmp->label = (yyvsp[-7].str);
@@ -2352,22 +2364,22 @@ yyreduce:
         tmp->where_exp = (yyvsp[0].where_f);
         (yyval.proc_f) = tmp;
     }
-#line 2356 "parser.tab.c" /* yacc.c:1646  */
+#line 2368 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 86:
-#line 724 "parser.y" /* yacc.c:1646  */
+  case 87:
+#line 730 "parser.y" /* yacc.c:1646  */
     { 
         proc_t* tmp = NEW(proc_t);
         tmp->label = (yyvsp[-5].str);
         tmp->stmts = (yyvsp[-1].stmts_f);
         (yyval.proc_f) = tmp;
     }
-#line 2367 "parser.tab.c" /* yacc.c:1646  */
+#line 2379 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 87:
-#line 730 "parser.y" /* yacc.c:1646  */
+  case 88:
+#line 736 "parser.y" /* yacc.c:1646  */
     { 
         proc_t* tmp = NEW(proc_t);
         tmp->label = (yyvsp[-6].str);
@@ -2375,56 +2387,56 @@ yyreduce:
         tmp->where_exp = (yyvsp[0].where_f);
         (yyval.proc_f) = tmp;
     }
-#line 2379 "parser.tab.c" /* yacc.c:1646  */
+#line 2391 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 88:
-#line 740 "parser.y" /* yacc.c:1646  */
+  case 89:
+#line 746 "parser.y" /* yacc.c:1646  */
     {
         stmts_t* tmp = NEW(stmts_t);
         tmp->stmt = (yyvsp[0].stmt_f);
         (yyval.stmts_f) = tmp;
     }
-#line 2389 "parser.tab.c" /* yacc.c:1646  */
+#line 2401 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 89:
-#line 745 "parser.y" /* yacc.c:1646  */
+  case 90:
+#line 751 "parser.y" /* yacc.c:1646  */
     {
         stmts_t* tmp = NEW(stmts_t);
         tmp->stmt = (yyvsp[-1].stmt_f);
         tmp->next = (yyvsp[0].stmts_f);
         (yyval.stmts_f) = tmp;
     }
-#line 2400 "parser.tab.c" /* yacc.c:1646  */
+#line 2412 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 90:
-#line 754 "parser.y" /* yacc.c:1646  */
+  case 91:
+#line 760 "parser.y" /* yacc.c:1646  */
     {
        stmt_t* tmp = NEW(stmt_t);
        tmp->stmt_type = STMT_EXPR;
        tmp->lhs = (yyvsp[-3].str);
        tmp->body.expr = (yyvsp[-1].expr_f);
-       (yyval.stmt_f) = tmp;
-    }
-#line 2412 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 91:
-#line 761 "parser.y" /* yacc.c:1646  */
-    {
-       stmt_t* tmp = NEW(stmt_t);
-       tmp->stmt_type = STMT_WH;
-       tmp->lhs = (yyvsp[-3].str);
-       tmp->body.while_expr = (yyvsp[-1].while_f);
        (yyval.stmt_f) = tmp;
     }
 #line 2424 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 768 "parser.y" /* yacc.c:1646  */
+#line 767 "parser.y" /* yacc.c:1646  */
+    {
+       stmt_t* tmp = NEW(stmt_t);
+       tmp->stmt_type = STMT_WH;
+       tmp->lhs = (yyvsp[-3].str);
+       tmp->body.while_expr = (yyvsp[-1].while_f);
+       (yyval.stmt_f) = tmp;
+    }
+#line 2436 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 93:
+#line 774 "parser.y" /* yacc.c:1646  */
     {
        stmt_t* tmp = NEW(stmt_t);
        tmp->stmt_type = STMT_IO;
@@ -2432,96 +2444,96 @@ yyreduce:
        tmp->body.io_expr = (yyvsp[-1].io_f);
        (yyval.stmt_f) = tmp;
     }
-#line 2436 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 93:
-#line 775 "parser.y" /* yacc.c:1646  */
-    {
-       stmt_t* tmp = NEW(stmt_t);
-       tmp->stmt_type = STMT_EXPR;
-       tmp->body.expr = (yyvsp[-1].expr_f);
-       (yyval.stmt_f) = tmp;
-    }
-#line 2447 "parser.tab.c" /* yacc.c:1646  */
+#line 2448 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
 #line 781 "parser.y" /* yacc.c:1646  */
     {
        stmt_t* tmp = NEW(stmt_t);
-       tmp->stmt_type = STMT_WH;
-       tmp->body.while_expr = (yyvsp[-1].while_f);
+       tmp->stmt_type = STMT_EXPR;
+       tmp->body.expr = (yyvsp[-1].expr_f);
        (yyval.stmt_f) = tmp;
     }
-#line 2458 "parser.tab.c" /* yacc.c:1646  */
+#line 2459 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
 #line 787 "parser.y" /* yacc.c:1646  */
     {
        stmt_t* tmp = NEW(stmt_t);
+       tmp->stmt_type = STMT_WH;
+       tmp->body.while_expr = (yyvsp[-1].while_f);
+       (yyval.stmt_f) = tmp;
+    }
+#line 2470 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 96:
+#line 793 "parser.y" /* yacc.c:1646  */
+    {
+       stmt_t* tmp = NEW(stmt_t);
        tmp->stmt_type = STMT_IO;
        tmp->body.io_expr = (yyvsp[-1].io_f);
        (yyval.stmt_f) = tmp;
     }
-#line 2469 "parser.tab.c" /* yacc.c:1646  */
+#line 2481 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 96:
-#line 796 "parser.y" /* yacc.c:1646  */
+  case 97:
+#line 802 "parser.y" /* yacc.c:1646  */
     {
         io_t* tmp = NEW(io_t);
         tmp->opt = I_READINT;
         (yyval.io_f) = tmp;
     }
-#line 2479 "parser.tab.c" /* yacc.c:1646  */
+#line 2491 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 97:
-#line 801 "parser.y" /* yacc.c:1646  */
+  case 98:
+#line 807 "parser.y" /* yacc.c:1646  */
     {
         io_t* tmp = NEW(io_t);
         tmp->opt = I_READFLOAT;
         (yyval.io_f) = tmp;
     }
-#line 2489 "parser.tab.c" /* yacc.c:1646  */
+#line 2501 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 98:
-#line 806 "parser.y" /* yacc.c:1646  */
+  case 99:
+#line 812 "parser.y" /* yacc.c:1646  */
     {
         io_t* tmp = NEW(io_t);
         tmp->opt = I_READBOOL;
         (yyval.io_f) = tmp;
     }
-#line 2499 "parser.tab.c" /* yacc.c:1646  */
+#line 2511 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 99:
-#line 811 "parser.y" /* yacc.c:1646  */
+  case 100:
+#line 817 "parser.y" /* yacc.c:1646  */
     {
         io_t* tmp = NEW(io_t);
         tmp->opt = I_PRINT;
         tmp->expr = (yyvsp[0].expr_f);
         (yyval.io_f) = tmp;
     }
-#line 2510 "parser.tab.c" /* yacc.c:1646  */
+#line 2522 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 100:
-#line 820 "parser.y" /* yacc.c:1646  */
+  case 101:
+#line 826 "parser.y" /* yacc.c:1646  */
     { 
                 while_t* tmp = NEW(while_t);
                 tmp->expr = (yyvsp[-4].expr_f);
                 tmp->stmts = (yyvsp[-1].stmts_f);
                 (yyval.while_f) = tmp;
     }
-#line 2521 "parser.tab.c" /* yacc.c:1646  */
+#line 2533 "parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2525 "parser.tab.c" /* yacc.c:1646  */
+#line 2537 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2749,7 +2761,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 827 "parser.y" /* yacc.c:1906  */
+#line 833 "parser.y" /* yacc.c:1906  */
 
 
 void print_errors() {
@@ -2762,6 +2774,510 @@ void print_errors() {
     }
     del_list(&error_list_root);
     printf("\n");
+
+}
+
+enum {
+         WHILE_T, IO_T, STMT_T, STMTS_T, PROC_T, APPEXPR_T, NONAPP_T, WHERE_T, EXPRS_T, OP_T,
+         YIELDEXPR_T, IFEXPR_T, EXPR_T, BASIC_TYPE_T, FUNTYPE_T, FUNTYPE_DECL_T, BASIC_VAL_T, ARG_T, 
+         FUN_T, LINES_T, LINE_T, ARGS_T, PROGRAM_T, LIST_ARGS_T, BUILT_LIST_VAL_T, LIST_VALUE_T }
+ union_type;
+
+void ident(int lvl) {
+    while(lvl) {
+        printf(" ");
+        lvl--;
+    }
+}
+
+void print_tree(YYSTYPE node, char node_type, int lvl) {
+    YYSTYPE tmp;
+    memset(&tmp, 0, sizeof(YYSTYPE));
+    switch(node_type) {
+        case WHILE_T:
+            ident(lvl); printf("| while_expr\n");
+            tmp.expr_f = node.while_f->expr;
+            ident(lvl + 1); printf("| (\n");
+            print_tree(tmp, EXPR_T, lvl + 1);
+            ident(lvl + 1); printf("| )\n");
+            ident(lvl + 1); printf("| {\n");
+            print_tree(tmp, STMTS_T, lvl + 1);
+            ident(lvl + 1); printf("| }\n");
+            break;
+        case IO_T:
+            ident(lvl); printf("| io_stmt\n");
+            switch(node.io_f->opt) {
+                case I_READINT:
+                    ident(lvl + 1); printf("| READINT\n");
+                    break;
+                case I_READFLOAT:
+                    ident(lvl + 1); printf("| READFLOAT\n");
+                    break;
+                case I_READBOOL:
+                    ident(lvl + 1); printf("| READBOOL\n");
+                    break;
+                case I_PRINT:
+                    ident(lvl + 1); printf("| PRINT\n");
+                    tmp.expr_f = node.io_f->expr;
+                    print_tree(tmp, EXPR_T, lvl + 1);
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            break;
+        case STMT_T:
+            ident(lvl); printf("| stmt\n");
+            switch(node.stmt_f->stmt_type) {
+                case STMT_EXPR:
+                    ident(lvl + 1); printf("| ID, %s\n", node.stmt_f->lhs);
+                    ident(lvl + 1); printf("| LARROW\n");
+                    tmp.expr_f = node.stmt_f->body.expr;
+                    print_tree(tmp, EXPR_T, lvl + 1);
+                    ident(lvl + 1); printf("| ;\n");
+                    break;
+                case STMT_WH:
+                    ident(lvl + 1); printf("| ID, %s\n", node.stmt_f->lhs);
+                    ident(lvl + 1); printf("| LARROW\n");
+                    tmp.while_f = node.stmt_f->body.while_expr;
+                    print_tree(tmp, WHILE_T, lvl + 1);
+                    ident(lvl + 1); printf("| ;\n");
+                    break;
+                case STMT_IO:
+                    ident(lvl + 1); printf("| ID, %s\n", node.stmt_f->lhs);
+                    ident(lvl + 1); printf("| LARROW\n");
+                    tmp.io_f = node.stmt_f->body.io_expr;
+                    print_tree(tmp, IO_T, lvl + 1);
+                    ident(lvl + 1); printf("| ;\n");
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            break;
+        case STMTS_T:
+            ident(lvl); printf("| stmts\n");
+
+            tmp.stmt_f = node.stmts_f->stmt;
+            print_tree(tmp, STMT_T, lvl + 1);
+            memset(&tmp, 0, sizeof(YYSTYPE));
+
+            if(node.stmts_f->next != NULL) {
+                tmp.stmts_f = node.stmts_f->next;
+                print_tree(tmp, STMTS_T, lvl + 1);
+            }
+            break;
+        case PROC_T:
+            ident(lvl); printf("| procdecl\n");
+            ident(lvl + 1); printf("| ID, %s\n", node.proc_f->label);
+            if(node.proc_f->args != NULL) {
+                tmp.args_f = node.proc_f->args;
+                print_tree(tmp, ARGS_T, lvl + 1);
+            }
+            memset(&tmp, 0, sizeof(YYSTYPE));
+            ident(lvl + 1); printf("| = ");
+            ident(lvl + 1); printf("| DO ");
+
+            ident(lvl + 1); printf("| { ");
+            tmp.stmts_f = node.proc_f->stmts;
+            print_tree(tmp, STMTS_T, lvl + 1);
+            ident(lvl + 1); printf("| } ");
+            memset(&tmp, 0, sizeof(YYSTYPE));
+
+            if(node.proc_f->where_exp != NULL) {
+                tmp.where_f = node.proc_f->where_exp;
+                print_tree(tmp, WHERE_T, lvl + 1);
+            }
+            break;
+        case APPEXPR_T:
+            ident(lvl); printf("| appexpr\n");
+            switch(node.appexpr_f->tp) {
+                case A_APP:
+                    tmp.appexpr_f = node.appexpr_f->app_tp.app;
+                    print_tree(tmp, APPEXPR_T, lvl + 1);
+                    break;
+                case A_NAPP:
+                    tmp.nonapp_f = node.appexpr_f->app_tp.napp1;
+                    print_tree(tmp, NONAPP_T, lvl + 1);
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            memset(&tmp, 0, sizeof(YYSTYPE));
+            tmp.nonapp_f = node.appexpr_f->napp2;
+            print_tree(tmp, NONAPP_T, lvl + 1);
+            break;
+        case NONAPP_T:
+            ident(lvl); printf("| nonapp\n");
+            switch(node.nonapp_f->tp) {
+                case NA_BASIC:
+                    tmp.basic_val_f = node.nonapp_f->n_tp.bvalue;
+                    print_tree(tmp, BASIC_VAL_T, lvl + 1);
+                    break;
+                case NA_EXPR:
+                    tmp.expr_f = node.nonapp_f->n_tp.expr;
+                    print_tree(tmp, EXPR_T, lvl + 1);
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            break;
+        case WHERE_T:
+            ident(lvl); printf("| where_exp\n");
+            ident(lvl + 1); printf("| WHERE\n");
+            ident(lvl + 1); printf("| {\n");
+            tmp.lines_f = node.where_f->lines;
+            print_tree(tmp, LINES_T, lvl + 1);
+            ident(lvl + 1); printf("| }\n");
+            break;
+        case EXPRS_T:
+            ident(lvl); printf("| exprs\n");
+            tmp.expr_f = node.exprs_f->expr;
+            print_tree(tmp, EXPR_T, lvl + 1);
+            memset(&tmp, 0, sizeof(YYSTYPE));
+            if(node.exprs_f->next != NULL) {
+                tmp.exprs_f = node.exprs_f->next;
+                print_tree(tmp, EXPRS_T, lvl + 1);
+            }
+            break;
+        case OP_T:
+            ident(lvl); printf("| op_precN\n");
+            static const char* operations[] = { "OR", "AND", "EQ", "DIFF", "LESS", "LEQ", "GREATER", "GEQ", "CONS", "APPEND", "PLUS", "MINUS", "MOD", "TIMES", "DIV" };
+            if(node.op_f->op_tp >= O_OR) {
+                tmp.op_f = node.op_f->opt.opt1;
+                print_tree(tmp, OP_T, lvl + 1);
+                memset(&tmp, 0, sizeof(YYSTYPE));
+                ident(lvl + 1); printf("| %s\n", operations[node.op_f->op_tp - O_OR]);
+                tmp.op_f = node.op_f->opt2;
+                print_tree(tmp, OP_T, lvl + 1);
+            } else {
+                switch(node.op_f->op_tp) {
+                    case O_BVALUE:
+                        tmp.basic_val_f = node.op_f->opt.bval;
+                        print_tree(tmp, BASIC_VAL_T, lvl + 1);
+                        break;
+                    case O_LIST:
+                        tmp.exprs_f = node.op_f->opt.lexpr;
+                        print_tree(tmp, EXPRS_T, lvl + 1);
+                        break;
+                    case O_EXPR:
+                        tmp.expr_f = node.op_f->opt.expr;
+                        ident(lvl + 1); printf("| (\n");
+                        print_tree(tmp, EXPR_T, lvl + 1);
+                        ident(lvl + 1); printf("| )\n");
+                        break;
+                    case O_NEG:
+                        ident(lvl + 1); printf("| -\n");
+                        tmp.op_f = node.op_f->opt.opt1;
+                        print_tree(tmp, OP_T, lvl + 1);
+                        break;
+                    case O_NEXT:
+                        tmp.op_f = node.op_f->opt.opt1;
+                        print_tree(tmp, OP_T, lvl + 1);
+                        break;
+                    default:
+                        printf("ERROR!"); 
+                } 
+            } 
+            break;
+        case YIELDEXPR_T:
+            ident(lvl); printf("| yieldexpr\n");
+            switch(node.yieldexpr_f->yield_tp) {
+                case Y_IF:
+                    tmp.ifexpr_f = node.yieldexpr_f->tp.ifexpr;
+                    print_tree(tmp, IFEXPR_T, lvl + 1);
+                    break;
+                case Y_APP:
+                    tmp.appexpr_f = node.yieldexpr_f->tp.appexpr;
+                    print_tree(tmp, APPEXPR_T, lvl + 1);
+                    break;
+                case Y_OP:
+                    tmp.op_f = node.yieldexpr_f->tp.op_expr;
+                    print_tree(tmp, OP_T, lvl + 1);
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            break;
+        case IFEXPR_T:
+            ident(lvl); printf("| ifexpr\n");
+            ident(lvl + 1); printf("| IF\n");
+
+            tmp.expr_f = node.ifexpr_f->expr1;
+            print_tree(tmp, IFEXPR_T, lvl + 1);
+            memset(&tmp, 0, sizeof(YYSTYPE));
+
+            ident(lvl + 1); printf("| THEN\n");
+            ident(lvl + 1); printf("| {\n");
+
+            tmp.expr_f = node.ifexpr_f->expr2;
+            print_tree(tmp, IFEXPR_T, lvl + 1);
+            memset(&tmp, 0, sizeof(YYSTYPE));
+
+            ident(lvl + 1); printf("| }\n");
+            ident(lvl + 1); printf("| ELSE\n");
+            ident(lvl + 1); printf("| {\n");
+
+            tmp.expr_f = node.ifexpr_f->expr3;
+            print_tree(tmp, IFEXPR_T, lvl + 1);
+            memset(&tmp, 0, sizeof(YYSTYPE));
+            ident(lvl + 1); printf("| }\n");
+            break;
+        case EXPR_T:
+            ident(lvl); printf("| expr\n");
+            switch(node.expr_f->expr_tp) {
+                case OP_EXPR:
+                    tmp.op_f = node.expr_f->tp.op_expr;
+                    print_tree(tmp, OP_T, lvl + 1);
+                    break;
+                case APP_EXPR:
+                    tmp.appexpr_f = node.expr_f->tp.appexpr;
+                    print_tree(tmp, APPEXPR_T, lvl + 1);
+                    break;
+                case IF_EXPR:
+                    tmp.ifexpr_f = node.expr_f->tp.ifexpr;
+                    print_tree(tmp, IFEXPR_T, lvl + 1);
+                    break;
+                case YIELD_EXPR:
+                    tmp.yieldexpr_f = node.expr_f->tp.yieldexpr;
+                    print_tree(tmp, YIELDEXPR_T, lvl + 1);
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            break;
+        case BASIC_TYPE_T:
+            ident(lvl); printf("| basic_type\n");
+            switch(node.basic_type_f->whichtype) {
+                case BT_INTEGER:
+                    ident(lvl + 1); printf("| INTEGER\n");
+                    break;
+                case BT_FLOAT:
+                    ident(lvl + 1); printf("| FLOAT\n");
+                    break;
+                case BT_BOOL:
+                    ident(lvl + 1); printf("| BOOL\n");
+                    break;
+                case BT_UNIT:
+                    ident(lvl + 1); printf("| (\n");
+                    ident(lvl + 1); printf("| )\n");
+                    break;
+                case BT_VAR:
+                    tmp.yieldexpr_f = node.expr_f->tp.yieldexpr;
+                    print_tree(tmp, YIELDEXPR_T, lvl + 1);
+                    break;
+                case BT_LIST:
+                    tmp.yieldexpr_f = node.expr_f->tp.yieldexpr;
+                    print_tree(tmp, YIELDEXPR_T, lvl + 1);
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            break;
+        case FUNTYPE_T:
+            ident(lvl); printf("| funtype\n");
+            switch(node.funtype_f->typeorder) {
+                case T_BASIC:
+                    tmp.basic_type_f = node.funtype_f->tp.btype;
+                    print_tree(tmp, BASIC_TYPE_T, lvl + 1);
+                    break;
+                case T_FUNC:
+                    tmp.funtype_f = node.funtype_f->tp.ftype;
+                    print_tree(tmp, FUNTYPE_T, lvl + 1);
+                    memset(&tmp, 0, sizeof(YYSTYPE));
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            if(node.funtype_f->next != NULL) {
+                tmp.funtype_f = node.funtype_f->next;
+                print_tree(tmp, FUNTYPE_T, lvl + 1);
+            }
+            break;
+        case FUNTYPE_DECL_T:
+            ident(lvl); printf("| funtype_decl\n");
+            ident(lvl + 1); printf("| ID, %s\n", node.funtype_decl_f->label);
+            ident(lvl + 1); printf("| ::\n");
+
+            tmp.funtype_f = node.funtype_decl_f->type;
+            print_tree(tmp, FUNTYPE_T, lvl + 1);
+            ident(lvl + 1); printf("| ;\n");
+            break;
+        case BASIC_VAL_T:
+            ident(lvl); printf("| basic_value\n");
+            switch(node.basic_val_f->valtype) {
+                case BINT:
+                    ident(lvl + 1); printf("| NUMBER, %d\n", node.basic_val_f->val.intval);
+                    break;
+                case BFLOAT:
+                    ident(lvl + 1); printf("| FLOATNUM, %.4f\n", node.basic_val_f->val.floatval);
+                    break;
+                case BBOOL:
+                    if(node.basic_val_f->val.intval) {
+                        ident(lvl + 1); printf("| BOOLVAL, True\n");
+                    } else {
+                        ident(lvl + 1); printf("| BOOLVAL, False\n");
+                    }
+                    break;
+                case BLABEL:
+                    ident(lvl + 1); printf("| ID, %s\n", node.basic_val_f->val.label);
+                    break;
+                case BUNIT:
+                    ident(lvl + 1); printf("| ( \n");;
+                    ident(lvl + 1); printf("| ) \n");;
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            break;
+        case ARG_T:
+            ident(lvl); printf("| arg_value\n");
+            switch(node.arg_f->tp) {
+                case AR_LIST:
+                    tmp.list_value_f = node.arg_f->opt.listval;
+                    print_tree(tmp, LIST_VALUE_T, lvl + 1);
+                    break;
+                case AR_BASIC:
+                    tmp.basic_val_f = node.arg_f->opt.basicval;
+                    print_tree(tmp, BASIC_VAL_T, lvl + 1);
+                    break;
+                case AR_ARG:
+                    ident(lvl + 1); printf("| ( \n");;
+
+                    tmp.arg_f = node.arg_f->opt.argval;
+                    print_tree(tmp, ARG_T, lvl + 1);
+
+                    ident(lvl + 1); printf("| ) \n");;
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            break;
+        case FUN_T:
+            ident(lvl); printf("| fundecl\n");
+            ident(lvl + 1); printf("| ID, %s\n", node.fun_f->label);
+            if(node.fun_f->args != NULL) {
+                tmp.args_f = node.fun_f->args;
+                print_tree(tmp, ARGS_T, lvl + 1);
+            }
+            memset(&tmp, 0, sizeof(YYSTYPE));
+            ident(lvl + 1); printf("| = ");
+
+            ident(lvl + 1); printf("| { ");
+            tmp.expr_f = node.fun_f->expr;
+            print_tree(tmp, STMTS_T, lvl + 1);
+            ident(lvl + 1); printf("| } ");
+            memset(&tmp, 0, sizeof(YYSTYPE));
+
+            if(node.proc_f->where_exp != NULL) {
+                tmp.where_f = node.proc_f->where_exp;
+                print_tree(tmp, WHERE_T, lvl + 1);
+            }
+            break;
+        case LINES_T:
+            ident(lvl); printf("| line_elems\n");
+            tmp.line_f = node.lines_f->line;
+            print_tree(tmp, LINE_T, lvl + 1);
+            if(node.lines_f->next != NULL) {
+                tmp.lines_f = node.lines_f->next;
+                print_tree(tmp, LINES_T, lvl + 1);
+            }
+            break;
+        case LINE_T:
+            ident(lvl); printf("| line_elem\n");
+            switch(node.line_f->opt_type) {
+                case L_FUN:
+                    tmp.fun_f = node.line_f->opt.fun;
+                    print_tree(tmp, FUN_T, lvl + 1);
+                    break;
+                case L_PROC:
+                    tmp.proc_f = node.line_f->opt.proc;
+                    print_tree(tmp, PROC_T, lvl + 1);
+                    break;
+                case L_FUNTYPE:
+                    tmp.funtype_decl_f = node.line_f->opt.funtype;
+                    print_tree(tmp, FUNTYPE_DECL_T, lvl + 1);
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            break;
+        case ARGS_T:
+            ident(lvl); printf("| args\n");
+            if(node.args_f->arg != NULL) {
+                tmp.arg_f = node.args_f->arg;
+                print_tree(tmp, ARG_T, lvl + 1);
+                if(node.args_f->next != NULL) {
+                    tmp.args_f = node.args_f->next;
+                    print_tree(tmp, ARGS_T, lvl + 1);
+                }
+            } else {
+                ident(lvl + 1); printf("| WILDSCORE\n");
+            }
+            break;
+        case PROGRAM_T:
+            ident(lvl); printf("| program\n");
+            tmp.lines_f = node.program_f->lines;
+            print_tree(tmp, LINES_T, lvl + 1);
+            break;
+        case LIST_ARGS_T:
+            ident(lvl); printf("| list_args\n");
+            tmp.arg_f = node.list_args_f->arg;
+            print_tree(tmp, ARG_T, lvl + 1);
+            if(node.list_args_f->next != NULL) {
+                tmp.list_args_f = node.list_args_f->next;
+                print_tree(tmp, LIST_ARGS_T, lvl + 1);
+            }
+            break;
+        case BUILT_LIST_VAL_T:
+            ident(lvl); printf("| built_list_value\n");
+            ident(lvl + 1); printf("| [\n");
+            if(node.built_list_val_f->vals != NULL) {
+                tmp.list_args_f = node.built_list_val_f->vals;
+                print_tree(tmp, LIST_ARGS_T, lvl + 1);
+            }
+            ident(lvl + 1); printf("| ]\n");
+            break;
+        case LIST_VALUE_T:
+            ident(lvl); printf("| list_value\n");
+            switch(node.list_value_f->ls_type) {
+                case LS_BASIC:
+                    tmp.basic_val_f = node.list_value_f->opt.basic_val;
+                    print_tree(tmp, BASIC_VAL_T, lvl + 1);
+                    break;
+                case LS_LIST:
+                    ident(lvl + 1); printf("| [\n");
+                    tmp.list_args_f = node.list_value_f->opt.list_args_val;
+                    print_tree(tmp, BASIC_VAL_T, lvl + 1);
+                    ident(lvl + 1); printf("| ]\n");
+                    break;
+                case LS_WLD:
+                    ident(lvl + 1); printf("| WILDSCORE\n");
+                    break;
+                case LS_BLT:
+                    tmp.built_list_val_f = node.list_value_f->opt.built_list_val;
+                    print_tree(tmp, BUILT_LIST_VAL_T, lvl + 1);
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            memset(&tmp, 0, sizeof(YYSTYPE));
+            ident(lvl + 1); printf("| :\n");
+            tmp.list_value_f = node.list_value_f->next;
+            print_tree(tmp, LIST_VALUE_T, lvl + 1);
+            break;
+    }
+
 
 }
 

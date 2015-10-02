@@ -3,7 +3,6 @@ typedef struct io_t             io_t;
 typedef struct stmt_t           stmt_t;
 typedef struct stmts_t          stmts_t;
 typedef struct proc_t           proc_t;
-typedef struct list_t           list_t;
 typedef struct appexpr_t        appexpr_t;
 typedef struct where_t          where_t;
 typedef struct exprs_t          exprs_t;
@@ -175,15 +174,6 @@ struct nonapp_t {
         basic_val_t* bvalue;
         expr_t* expr;
     } n_tp;
-};
-
-struct list_t {
-    enum { LBASIC, LLIST, LWILD } valtype ;
-    union {
-        list_t* listval;
-        basic_val_t* basicval; 
-    } val;
-    list_t* next;
 };
 
 struct proc_t {
