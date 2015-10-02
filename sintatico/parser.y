@@ -1,22 +1,25 @@
 %{
 #include <stdio.h>
 #include <string.h>
-#include "ast.h"
+#include "lex.yy.c"
 
 /*Macro para alocar e inicializar a struct toda com 0*/
 #define NEW(TYPE) memset(malloc(sizeof(TYPE)), 0, sizeof(TYPE))
 
-void yyerror(const char *str)
-{    fprintf(stderr,"error: %s\n",str);}
+void yyerror(const char *str) {    
+    printf("%d:%d: %s\n", line, col, str);
+}
 %}
+
+%error-verbose
 
 %token <str> ID
 %token WILDSCORE
 %token FLOAT
-%token BOOLVAL
+%token <boolval> BOOLVAL
 %token BOOL
-%token NUMBER
-%token FLOATNUM
+%token <intval> NUMBER
+%token <floatval> FLOATNUM
 %token INTEGER
 %token IF
 %token ELSE
@@ -48,6 +51,7 @@ void yyerror(const char *str)
     proc_t* proc_f;           
     list_t* list_f;           
     appexpr_t* appexpr_f;        
+    nonapp_t* nonapp_f;        
     where_t* where_f;          
     exprs_t* exprs_f;       
     op_t* op_f;             
@@ -66,7 +70,11 @@ void yyerror(const char *str)
     program_t* program_f;        
     list_args_t* list_args_f;      
     built_list_val_t* built_list_val_f; 
+    list_value_t* list_value_f;
     char* str;
+    int intval;
+    float floatval;
+    int boolval;
 }
 
 
@@ -75,8 +83,8 @@ void yyerror(const char *str)
 %type    <stmt_f> stmt
 %type    <stmts_f>stmts
 %type    <proc_f> procdecl
-%type    <list_f> list_value
 %type    <appexpr_f> appexpr
+%type    <nonapp_f> nonapp
 %type    <where_f> where_exp          
 %type    <exprs_f> list_expr
 %type    <exprs_f> exprs
@@ -103,114 +111,376 @@ void yyerror(const char *str)
 %type    <program_f> program      
 %type    <list_args_f> list_args
 %type    <built_list_val_f> built_list_value
+%type    <list_value_f> list_value
 
 
 %start program
 
 %%
 program:  
-    line_elems
+    line_elems {
+        program_t* tmp = NEW(program_t);
+        tmp->lines = $1;
+        $$ = tmp;
+    }
 	;
 
 line_elems: 
-    line_elem line_elems
-    | line_elem
+    line_elem line_elems {
+        lines_t* tmp = NEW(lines_t);
+        tmp->line = $1;
+        tmp->next = $2;
+        $$ = tmp; 
+    }
+    | line_elem {
+        lines_t* tmp = NEW(lines_t);
+        tmp->line = $1;
+        $$ = tmp;
+    }
 	;
 
 line_elem:
-    fundecl
-    | procdecl
-    | funtype_decl
+    fundecl {
+        line_t* tmp = NEW(line_t);
+        tmp->opt_type = L_FUN;
+        tmp->opt.fun = $1;
+        $$ = tmp; 
+    }
+    | procdecl {
+        line_t* tmp = NEW(line_t);
+        tmp->opt_type = L_PROC;
+        tmp->opt.proc = $1;
+        $$ = tmp; 
+    }
+    | funtype_decl {
+        line_t* tmp = NEW(line_t);
+        tmp->opt_type = L_FUNTYPE;
+        tmp->opt.funtype = $1;
+        $$ = tmp; 
+    }
 	;
 
 fundecl: 
-    ID args '=' expr ';'
-    | ID args '=' expr where_exp 
-    | ID '=' expr ';'
-    | ID '=' expr where_exp
+    ID args '=' expr ';' {
+        fun_t* tmp = NEW(fun_t);
+        tmp->label = $1;
+        tmp->args = $2;
+        tmp->expr = $4;
+        $$ = tmp;
+    
+    }
+    | ID args '=' expr where_exp {
+        fun_t* tmp = NEW(fun_t);
+        tmp->label = $1;
+        tmp->args = $2;
+        tmp->expr = $4;
+        tmp->where_exp = $5;
+        $$ = tmp;
+    
+    }
+    | ID '=' expr ';' {
+        fun_t* tmp = NEW(fun_t);
+        tmp->label = $1;
+        tmp->expr = $3;
+        $$ = tmp;
+    
+    }
+    | ID '=' expr where_exp {
+        fun_t* tmp = NEW(fun_t);
+        tmp->label = $1;
+        tmp->expr = $3;
+        tmp->where_exp = $4;
+        $$ = tmp;
+    
+    }
 	;
 
 args:
-    arg_value args 
-    | arg_value
-    | WILDSCORE
+    arg_value args  {
+        args_t* tmp = NEW(args_t);
+        tmp->arg = $1;
+        tmp->next = $2;
+        $$ = tmp;
+    
+    }
+    | arg_value {
+        args_t* tmp = NEW(args_t);
+        tmp->arg = $1;
+        $$ = tmp;
+    
+    }
+    | WILDSCORE {
+        $$ = NEW(arg_t);
+    }
 	;
 
 arg_value:
-    list_value
-    | basic_value
-    | '(' arg_value ')'
+    list_value {
+        arg_t* tmp = NEW(arg_t);
+        tmp->tp = AR_LIST;
+        tmp->opt.listval = $1;
+        $$ = tmp;
+    
+    }
+    | basic_value {
+        arg_t* tmp = NEW(arg_t);
+        tmp->tp = AR_BASIC;
+        tmp->opt.basicval = $1;
+        $$ = tmp; 
+    }
+    | '(' arg_value ')' {
+        arg_t* tmp = NEW(arg_t);
+        tmp->tp = AR_ARG;
+        tmp->opt.argval = $2;
+        $$ = tmp; 
+    }
 	;
 
 basic_value: 
-    NUMBER 
-    | FLOATNUM
-    | BOOLVAL
-    | ID
-    | '(' ')'
+    NUMBER {
+        basic_val_t* tmp = NEW(basic_val_t);
+        tmp->valtype = BINT;
+        tmp->val.intval = $1;
+        $$ = tmp;
+    }
+    | FLOATNUM {
+        basic_val_t* tmp = NEW(basic_val_t);
+        tmp->valtype = BFLOAT;
+        tmp->val.floatval = $1;
+        $$ = tmp;
+    }
+    | BOOLVAL {
+        basic_val_t* tmp = NEW(basic_val_t);
+        tmp->valtype = BBOOL;
+        tmp->val.boolval = $1;
+        $$ = tmp; 
+    }
+    | ID {
+        basic_val_t* tmp = NEW(basic_val_t);
+        tmp->valtype = BLABEL;
+        tmp->val.label = $1;
+        $$ = tmp; 
+    }
+    | '(' ')' {
+        basic_val_t* tmp = NEW(basic_val_t);
+        tmp->valtype = BUNIT;
+        $$ = tmp; 
+    }
 	;
 
 list_value:
-    basic_value ':' list_value
-    '[' list_args ']' ':' list_value
-    | WILDSCORE ':' list_value
-    | built_list_value
+    basic_value ':' list_value {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_BASIC;
+        tmp->opt.basic_val = $1;
+        tmp->next = $3;
+        $$ = tmp;
+    }
+    |'[' list_args ']' ':' list_value {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_LIST;
+        tmp->opt.list_args_val = $2;
+        tmp->next = $5;
+        $$ = tmp;
+    
+    }
+    | WILDSCORE ':' list_value {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_WLD;
+        tmp->next = $3;
+        $$ = tmp;
+    
+    }
+    | built_list_value {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_BLT;
+        tmp->opt.built_list_val = $1;
+        $$ = tmp;
+    
+    }
 	;
 
 list_args:
-         arg_value
-         | arg_value ',' list_args
+         arg_value {
+            list_args_t* tmp = NEW(list_args_t);
+            tmp->arg = $1;
+            $$ = tmp;
+         }
+         | arg_value ',' list_args {
+            list_args_t* tmp = NEW(list_args_t);
+            tmp->arg = $1;
+            tmp->next = $3;
+            $$ = tmp;
+         }
          ;
 
 built_list_value:
-    '[' ']'
-    | '[' list_args ']'
+    '[' ']' {
+        $$ = NEW(built_list_val_t);
+    }
+    | '[' list_args ']' {
+        built_list_val_t* tmp = NEW(built_list_val_t);
+        tmp->vals = $2;
+        $$ = tmp;
+    }
 	;
 
 funtype_decl:
-    ID DOUBLECOLON funtype ';'
+    ID DOUBLECOLON funtype ';' {
+        funtype_decl_t* tmp = NEW(funtype_decl_t);
+        tmp->label = $1;
+        tmp->type = $3;
+        $$ = tmp;
+
+    }
 	;
 
 funtype:
-    basic_type
-    | '(' funtype ')'
-    | basic_type RARROW funtype
+    basic_type {
+        funtype_t* tmp = NEW(funtype_t);
+        tmp->typeorder = T_BASIC;
+        tmp->tp.btype = $1;
+        $$ = tmp;
+    }
+    | '(' funtype ')' {
+        funtype_t* tmp = NEW(funtype_t);
+        tmp->typeorder = T_FUNC;
+        tmp->tp.ftype = $2;
+        $$ = tmp;
+    }
+    | basic_type RARROW funtype {
+        funtype_t* tmp = NEW(funtype_t);
+        tmp->typeorder = T_BASIC;
+        tmp->tp.btype = $1;
+        tmp->next = $3;
+        $$ = tmp;
+    }
 	;
 
 basic_type:
-    INTEGER
-    | FLOAT
-    | BOOL
-    | '[' basic_type ']' 
-    | ID
-    | '(' ')'
+    INTEGER {
+        basic_type_t* tmp = NEW(basic_type_t);
+        tmp->whichtype = BT_INTEGER;
+        $$ = tmp;
+    }
+    | FLOAT {
+        basic_type_t* tmp = NEW(basic_type_t);
+        tmp->whichtype = BT_FLOAT;
+        $$ = tmp;
+    }
+    | BOOL {
+        basic_type_t* tmp = NEW(basic_type_t);
+        tmp->whichtype = BT_BOOL;
+        $$ = tmp;
+    }
+    | '[' basic_type ']' {
+        basic_type_t* tmp = NEW(basic_type_t);
+        tmp->whichtype = BT_LIST;
+        tmp->internal_list_type = $2;
+        $$ = tmp;
+    }
+    | ID {
+        basic_type_t* tmp = NEW(basic_type_t);
+        tmp->whichtype = BT_VAR;
+        $$ = tmp;
+    }
+    | '(' ')' {
+        basic_type_t* tmp = NEW(basic_type_t);
+        tmp->whichtype = BT_UNIT;
+        $$ = tmp;
+    }
 	;
 
 appexpr:
-       appexpr nonapp
-       | nonapp nonapp
+       appexpr nonapp {
+            appexpr_t* tmp = NEW(appexpr_t);
+            tmp->tp = A_APP;
+            tmp->app_tp.app = $1;
+            tmp->napp2 = $2;
+            $$ = tmp;
+       
+       }
+       | nonapp nonapp {
+            appexpr_t* tmp = NEW(appexpr_t);
+            tmp->tp = A_NAPP;
+            tmp->app_tp.napp1 = $1;
+            tmp->napp2 = $2;
+            $$ = tmp;
+       }
 	;
 
 nonapp:
-      basic_value
-      | '(' expr ')'
+      basic_value {
+            nonapp_t* tmp = NEW(nonapp_t);
+            tmp->tp = NA_BASIC;
+            tmp->n_tp.bvalue = $1;
+            $$ = tmp;
+      }
+      | '(' expr ')' {
+            nonapp_t* tmp = NEW(nonapp_t);
+            tmp->tp = NA_EXPR;
+            tmp->n_tp.expr = $2;
+            $$ = tmp;
+      }
       ;
 
 expr:
-    op_prec1
-    | appexpr
-    | ifexpr
-    | yieldexpr
+    op_prec1 {
+        expr_t* tmp = NEW(expr_t);
+        tmp->expr_tp = OP_EXPR;
+        tmp->tp.op_expr = $1;
+        $$ = tmp;
+    
+    }
+    | appexpr {
+        expr_t* tmp = NEW(expr_t);
+        tmp->expr_tp = APP_EXPR;
+        tmp->tp.appexpr = $1;
+        $$ = tmp;
+    }
+    | ifexpr {
+        expr_t* tmp = NEW(expr_t);
+        tmp->expr_tp = IF_EXPR;
+        tmp->tp.ifexpr = $1;
+        $$ = tmp;
+    }
+    | yieldexpr {
+        expr_t* tmp = NEW(expr_t);
+        tmp->expr_tp = YIELD_EXPR;
+        tmp->tp.yieldexpr = $1;
+        $$ = tmp;
+    }
 	;
 
 ifexpr:
-    IF expr THEN '{' expr '}' ELSE '{' expr '}'
+    IF expr THEN '{' expr '}' ELSE '{' expr '}' {
+        ifexpr_t* tmp = NEW(ifexpr_t);
+        tmp->expr1 = $2;
+        tmp->expr2 = $5;
+        tmp->expr3 = $9;
+        $$ = tmp;
+    }
 	;
 
 yieldexpr:
-    YIELD ifexpr
-    | YIELD appexpr
-    | YIELD op_prec1
+    YIELD ifexpr {
+        yieldexpr_t* tmp = NEW(yieldexpr_t);
+        tmp->yield_tp = Y_IF;
+        tmp->tp.ifexpr = $2;
+        $$ = tmp;
+    }
+    | YIELD appexpr {
+        yieldexpr_t* tmp = NEW(yieldexpr_t);
+        tmp->yield_tp = Y_APP;
+        tmp->tp.appexpr = $2;
+        $$ = tmp;
+    }
+    | YIELD op_prec1 {
+        yieldexpr_t* tmp = NEW(yieldexpr_t);
+        tmp->yield_tp = Y_OP;
+        tmp->tp.op_expr = $2;
+        $$ = tmp;
+    }
 	;
 
 op_prec1:
@@ -556,13 +826,29 @@ while_expr:
 	;
 %%
 
+void print_errors() {
+    list_error_t* cur = NULL;
+    cur = error_list_root;
+    // Printando erros
+    while(cur != NULL) {
+        printf("%s", cur->erro->msg); 
+        cur = cur->next;
+    }
+    del_list(&error_list_root);
+    printf("\n");
+
+}
+
 int main(int argc, char** argv) {
 
-    /*if(argc > 1) {*/
-        /*yyin = fopen(argv[1], "r");*/
-    /*}*/
+    if(argc > 1) {
+        yyin = fopen(argv[1], "r");
+    }
 
     yyparse();
+
+    print_errors();
+
 
     return 0;
 }

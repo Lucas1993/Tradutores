@@ -9,6 +9,7 @@ int line = 1;
 int col = 1;
 
 list_error_t *error_list_root = NULL;
+void lex_error();
 
 
 %}
@@ -51,6 +52,7 @@ R_IF            "if"
 R_THEN          "then"
 R_ELSE          "else"
 R_WHILE         "while"
+R_WHERE         "where"
 R_READINT       "readInt"
 R_READFLOAT     "readFloat"
 R_READBOOL      "readBool"
@@ -69,60 +71,72 @@ NL            [\n\r]
 <INCOMMENT>"*/"                                     { BEGIN(INITIAL); }
 <INCOMMENT>"\n"                                     { line += 1; }
 <INCOMMENT>.                                        { col += yyleng; }
-_+{R_LETTER}({R_NUMBER}|{R_LETTER}|_)*              { return -1; }
-_+{R_NUMBER}({R_NUMBER}|{R_LETTER}|_)*              { return -1; }
-{R_NUMBER}+({R_LETTER}|_)({R_NUMBER}|{R_LETTER}|_)* { return -1; }
-{R_LCBRACKET}                                       { return '{'; }
-{R_RCBRACKET}                                       { return '}'; }
-{R_LPAREN}                                          { return '('; }
-{R_RPAREN}                                          { return ')'; }
-{R_COLON}                                           { return ':'; }
-{R_LARROW}                                          { return LARROW; }
-{R_RARROW}                                          { return RARROW; }
-{R_NOTEQUAL}                                        { return DIFF; }
-{R_EQUALS}                                          { return EQUALS; }
-{R_PLUS}                                            { return '+'; }
-{R_MINUS}                                           { return '-'; }
-{R_DIV}                                             { return '/'; }
-{R_STAR}                                            { return '*'; }
-{R_PERCENT}                                         { return '%'; }
-{R_UNDERSCORE}                                      { return '_'; }
-{R_DOUBLECOLON}                                     { return DOUBLECOLON; }
-{R_LBRACKET}                                        { return '['; }
-{R_RBRACKET}                                        { return ']'; }
-{R_SEMICOLON}                                       { return ';'; }
-{R_APPEND}                                          { return APPEND; }
-{R_AND}                                             { return AND; }
-{R_OR}                                              { return OR; }
-{R_LESS}                                            { return '<'; }
-{R_LESSEQ}                                          { return LEQ; }
-{R_MORE}                                            { return '>'; }
-{R_MOREEQ}                                          { return GEQ; }
-{R_ATRIB}                                           { return '='; }
-{R_COMMA}                                           { return ','; }
-{R_YIELD}                                           { return YIELD; }
-{R_INTEGER}                                         { return INTEGER; }
-{R_FLOAT}                                           { return FLOAT; }
-{R_BOOL}                                            { return BOOL; }
-{R_DO}                                              { return DO; }
-{R_IF}                                              { return IF; }
-{R_THEN}                                            { return THEN; }
-{R_ELSE}                                            { return ELSE; }
-{R_WHILE}                                           { return WHILE; }
-{R_READINT}                                         { return READINT; }
-{R_READFLOAT}                                       { return READFLOAT; }
-{R_READBOOL}                                        { return READBOOL; }
-{R_PRINT}                                           { return PRINT; }
-{R_BOOLVAL}                                         { return BOOLVAL; }
-{R_LETTER}({R_NUMBER}|{R_LETTER}|_)*                { yylval.str = strdup(yytext); return ID; }
-{R_NUMBER}+                                         { return NUMBER; }
-{R_NUMBER}+'.'{R_NUMBER}+                           { return FLOATNUM; }
+_+{R_LETTER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; lex_error(); }
+_+{R_NUMBER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; lex_error(); }
+{R_NUMBER}+({R_LETTER}|_)({R_NUMBER}|{R_LETTER}|_)* { col += yyleng; lex_error(); }
+{R_LCBRACKET}                                       { col += yyleng; return '{'; }
+{R_RCBRACKET}                                       { col += yyleng; return '}'; }
+{R_LPAREN}                                          { col += yyleng; return '('; }
+{R_RPAREN}                                          { col += yyleng; return ')'; }
+{R_COLON}                                           { col += yyleng; return ':'; }
+{R_LARROW}                                          { col += yyleng; return LARROW; }
+{R_RARROW}                                          { col += yyleng; return RARROW; }
+{R_NOTEQUAL}                                        { col += yyleng; return DIFF; }
+{R_EQUALS}                                          { col += yyleng; return EQUALS; }
+{R_PLUS}                                            { col += yyleng; return '+'; }
+{R_MINUS}                                           { col += yyleng; return '-'; }
+{R_DIV}                                             { col += yyleng; return '/'; }
+{R_STAR}                                            { col += yyleng; return '*'; }
+{R_PERCENT}                                         { col += yyleng; return '%'; }
+{R_UNDERSCORE}                                      { col += yyleng; return '_'; }
+{R_DOUBLECOLON}                                     { col += yyleng; return DOUBLECOLON; }
+{R_LBRACKET}                                        { col += yyleng; return '['; }
+{R_RBRACKET}                                        { col += yyleng; return ']'; }
+{R_SEMICOLON}                                       { col += yyleng; return ';'; }
+{R_APPEND}                                          { col += yyleng; return APPEND; }
+{R_AND}                                             { col += yyleng; return AND; }
+{R_OR}                                              { col += yyleng; return OR; }
+{R_LESS}                                            { col += yyleng; return '<'; }
+{R_LESSEQ}                                          { col += yyleng; return LEQ; }
+{R_MORE}                                            { col += yyleng; return '>'; }
+{R_MOREEQ}                                          { col += yyleng; return GEQ; }
+{R_ATRIB}                                           { col += yyleng; return '='; }
+{R_COMMA}                                           { col += yyleng; return ','; }
+{R_YIELD}                                           { col += yyleng; return YIELD; }
+{R_INTEGER}                                         { col += yyleng; return INTEGER; }
+{R_FLOAT}                                           { col += yyleng; return FLOAT; }
+{R_BOOL}                                            { col += yyleng; return BOOL; }
+{R_DO}                                              { col += yyleng; return DO; }
+{R_IF}                                              { col += yyleng; return IF; }
+{R_THEN}                                            { col += yyleng; return THEN; }
+{R_ELSE}                                            { col += yyleng; return ELSE; }
+{R_WHILE}                                           { col += yyleng; return WHILE; }
+{R_WHERE}                                           { col += yyleng; return WHERE; }
+{R_READINT}                                         { col += yyleng; return READINT; }
+{R_READFLOAT}                                       { col += yyleng; return READFLOAT; }
+{R_READBOOL}                                        { col += yyleng; return READBOOL; }
+{R_PRINT}                                           { col += yyleng; return PRINT; }
+{R_BOOLVAL}                                         { col += yyleng; return BOOLVAL; }
+{R_LETTER}({R_NUMBER}|{R_LETTER}|_)*                { col += yyleng; yylval.str = strdup(yytext); return ID; }
+{R_NUMBER}+                                         { col += yyleng; return NUMBER; }
+{R_NUMBER}+'.'{R_NUMBER}+                           { col += yyleng; return FLOATNUM; }
 {WS}+                                               { col += yyleng; BEGIN(INITIAL); }
 {NL}                                                { col = 1; line++; BEGIN(INITIAL);}
-.                                                   { return -1; }
+.                                                   { lex_error(); }
 
 
 %%
 
 int yywrap() { return 1; }
+
+void lex_error() {
+    const char* def = " lexical error, unexpected ";
+    size_t sz = sizeof(def) + sizeof(yytext) + 20;
+    char* msg = malloc(sz);
+
+    sprintf(msg, "%d:%d:%s '%s'", line, col, def, yytext);
+    
+    comp_error_t* err = make_error(0, msg, line, col);
+    add_error(&error_list_root, err);
+}
 

@@ -23,6 +23,8 @@ typedef struct args_t           args_t;
 typedef struct program_t        program_t;
 typedef struct list_args_t      list_args_t;
 typedef struct built_list_val_t built_list_val_t;
+typedef struct nonapp_t         nonapp_t;
+typedef struct list_value_t     list_value_t;
 
 struct program_t {
     lines_t* lines; 
@@ -30,11 +32,11 @@ struct program_t {
 
 struct lines_t {
     line_t* line;
-    lines_t* lines;
+    lines_t* next;
 };
 
 struct line_t {
-    enum { L_ENUM, L_PROC, L_FUNTYPE } opt_type;
+    enum { L_FUN, L_PROC, L_FUNTYPE } opt_type;
     union {
         fun_t* fun;
         proc_t* proc;
@@ -55,8 +57,12 @@ struct args_t {
 };
 
 struct arg_t {
-    list_t* listval;
-    basic_val_t* basicval;
+    enum { AR_LIST, AR_BASIC, AR_ARG } tp;
+    union {
+        list_value_t* listval;
+        basic_val_t* basicval;
+        arg_t* argval;
+    } opt;
 };
 
 struct basic_val_t {
@@ -73,9 +79,10 @@ struct list_value_t {
     enum { LS_BASIC, LS_LIST, LS_WLD, LS_BLT } ls_type;
     union {
         basic_val_t* basic_val;
-        list_args_t* list_val;
+        list_args_t* list_args_val;
         built_list_val_t* built_list_val;
     } opt;
+    list_value_t* next;
 };
 
 struct built_list_val_t {
@@ -93,7 +100,7 @@ struct funtype_decl_t {
 };
 
 struct funtype_t {
-    enum { tbasic, tfunc } typeorder ;
+    enum { T_BASIC, T_FUNC } typeorder ;
     union {
         basic_type_t* btype;
         funtype_t* ftype;
@@ -153,8 +160,21 @@ struct where_t {
 };
 
 struct appexpr_t {
-    expr_t* expr1;
-    expr_t* expr2;
+    enum { A_APP, A_NAPP } tp;
+    union {
+        appexpr_t* app;
+        nonapp_t* napp1;
+    } app_tp;
+
+    nonapp_t* napp2;
+};
+
+struct nonapp_t {
+    enum { NA_BASIC, NA_EXPR } tp;
+    union {
+        basic_val_t* bvalue;
+        expr_t* expr;
+    } n_tp;
 };
 
 struct list_t {

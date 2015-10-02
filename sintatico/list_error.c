@@ -23,20 +23,14 @@ void add_error(list_error_t** root, comp_error_t* erro) {
 
 }
 
-comp_error_t* make_error(int type, char* token, int line, int col) {
+comp_error_t* make_error(int type, char* msg, int line, int col) {
     comp_error_t* err = NULL;
     err = malloc(sizeof(comp_error_t));
     if (err == NULL) {
         exit(1);
     }
     err->type = type;
-    char* str = malloc(strlen(token)+1);
-    if (str == NULL) {
-        exit(1);
-    }
-    strcpy(str, token);
-
-    err->token = str;
+    err->msg = msg;
     err->line = line;
     err->col = col;
 
@@ -47,8 +41,8 @@ void del_list(list_error_t** root) {
     list_error_t* aux = NULL;
     if (root != NULL && (*root) != NULL) {
         if ((*root)->erro != NULL) {
-            if ((*root)->erro->token != NULL) {
-                free((*root)->erro->token);
+            if ((*root)->erro->msg != NULL) {
+                free((*root)->erro->msg);
             }
             free((*root)->erro);
         }

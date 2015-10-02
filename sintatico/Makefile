@@ -1,12 +1,9 @@
 all: comp 
 
-comp: bis lex.yy.o parser.tab.o list_error.o
-	gcc list_error.o lex.yy.o parser.tab.o -lfl -ly 
+comp: bis parser.tab.o list_error.o
+	gcc list_error.o parser.tab.o -lfl -ly 
 
-lex.yy.o: fl
-	gcc lex.yy.c -lfl -c
-
-parser.tab.o: bis
+parser.tab.o: fl bis
 	gcc parser.tab.c -ly -c
 
 list_error.o: 
