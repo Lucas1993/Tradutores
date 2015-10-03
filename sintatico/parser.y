@@ -13,7 +13,7 @@ void yyerror(const char *str) {
 enum {
          WHILE_T, IO_T, STMT_T, STMTS_T, ID_LIST_T, PROC_T, APPEXPR_T, NONAPP_T, WHERE_T, EXPRS_T, OP_T,
          YIELDEXPR_T, IFEXPR_T, EXPR_T, BASIC_TYPE_T, FUNTYPE_T, FUNTYPE_DECL_T, BASIC_VAL_T, ARG_T, 
-         FUN_T, LINES_T, LINE_T, ARGS_T, PROGRAM_T, LIST_ARGS_T, BUILT_LIST_VAL_T, LIST_VALUE_T }
+         FUN_T, LINES_T, LINE_T, ARGS_T, PROGRAM_T, LIST_EXPR_T, LIST_ARGS_T, BUILT_LIST_VAL_T, LIST_VALUE_T }
  union_type;
 
 void print_tree(YYSTYPE node, char node_type, int lvl);
@@ -62,11 +62,12 @@ void print_tree(YYSTYPE node, char node_type, int lvl);
     appexpr_t* appexpr_f;        
     nonapp_t* nonapp_f;        
     where_t* where_f;          
-    exprs_t* exprs_f;       
     op_t* op_f;             
     yieldexpr_t* yieldexpr_f;      
     ifexpr_t* ifexpr_f;         
     expr_t* expr_f;           
+    exprs_t* exprs_f;           
+    list_expr_t* list_expr_f;
     basic_type_t* basic_type_f;     
     funtype_t* funtype_f;        
     funtype_decl_t* funtype_decl_f;   
@@ -96,7 +97,7 @@ void print_tree(YYSTYPE node, char node_type, int lvl);
 %type    <appexpr_f> appexpr
 %type    <nonapp_f> nonapp
 %type    <where_f> where_exp          
-%type    <exprs_f> list_expr
+%type    <list_expr_f> list_expr
 %type    <exprs_f> exprs
 %type    <op_f> op_prec1
 %type    <op_f> op_prec2
@@ -234,10 +235,10 @@ args:
 	;
 
 arg_value:
-    list_value {
+    '(' list_value ')' {
         arg_t* tmp = NEW(arg_t);
         tmp->tp = AR_LIST;
-        tmp->opt.listval = $1;
+        tmp->opt.listval = $2;
         $$ = tmp;
     
     }
@@ -262,9 +263,18 @@ id_list:
             tmp->next = $3;
             $$ = tmp;
       }
-      | ID {
+      | WILDSCORE ':' id_list {
+            id_list_t* tmp = NEW(id_list_t);
+            tmp->next = $3;
+            $$ = tmp;
+      }
+      | ID  {
             id_list_t* tmp = NEW(id_list_t);
             tmp->label = $1;
+            $$ = tmp; 
+      }
+      | WILDSCORE  {
+            id_list_t* tmp = NEW(id_list_t);
             $$ = tmp; 
       }
       ;
@@ -294,12 +304,6 @@ basic_value:
         tmp->val.label = $1;
         $$ = tmp; 
     }
-    /*| '(' id_list ')' {*/
-        /*basic_val_t* tmp = NEW(basic_val_t);*/
-        /*tmp->valtype = BID;*/
-        /*tmp->val.ids = $2;*/
-        /*$$ = tmp; */
-    /*}*/
     | '(' ')' {
         basic_val_t* tmp = NEW(basic_val_t);
         tmp->valtype = BUNIT;
@@ -323,6 +327,12 @@ list_value:
         $$ = tmp;
     
     }
+    | WILDSCORE ':' WILDSCORE {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_WLD;
+        $$ = tmp;
+    
+    }
     | WILDSCORE ':' list_value {
         list_value_t* tmp = NEW(list_value_t);
         tmp->ls_type = LS_WLD;
@@ -336,6 +346,17 @@ list_value:
         tmp->opt.built_list_val = $1;
         $$ = tmp;
     
+    }
+    | basic_value ':' ID {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_BASIC;
+        tmp->opt.basic_val = $1;
+        tmp->label = $3;
+        $$ = tmp;
+    }
+    | basic_value ':' WILDSCORE {
+        list_value_t* tmp = NEW(list_value_t);
+        $$ = tmp;
     }
 	;
 
@@ -489,12 +510,6 @@ expr:
         expr_t* tmp = NEW(expr_t);
         tmp->expr_tp = IF_EXPR;
         tmp->tp.ifexpr = $1;
-        $$ = tmp;
-    }
-    | yieldexpr {
-        expr_t* tmp = NEW(expr_t);
-        tmp->expr_tp = YIELD_EXPR;
-        tmp->tp.yieldexpr = $1;
         $$ = tmp;
     }
 	;
@@ -736,7 +751,9 @@ exprs:
 
 list_expr:
      '[' exprs ']' {
-        $$ = $2;
+        list_expr_t* tmp = NEW(list_expr_t);
+        tmp->inner = $2;
+        $$ = tmp;
      }
     | '[' ']' {
         $$ = NEW(exprs_t);
@@ -799,31 +816,31 @@ stmts:
 	;
 
 stmt:
-    ID LARROW expr ';' {
+    id_list LARROW expr ';' {
        stmt_t* tmp = NEW(stmt_t);
        tmp->stmt_type = STMT_EXPR;
        tmp->lhs = $1;
        tmp->body.expr = $3;
        $$ = tmp;
     }
-    | ID LARROW while_expr {
+    | id_list LARROW while_expr {
        stmt_t* tmp = NEW(stmt_t);
        tmp->stmt_type = STMT_WH;
        tmp->lhs = $1;
        tmp->body.while_expr = $3;
        $$ = tmp;
     }
-    | ID LARROW io_stmt ';'{
+    | id_list LARROW io_stmt ';'{
        stmt_t* tmp = NEW(stmt_t);
        tmp->stmt_type = STMT_IO;
        tmp->lhs = $1;
        tmp->body.io_expr = $3;
        $$ = tmp;
     }
-    | expr ';'{
+    | yieldexpr ';'{
        stmt_t* tmp = NEW(stmt_t);
-       tmp->stmt_type = STMT_EXPR;
-       tmp->body.expr = $1;
+       tmp->stmt_type = STMT_YIELD;
+       tmp->body.yieldexpr = $1;
        $$ = tmp;
     }
     | while_expr {
@@ -895,6 +912,13 @@ void ident(int lvl) {
     }
 }
 
+/*  Função para imprimir um nó e seus filhos.
+    Como a árvore é heterogênea, a union do bison é usada para receber os nós.
+    Um enum é usado para identificar qual o nó ativo da union.
+    Para tratar a identação, o parâmetro lvl é usado e incrementado nas chamadas
+    recursivas.
+    O uso de memset é para garantir que não ocorram problemas devido às sobreposições
+    nas posições de memória no uso da union.*/
 void print_tree(YYSTYPE node, char node_type, int lvl) {
     YYSTYPE tmp;
     memset(&tmp, 0, sizeof(YYSTYPE));
@@ -938,7 +962,9 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
             switch(node.stmt_f->stmt_type) {
                 case STMT_EXPR:
                     if(node.stmt_f->lhs != NULL) {
-                        ident(lvl + 1); printf("| ID, %s\n", node.stmt_f->lhs);
+                        ident(lvl + 1); printf("| id_list \n");
+                        tmp.id_list_f = node.stmt_f->lhs;
+                        print_tree(tmp, ID_LIST_T, lvl + 1);
                         ident(lvl + 1); printf("| LARROW\n");
                     }
                     tmp.expr_f = node.stmt_f->body.expr;
@@ -947,19 +973,35 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                     break;
                 case STMT_WH:
                     if(node.stmt_f->lhs != NULL) {
-                    ident(lvl + 1); printf("| ID, %s\n", node.stmt_f->lhs);
-                    ident(lvl + 1); printf("| LARROW\n");
+                        ident(lvl + 1); printf("| id_list \n");
+                        tmp.id_list_f = node.stmt_f->lhs;
+                        print_tree(tmp, ID_LIST_T, lvl + 1);
+                        ident(lvl + 1); printf("| LARROW\n");
                     }
                     tmp.while_f = node.stmt_f->body.while_expr;
                     print_tree(tmp, WHILE_T, lvl + 1);
                     break;
                 case STMT_IO:
                     if(node.stmt_f->lhs != NULL) {
-                    ident(lvl + 1); printf("| ID, %s\n", node.stmt_f->lhs);
-                    ident(lvl + 1); printf("| LARROW\n");
+                        ident(lvl + 1); printf("| id_list \n");
+                        tmp.id_list_f = node.stmt_f->lhs;
+                        print_tree(tmp, ID_LIST_T, lvl + 1);
+                        ident(lvl + 1); printf("| LARROW\n");
                     }
                     tmp.io_f = node.stmt_f->body.io_expr;
                     print_tree(tmp, IO_T, lvl + 1);
+                    ident(lvl + 1); printf("| ;\n");
+                    break;
+                case STMT_YIELD:
+                    if(node.stmt_f->lhs != NULL) {
+                        ident(lvl + 1); printf("| id_list \n");
+                        tmp.id_list_f = node.stmt_f->lhs;
+                        print_tree(tmp, ID_LIST_T, lvl + 1);
+                        ident(lvl + 1); printf("| LARROW\n");
+                    }
+                    memset(&tmp, 0, sizeof(YYSTYPE));
+                    tmp.yieldexpr_f = node.stmt_f->body.yieldexpr;
+                    print_tree(tmp, YIELDEXPR_T, lvl + 1);
                     ident(lvl + 1); printf("| ;\n");
                     break;
                 default:
@@ -1082,8 +1124,8 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                         print_tree(tmp, BASIC_VAL_T, lvl + 1);
                         break;
                     case O_LIST:
-                        tmp.exprs_f = node.op_f->opt.lexpr;
-                        print_tree(tmp, EXPRS_T, lvl + 1);
+                        tmp.list_expr_f = node.op_f->opt.lexpr;
+                        print_tree(tmp, LIST_EXPR_T, lvl + 1);
                         break;
                     case O_EXPR:
                         tmp.expr_f = node.op_f->opt.expr;
@@ -1163,10 +1205,6 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                 case IF_EXPR:
                     tmp.ifexpr_f = node.expr_f->tp.ifexpr;
                     print_tree(tmp, IFEXPR_T, lvl + 1);
-                    break;
-                case YIELD_EXPR:
-                    tmp.yieldexpr_f = node.expr_f->tp.yieldexpr;
-                    print_tree(tmp, YIELDEXPR_T, lvl + 1);
                     break;
                 default:
                     printf("ERRO!");
@@ -1249,10 +1287,6 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                         ident(lvl + 1); printf("| BOOLVAL, False\n");
                     }
                     break;
-                case BID:
-                    tmp.id_list_f = node.basic_val_f->val.ids;
-                    print_tree(tmp, ID_LIST_T, lvl + 1);
-                    break;
                 case BLABEL:
                     ident(lvl + 1); printf("| ID, %s \n", node.basic_val_f->val.label);
                     break;
@@ -1269,8 +1303,10 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
             ident(lvl); printf("| arg_value\n");
             switch(node.arg_f->tp) {
                 case AR_LIST:
+                    ident(lvl + 1); printf("| ( \n");;
                     tmp.list_value_f = node.arg_f->opt.listval;
                     print_tree(tmp, LIST_VALUE_T, lvl + 1);
+                    ident(lvl + 1); printf("| ) \n");;
                     break;
                 case AR_BASIC:
                     tmp.basic_val_f = node.arg_f->opt.basicval;
@@ -1364,6 +1400,7 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
             tmp.arg_f = node.list_args_f->arg;
             print_tree(tmp, ARG_T, lvl + 1);
             if(node.list_args_f->next != NULL) {
+                printf("| ,\n");
                 tmp.list_args_f = node.list_args_f->next;
                 print_tree(tmp, LIST_ARGS_T, lvl + 1);
             }
@@ -1401,10 +1438,30 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                     printf("ERRO!");
                     break; 
             }
-            memset(&tmp, 0, sizeof(YYSTYPE));
-            ident(lvl + 1); printf("| :\n");
-            tmp.list_value_f = node.list_value_f->next;
-            print_tree(tmp, LIST_VALUE_T, lvl + 1);
+            if(node.list_value_f->next != NULL) {
+                ident(lvl + 1); printf("| :\n");
+                tmp.list_value_f = node.list_value_f->next;
+                print_tree(tmp, LIST_VALUE_T, lvl + 1);
+            } else {
+                if(node.list_value_f->label != NULL) {
+                    ident(lvl + 1); printf("| :\n");
+                    ident(lvl + 1); printf("ID, %s\n", node.list_value_f->label);
+                } else {
+                    if(node.list_value_f->ls_type != LS_BLT) {
+                        ident(lvl + 1); printf("| :\n");
+                        ident(lvl + 1); printf("| _\n"); 
+                    }
+                }
+            }
+            break;
+        case LIST_EXPR_T:
+            ident(lvl); printf("| list_expr\n");
+            ident(lvl + 1); printf("| [\n");
+            if(node.list_expr_f->inner != NULL) {
+                tmp.exprs_f = node.list_expr_f->inner;
+                print_tree(tmp, EXPRS_T, lvl + 1);
+            }
+            ident(lvl + 1); printf("| ]\n");
             break;
     }
 

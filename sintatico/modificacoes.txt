@@ -7,11 +7,9 @@ Conflito de reduce/reduce
 Outros:
  - Statement mudado: basic_value para ID
  - basic_type: list_type mudado pra fazer sentido
- - appexpr: mudado ID para expr para permitir todos os tipos de aplicações
+ - appexpr: mudado completamente
  - built_value_list: adicionado nova regra para virgulas
- - operadores: todos à esquerda
+ - Passagem de listas explicitas como argumento sempre deve ser acompanhada de parenteses!
+ - Stmt mudado de novo: Yield retirado de expr e adicionado em stmt. ID trocado por id_list
 
 
-Corrigir:
-    Stmt: x:xs <- 2 não funciona!
-    x:xs também não funciona na passagem de argumentos?

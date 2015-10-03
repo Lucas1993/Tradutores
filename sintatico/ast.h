@@ -25,6 +25,7 @@ typedef struct built_list_val_t built_list_val_t;
 typedef struct nonapp_t         nonapp_t;
 typedef struct list_value_t     list_value_t;
 typedef struct id_list_t        id_list_t;
+typedef struct list_expr_t      list_expr_t;
 
 struct program_t {
     lines_t* lines; 
@@ -83,6 +84,7 @@ struct list_value_t {
         list_args_t* list_args_val;
         built_list_val_t* built_list_val;
     } opt;
+    char* label;
     list_value_t* next;
 };
 
@@ -116,12 +118,11 @@ struct basic_type_t {
 };
 
 struct expr_t {
-    enum { OP_EXPR, APP_EXPR, IF_EXPR, YIELD_EXPR } expr_tp;
+    enum { OP_EXPR, APP_EXPR, IF_EXPR } expr_tp;
     union {
         op_t* op_expr;
         appexpr_t* appexpr;
         ifexpr_t* ifexpr;
-        yieldexpr_t* yieldexpr;
     } tp;
 };
 
@@ -146,10 +147,14 @@ struct op_t {
         op_t* opt1;
         expr_t* expr;
         basic_val_t* bval;
-        exprs_t* lexpr;
+        list_expr_t* lexpr;
     } opt;
     op_t* opt2; // NULL for op_tp < O_OR
     
+};
+
+struct list_expr_t {
+    exprs_t* inner;
 };
 
 struct exprs_t {
@@ -197,9 +202,10 @@ struct stmts_t {
 };
 
 struct stmt_t {
-    char* lhs;
-    enum { STMT_EXPR, STMT_WH, STMT_IO } stmt_type;
+    id_list_t* lhs;
+    enum { STMT_EXPR, STMT_YIELD, STMT_WH, STMT_IO } stmt_type;
     union {
+        yieldexpr_t* yieldexpr;
         expr_t* expr;
         while_t* while_expr;
         io_t* io_expr;
