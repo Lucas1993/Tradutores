@@ -1,3 +1,5 @@
+#ifndef AST_H
+#define AST_H
 typedef struct while_t          while_t;
 typedef struct io_t             io_t;
 typedef struct stmt_t           stmt_t;
@@ -221,3 +223,4 @@ struct while_t {
     expr_t* expr;
     stmts_t* stmts;
 };
+#endif

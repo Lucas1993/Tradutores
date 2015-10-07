@@ -1,13 +1,16 @@
 all: comp 
 
-comp: bis parser.tab.o list_error.o
-	gcc list_error.o parser.tab.o -lfl -ly 
+comp: bis parser.tab.o list_error.o sym_table.o
+	gcc list_error.o sym_table.o parser.tab.o -g -lfl -ly 
 
 parser.tab.o: fl bis
-	gcc parser.tab.c -ly -c
+	gcc parser.tab.c -ly -g -c
 
 list_error.o: 
-	gcc -Wall list_error.c -c 
+	gcc -Wall list_error.c -g -c 
+
+sym_table.o: 
+	gcc -Wall sym_table.c -g -c 
 
 fl: tokenizer.lex
 	flex tokenizer.lex

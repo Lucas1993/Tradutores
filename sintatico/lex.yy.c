@@ -546,18 +546,21 @@ char *yytext;
 #include <stdio.h>
 #include "ast.h"
 #include "list_error.h"
+#include "sym_table.h"
 #include "parser.tab.h"
 
 
 int line = 1;
 int col = 1;
 
-list_error_t *error_list_root = NULL;
+int has_errors = 0;
+list_error_t* error_list_root = NULL;
+sym_node_t* symtable = NULL;
 void lex_error();
 
 
 
-#line 561 "lex.yy.c"
+#line 564 "lex.yy.c"
 
 #define INITIAL 0
 #define INCOMMENT 1
@@ -772,11 +775,11 @@ YY_DECL
 		}
 
 	{
-#line 67 "tokenizer.lex"
+#line 70 "tokenizer.lex"
 
 
 
-#line 780 "lex.yy.c"
+#line 783 "lex.yy.c"
 
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
@@ -835,292 +838,292 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 70 "tokenizer.lex"
+#line 73 "tokenizer.lex"
 { BEGIN(INCOMMENT); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 71 "tokenizer.lex"
+#line 74 "tokenizer.lex"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 72 "tokenizer.lex"
+#line 75 "tokenizer.lex"
 { col = 1; line += 1; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 73 "tokenizer.lex"
+#line 76 "tokenizer.lex"
 { col += yyleng; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 74 "tokenizer.lex"
-{ col += yyleng; lex_error(); }
+#line 77 "tokenizer.lex"
+{ col += yyleng; yylval.str = "err"; lex_error(); return ID; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 75 "tokenizer.lex"
-{ col += yyleng; lex_error(); }
+#line 78 "tokenizer.lex"
+{ col += yyleng; yylval.intval = -1; lex_error(); return NUMBER;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 76 "tokenizer.lex"
-{ col += yyleng; lex_error(); }
+#line 79 "tokenizer.lex"
+{ col += yyleng; yylval.str = "err"; lex_error(); return ID; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 77 "tokenizer.lex"
+#line 80 "tokenizer.lex"
 { col += yyleng; return '{'; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 78 "tokenizer.lex"
+#line 81 "tokenizer.lex"
 { col += yyleng; return '}'; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 79 "tokenizer.lex"
+#line 82 "tokenizer.lex"
 { col += yyleng; return '('; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 80 "tokenizer.lex"
+#line 83 "tokenizer.lex"
 { col += yyleng; return ')'; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 81 "tokenizer.lex"
+#line 84 "tokenizer.lex"
 { col += yyleng; return ':'; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 82 "tokenizer.lex"
+#line 85 "tokenizer.lex"
 { col += yyleng; return LARROW; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 83 "tokenizer.lex"
+#line 86 "tokenizer.lex"
 { col += yyleng; return RARROW; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 84 "tokenizer.lex"
+#line 87 "tokenizer.lex"
 { col += yyleng; return DIFF; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 85 "tokenizer.lex"
+#line 88 "tokenizer.lex"
 { col += yyleng; return EQUALS; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 86 "tokenizer.lex"
+#line 89 "tokenizer.lex"
 { col += yyleng; return '+'; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 87 "tokenizer.lex"
+#line 90 "tokenizer.lex"
 { col += yyleng; return '-'; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 88 "tokenizer.lex"
+#line 91 "tokenizer.lex"
 { col += yyleng; return '/'; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 89 "tokenizer.lex"
+#line 92 "tokenizer.lex"
 { col += yyleng; return '*'; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 90 "tokenizer.lex"
+#line 93 "tokenizer.lex"
 { col += yyleng; return '%'; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 91 "tokenizer.lex"
+#line 94 "tokenizer.lex"
 { col += yyleng; return WILDSCORE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 92 "tokenizer.lex"
+#line 95 "tokenizer.lex"
 { col += yyleng; return DOUBLECOLON; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 93 "tokenizer.lex"
+#line 96 "tokenizer.lex"
 { col += yyleng; return '['; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 94 "tokenizer.lex"
+#line 97 "tokenizer.lex"
 { col += yyleng; return ']'; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 95 "tokenizer.lex"
+#line 98 "tokenizer.lex"
 { col += yyleng; return ';'; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 96 "tokenizer.lex"
+#line 99 "tokenizer.lex"
 { col += yyleng; return APPEND; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 97 "tokenizer.lex"
+#line 100 "tokenizer.lex"
 { col += yyleng; return AND; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 98 "tokenizer.lex"
+#line 101 "tokenizer.lex"
 { col += yyleng; return OR; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 99 "tokenizer.lex"
+#line 102 "tokenizer.lex"
 { col += yyleng; return '<'; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 100 "tokenizer.lex"
+#line 103 "tokenizer.lex"
 { col += yyleng; return LEQ; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 101 "tokenizer.lex"
+#line 104 "tokenizer.lex"
 { col += yyleng; return '>'; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 102 "tokenizer.lex"
+#line 105 "tokenizer.lex"
 { col += yyleng; return GEQ; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 103 "tokenizer.lex"
+#line 106 "tokenizer.lex"
 { col += yyleng; return '='; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 104 "tokenizer.lex"
+#line 107 "tokenizer.lex"
 { col += yyleng; return ','; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 105 "tokenizer.lex"
+#line 108 "tokenizer.lex"
 { col += yyleng; return YIELD; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 106 "tokenizer.lex"
+#line 109 "tokenizer.lex"
 { col += yyleng; return INTEGER; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 107 "tokenizer.lex"
+#line 110 "tokenizer.lex"
 { col += yyleng; return FLOAT; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 108 "tokenizer.lex"
+#line 111 "tokenizer.lex"
 { col += yyleng; return BOOL; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 109 "tokenizer.lex"
+#line 112 "tokenizer.lex"
 { col += yyleng; return DO; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 110 "tokenizer.lex"
+#line 113 "tokenizer.lex"
 { col += yyleng; return IF; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 111 "tokenizer.lex"
+#line 114 "tokenizer.lex"
 { col += yyleng; return THEN; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 112 "tokenizer.lex"
+#line 115 "tokenizer.lex"
 { col += yyleng; return ELSE; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 113 "tokenizer.lex"
+#line 116 "tokenizer.lex"
 { col += yyleng; return WHILE; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 114 "tokenizer.lex"
+#line 117 "tokenizer.lex"
 { col += yyleng; return WHERE; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 115 "tokenizer.lex"
+#line 118 "tokenizer.lex"
 { col += yyleng; return READINT; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 116 "tokenizer.lex"
+#line 119 "tokenizer.lex"
 { col += yyleng; return READFLOAT; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 117 "tokenizer.lex"
+#line 120 "tokenizer.lex"
 { col += yyleng; return READBOOL; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 118 "tokenizer.lex"
+#line 121 "tokenizer.lex"
 { col += yyleng; return PRINT; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 119 "tokenizer.lex"
+#line 122 "tokenizer.lex"
 { col += yyleng; yylval.boolval = strcmp("True", yytext) != 0; return BOOLVAL; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 120 "tokenizer.lex"
+#line 123 "tokenizer.lex"
 { col += yyleng; yylval.str = strdup(yytext); return ID; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 121 "tokenizer.lex"
+#line 124 "tokenizer.lex"
 { col += yyleng; yylval.intval = atoi(yytext); return NUMBER; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 122 "tokenizer.lex"
+#line 125 "tokenizer.lex"
 { col += yyleng; yylval.floatval = atof(yytext); return FLOATNUM; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 123 "tokenizer.lex"
+#line 126 "tokenizer.lex"
 { col += yyleng; BEGIN(INITIAL); }
 	YY_BREAK
 case 55:
 /* rule 55 can match eol */
 YY_RULE_SETUP
-#line 124 "tokenizer.lex"
+#line 127 "tokenizer.lex"
 { col = 1; line++; BEGIN(INITIAL);}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 125 "tokenizer.lex"
+#line 128 "tokenizer.lex"
 { lex_error(); }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 128 "tokenizer.lex"
+#line 131 "tokenizer.lex"
 ECHO;
 	YY_BREAK
-#line 1124 "lex.yy.c"
+#line 1127 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(INCOMMENT):
 	yyterminate();
@@ -2116,13 +2119,14 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 127 "tokenizer.lex"
+#line 130 "tokenizer.lex"
 
 
 
 int yywrap() { return 1; }
 
 void lex_error() {
+    has_errors = 1;
     const char* def = " lexical error, unexpected ";
     size_t sz = sizeof(def) + sizeof(yytext) + 20;
     char* msg = malloc(sz);

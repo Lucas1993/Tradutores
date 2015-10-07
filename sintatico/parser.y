@@ -1,13 +1,24 @@
 %{
 #include <stdio.h>
 #include <string.h>
+#include "ast.h"
+#include "list_error.h"
+#include "sym_table.h"
 #include "lex.yy.c"
 
 /*Macro para alocar e inicializar a struct toda com 0*/
 #define NEW(TYPE) memset(malloc(sizeof(TYPE)), 0, sizeof(TYPE))
 
 void yyerror(const char *str) {    
-    printf("%d:%d: %s\n", line, col, str);
+    size_t sz = sizeof(str) + 64;
+    char* msg = malloc(sz);
+
+    has_errors = 1;
+
+    sprintf(msg, "%d:%d: %s\n", line, col, str);
+    
+    comp_error_t* err = make_error(0, msg, line, col);
+    add_error(&error_list_root, err);
 }
 
 enum {
@@ -134,7 +145,10 @@ program:
         tmp->lines = $1;
         YYSTYPE node;
         node.program_f = tmp;
-        print_tree(node, PROGRAM_T, 0);
+        if(!has_errors) {
+            printf("================== Syntax tree  ==================\n");
+            print_tree(node, PROGRAM_T, 0);
+        }
         $$ = tmp;
     }
 	;
@@ -181,6 +195,7 @@ fundecl:
         tmp->args = $2;
         tmp->expr = $4;
         $$ = tmp;
+        add_symbol(&symtable, $1, NULL);
     
     }
     | ID args '=' expr where_exp {
@@ -190,6 +205,7 @@ fundecl:
         tmp->expr = $4;
         tmp->where_exp = $5;
         $$ = tmp;
+        add_symbol(&symtable, $1, NULL);
     
     }
     | ID '=' expr ';' {
@@ -197,6 +213,7 @@ fundecl:
         tmp->label = $1;
         tmp->expr = $3;
         $$ = tmp;
+        add_symbol(&symtable, $1, NULL);
     
     }
     | ID '=' expr where_exp {
@@ -205,6 +222,7 @@ fundecl:
         tmp->expr = $3;
         tmp->where_exp = $4;
         $$ = tmp;
+        add_symbol(&symtable, $1, NULL);
     
     }
 	;
@@ -262,6 +280,7 @@ id_list:
             tmp->label = $1;
             tmp->next = $3;
             $$ = tmp;
+            add_symbol(&symtable, $1, NULL);
       }
       | WILDSCORE ':' id_list {
             id_list_t* tmp = NEW(id_list_t);
@@ -272,6 +291,7 @@ id_list:
             id_list_t* tmp = NEW(id_list_t);
             tmp->label = $1;
             $$ = tmp; 
+            add_symbol(&symtable, $1, NULL);
       }
       | WILDSCORE  {
             id_list_t* tmp = NEW(id_list_t);
@@ -303,6 +323,7 @@ basic_value:
         tmp->valtype = BLABEL;
         tmp->val.label = $1;
         $$ = tmp; 
+        add_symbol(&symtable, $1, NULL);
     }
     | '(' ')' {
         basic_val_t* tmp = NEW(basic_val_t);
@@ -353,6 +374,7 @@ list_value:
         tmp->opt.basic_val = $1;
         tmp->label = $3;
         $$ = tmp;
+        add_symbol(&symtable, $3, NULL);
     }
     | basic_value ':' WILDSCORE {
         list_value_t* tmp = NEW(list_value_t);
@@ -391,6 +413,7 @@ funtype_decl:
         tmp->label = $1;
         tmp->type = $3;
         $$ = tmp;
+        add_symbol(&symtable, $1,  $3);
 
     }
 	;
@@ -451,6 +474,7 @@ basic_type:
         tmp->whichtype = BT_VAR;
         tmp->label = $1;
         $$ = tmp;
+        add_symbol(&symtable, $1, NULL);
     }
     | '(' ')' {
         basic_type_t* tmp = NEW(basic_type_t);
@@ -515,11 +539,11 @@ expr:
 	;
 
 ifexpr:
-    IF expr THEN '{' expr '}' ELSE '{' expr '}' {
+    IF expr THEN expr ELSE expr {
         ifexpr_t* tmp = NEW(ifexpr_t);
         tmp->expr1 = $2;
-        tmp->expr2 = $5;
-        tmp->expr3 = $9;
+        tmp->expr2 = $4;
+        tmp->expr3 = $6;
         $$ = tmp;
     }
 	;
@@ -777,6 +801,7 @@ procdecl:
         tmp->args = $2;
         tmp->stmts = $6;
         $$ = tmp;
+        add_symbol(&symtable, $1, NULL);
     }
     | ID args '=' DO '{' stmts '}' where_exp { 
         proc_t* tmp = NEW(proc_t);
@@ -785,12 +810,14 @@ procdecl:
         tmp->stmts = $6;
         tmp->where_exp = $8;
         $$ = tmp;
+        add_symbol(&symtable, $1, NULL);
     }
     | ID '=' DO '{' stmts '}' { 
         proc_t* tmp = NEW(proc_t);
         tmp->label = $1;
         tmp->stmts = $5;
         $$ = tmp;
+        add_symbol(&symtable, $1, NULL);
     }
     | ID '=' DO '{' stmts '}' where_exp  { 
         proc_t* tmp = NEW(proc_t);
@@ -798,7 +825,9 @@ procdecl:
         tmp->stmts = $5;
         tmp->where_exp = $7;
         $$ = tmp;
+        add_symbol(&symtable, $1, NULL);
     }
+    | ID '=' DO '{' error '}' { yyerrok; } 
 	;
 
 stmts:
@@ -855,6 +884,7 @@ stmt:
        tmp->body.io_expr = $1;
        $$ = tmp;
     }
+    | error ';' { yyerrok; }
 	;
 
 io_stmt:
@@ -891,15 +921,79 @@ while_expr:
 	;
 %%
 
+void print_basictype(basic_type_t* btype) {
+    if(btype) {
+        switch(btype->whichtype) {
+            case BT_INTEGER:
+                printf("Integer");
+                break;
+            case BT_FLOAT:
+                printf("Float");
+                break;
+            case BT_BOOL:
+                printf("Bool");
+                break;
+            case BT_LIST:
+                printf("[");
+                print_basictype(btype->internal_list_type);
+                printf("]");
+                break;
+            case BT_VAR:
+                printf("%s", btype->label);
+                break;
+            default:
+                printf("()");
+                break;
+        }
+    } 
+}
+
+void print_type(funtype_t* type) {
+    if(type) {
+        if(type->typeorder == T_BASIC) {
+            basic_type_t* btype = type->tp.btype;
+            print_basictype(btype);
+        } else {
+            print_type(type->tp.ftype); 
+        }
+        if(type->next != NULL) {
+            printf(" -> ");
+            print_type(type->next);
+        }
+    }
+}
+
+void print_symbols() {
+    sym_node_t* cur = NULL;
+    cur = symtable;
+    // Printando erros
+    printf("================== Symbol table ==================\n");
+    while(cur != NULL) {
+        if(cur->type == NULL) {
+            printf("Symbol: %s\t\tType: ?\n", cur->label); 
+        } else {
+            printf("Symbol: %s\t\tType: ", cur->label); 
+            print_type(cur->type);
+            printf("\n");
+        
+        }
+        cur = cur->next;
+    }
+    /*del_list(error_list_root);*/
+    symtable = NULL;
+    printf("\n");
+
+}
 void print_errors() {
     list_error_t* cur = NULL;
     cur = error_list_root;
     // Printando erros
     while(cur != NULL) {
-        printf("%s", cur->erro->msg); 
+        printf("%s\n", cur->erro->msg); 
         cur = cur->next;
     }
-    del_list(&error_list_root);
+    /*del_list(error_list_root);*/
+    error_list_root = NULL;
     printf("\n");
 
 }
@@ -1172,14 +1266,14 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
             ident(lvl + 1); printf("| IF\n");
 
             tmp.expr_f = node.ifexpr_f->expr1;
-            print_tree(tmp, IFEXPR_T, lvl + 1);
+            print_tree(tmp, EXPR_T, lvl + 1);
             memset(&tmp, 0, sizeof(YYSTYPE));
 
             ident(lvl + 1); printf("| THEN\n");
             ident(lvl + 1); printf("| {\n");
 
             tmp.expr_f = node.ifexpr_f->expr2;
-            print_tree(tmp, IFEXPR_T, lvl + 1);
+            print_tree(tmp, EXPR_T, lvl + 1);
             memset(&tmp, 0, sizeof(YYSTYPE));
 
             ident(lvl + 1); printf("| }\n");
@@ -1187,7 +1281,7 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
             ident(lvl + 1); printf("| {\n");
 
             tmp.expr_f = node.ifexpr_f->expr3;
-            print_tree(tmp, IFEXPR_T, lvl + 1);
+            print_tree(tmp, EXPR_T, lvl + 1);
             memset(&tmp, 0, sizeof(YYSTYPE));
             ident(lvl + 1); printf("| }\n");
             break;
@@ -1424,7 +1518,7 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                 case LS_LIST:
                     ident(lvl + 1); printf("| [\n");
                     tmp.list_args_f = node.list_value_f->opt.list_args_val;
-                    print_tree(tmp, BASIC_VAL_T, lvl + 1);
+                    print_tree(tmp, LIST_ARGS_T, lvl + 1);
                     ident(lvl + 1); printf("| ]\n");
                     break;
                 case LS_WLD:
@@ -1477,6 +1571,9 @@ int main(int argc, char** argv) {
     yyparse();
 
     print_errors();
+    if(!has_errors) {
+        print_symbols(); 
+    }
 
 
     return 0;

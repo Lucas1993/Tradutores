@@ -1,15 +1,11 @@
 sumBelow10 :: [Integer] -> Integer;
-sumBelow10 [] = 0;
+sumBelow10 ([]) = 0;
 sumBelow10 xs = do {
     sum <- 0;
     while(xs /= []) {
         x:xs <- xs;
-        aux  <- if (x < 10) then {
-                    yield x;
-                } else {
-                    yield 0;
-                };
+        aux  <- if (x < 10) then x else 0;
         sum <- sum + aux;
-    };
-    sum;
+    }
+    yield sum;
 }

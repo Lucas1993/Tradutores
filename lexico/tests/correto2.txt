@@ -14,4 +14,5 @@ incListBy i xs = do {
     rev (x:xs) = (rev xs) ++ [x];
 }
 
+constBoolFunc :: Bool;
 constBoolFunc = True; 

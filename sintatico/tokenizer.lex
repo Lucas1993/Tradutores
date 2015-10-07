@@ -2,13 +2,16 @@
 #include <stdio.h>
 #include "ast.h"
 #include "list_error.h"
+#include "sym_table.h"
 #include "parser.tab.h"
 
 
 int line = 1;
 int col = 1;
 
-list_error_t *error_list_root = NULL;
+int has_errors = 0;
+list_error_t* error_list_root = NULL;
+sym_node_t* symtable = NULL;
 void lex_error();
 
 
@@ -71,9 +74,9 @@ NL            [\n\r]
 <INCOMMENT>"*/"                                     { BEGIN(INITIAL); }
 <INCOMMENT>"\n"                                     { col = 1; line += 1; }
 <INCOMMENT>.                                        { col += yyleng; }
-_+{R_LETTER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; lex_error(); }
-_+{R_NUMBER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; lex_error(); }
-{R_NUMBER}+({R_LETTER}|_)({R_NUMBER}|{R_LETTER}|_)* { col += yyleng; lex_error(); }
+_+{R_LETTER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; yylval.str = "err"; lex_error(); return ID; }
+_+{R_NUMBER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; yylval.intval = -1; lex_error(); return NUMBER;}
+{R_NUMBER}+({R_LETTER}|_)({R_NUMBER}|{R_LETTER}|_)* { col += yyleng; yylval.str = "err"; lex_error(); return ID; }
 {R_LCBRACKET}                                       { col += yyleng; return '{'; }
 {R_RCBRACKET}                                       { col += yyleng; return '}'; }
 {R_LPAREN}                                          { col += yyleng; return '('; }
@@ -130,6 +133,7 @@ _+{R_NUMBER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; lex_error()
 int yywrap() { return 1; }
 
 void lex_error() {
+    has_errors = 1;
     const char* def = " lexical error, unexpected ";
     size_t sz = sizeof(def) + sizeof(yytext) + 20;
     char* msg = malloc(sz);

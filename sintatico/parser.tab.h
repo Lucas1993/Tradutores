@@ -82,7 +82,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 55 "parser.y" /* yacc.c:1909  */
+#line 66 "parser.y" /* yacc.c:1909  */
 
     while_t* while_f;          
     io_t* io_f;             

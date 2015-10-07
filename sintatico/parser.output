@@ -74,7 +74,7 @@ Grammar
    54     | appexpr
    55     | ifexpr
 
-   56 ifexpr: IF expr THEN '{' expr '}' ELSE '{' expr '}'
+   56 ifexpr: IF expr THEN expr ELSE expr
 
    57 yieldexpr: YIELD ifexpr
    58          | YIELD appexpr
@@ -126,47 +126,49 @@ Grammar
    92         | ID args '=' DO '{' stmts '}' where_exp
    93         | ID '=' DO '{' stmts '}'
    94         | ID '=' DO '{' stmts '}' where_exp
+   95         | ID '=' DO '{' error '}'
 
-   95 stmts: stmt
-   96      | stmt stmts
+   96 stmts: stmt
+   97      | stmt stmts
 
-   97 stmt: id_list LARROW expr ';'
-   98     | id_list LARROW while_expr
-   99     | id_list LARROW io_stmt ';'
-  100     | yieldexpr ';'
-  101     | while_expr
-  102     | io_stmt ';'
+   98 stmt: id_list LARROW expr ';'
+   99     | id_list LARROW while_expr
+  100     | id_list LARROW io_stmt ';'
+  101     | yieldexpr ';'
+  102     | while_expr
+  103     | io_stmt ';'
+  104     | error ';'
 
-  103 io_stmt: READINT
-  104        | READFLOAT
-  105        | READBOOL
-  106        | PRINT expr
+  105 io_stmt: READINT
+  106        | READFLOAT
+  107        | READBOOL
+  108        | PRINT expr
 
-  107 while_expr: WHILE '(' expr ')' '{' stmts '}'
+  109 while_expr: WHILE '(' expr ')' '{' stmts '}'
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 '%' (37) 77
-'(' (40) 15 17 26 40 42 48 52 84 107
-')' (41) 15 17 26 40 42 48 52 84 107
+'(' (40) 15 17 26 40 42 48 52 84 109
+')' (41) 15 17 26 40 42 48 52 84 109
 '*' (42) 79
 '+' (43) 74
 ',' (44) 35 87
 '-' (45) 75 85
 '/' (47) 80
 ':' (58) 18 19 27 28 29 30 32 33 71
-';' (59) 7 9 38 97 99 100 102
+';' (59) 7 9 38 98 100 101 103 104
 '<' (60) 66
-'=' (61) 7 8 9 10 91 92 93 94
+'=' (61) 7 8 9 10 91 92 93 94 95
 '>' (62) 68
 '[' (91) 28 36 37 46 88 89
 ']' (93) 28 36 37 46 88 89
-'{' (123) 56 90 91 92 93 94 107
-'}' (125) 56 90 91 92 93 94 107
-error (256)
-ID (258) 7 8 9 10 18 20 25 32 38 47 91 92 93 94
+'{' (123) 90 91 92 93 94 95 109
+'}' (125) 90 91 92 93 94 95 109
+error (256) 95 104
+ID (258) 7 8 9 10 18 20 25 32 38 47 91 92 93 94 95
 WILDSCORE (259) 12 14 19 21 29 30 33
 FLOAT (260) 44
 BOOLVAL (261) 24
@@ -177,16 +179,16 @@ INTEGER (265) 43
 IF (266) 56
 ELSE (267) 56
 THEN (268) 56
-WHILE (269) 107
+WHILE (269) 109
 WHERE (270) 90
 YIELD (271) 57 58 59
-DO (272) 91 92 93 94
-PRINT (273) 106
-READBOOL (274) 105
-READFLOAT (275) 104
-READINT (276) 103
+DO (272) 91 92 93 94 95
+PRINT (273) 108
+READBOOL (274) 107
+READFLOAT (275) 106
+READINT (276) 105
 RARROW (277) 41 42
-LARROW (278) 97 98 99
+LARROW (278) 98 99 100
 DIFF (279) 65
 EQUALS (280) 64
 DOUBLECOLON (281) 38
@@ -214,7 +216,7 @@ args (54)
 arg_value (55)
     on left: 15 16 17, on right: 11 13 17 34 35
 id_list (56)
-    on left: 18 19 20 21, on right: 18 19 97 98 99
+    on left: 18 19 20 21, on right: 18 19 98 99 100
 basic_value (57)
     on left: 22 23 24 25 26, on right: 16 27 32 33 51 82
 list_value (58)
@@ -234,11 +236,11 @@ appexpr (64)
 nonapp (65)
     on left: 51 52, on right: 49 50
 expr (66)
-    on left: 53 54 55, on right: 7 8 9 10 52 56 84 86 87 97 106 107
+    on left: 53 54 55, on right: 7 8 9 10 52 56 84 86 87 98 108 109
 ifexpr (67)
     on left: 56, on right: 55 57
 yieldexpr (68)
-    on left: 57 58 59, on right: 100
+    on left: 57 58 59, on right: 101
 op_prec1 (69)
     on left: 60 61, on right: 53 59 60
 op_prec2 (70)
@@ -262,15 +264,15 @@ list_expr (78)
 where_exp (79)
     on left: 90, on right: 8 10 92 94
 procdecl (80)
-    on left: 91 92 93 94, on right: 5
+    on left: 91 92 93 94 95, on right: 5
 stmts (81)
-    on left: 95 96, on right: 91 92 93 94 96 107
+    on left: 96 97, on right: 91 92 93 94 97 109
 stmt (82)
-    on left: 97 98 99 100 101 102, on right: 95 96
+    on left: 98 99 100 101 102 103 104, on right: 96 97
 io_stmt (83)
-    on left: 103 104 105 106, on right: 99 102
+    on left: 105 106 107 108, on right: 100 103
 while_expr (84)
-    on left: 107, on right: 98 101
+    on left: 109, on right: 99 102
 
 
 State 0
@@ -298,6 +300,7 @@ State 1
    92         | ID . args '=' DO '{' stmts '}' where_exp
    93         | ID . '=' DO '{' stmts '}'
    94         | ID . '=' DO '{' stmts '}' where_exp
+   95         | ID . '=' DO '{' error '}'
 
     ID           shift, and go to state 8
     WILDSCORE    shift, and go to state 9
@@ -432,6 +435,7 @@ State 14
    10        | ID '=' . expr where_exp
    93 procdecl: ID '=' . DO '{' stmts '}'
    94         | ID '=' . DO '{' stmts '}' where_exp
+   95         | ID '=' . DO '{' error '}'
 
     ID        shift, and go to state 8
     BOOLVAL   shift, and go to state 10
@@ -616,7 +620,7 @@ State 29
 
 State 30
 
-   56 ifexpr: IF . expr THEN '{' expr '}' ELSE '{' expr '}'
+   56 ifexpr: IF . expr THEN expr ELSE expr
 
     ID        shift, and go to state 8
     BOOLVAL   shift, and go to state 10
@@ -647,6 +651,7 @@ State 31
 
    93 procdecl: ID '=' DO . '{' stmts '}'
    94         | ID '=' DO . '{' stmts '}' where_exp
+   95         | ID '=' DO . '{' error '}'
 
     '{'  shift, and go to state 65
 
@@ -1052,7 +1057,7 @@ State 63
 
 State 64
 
-   56 ifexpr: IF expr . THEN '{' expr '}' ELSE '{' expr '}'
+   56 ifexpr: IF expr . THEN expr ELSE expr
 
     THEN  shift, and go to state 107
 
@@ -1061,22 +1066,24 @@ State 65
 
    93 procdecl: ID '=' DO '{' . stmts '}'
    94         | ID '=' DO '{' . stmts '}' where_exp
+   95         | ID '=' DO '{' . error '}'
 
-    ID         shift, and go to state 108
-    WILDSCORE  shift, and go to state 109
-    WHILE      shift, and go to state 110
-    YIELD      shift, and go to state 111
-    PRINT      shift, and go to state 112
-    READBOOL   shift, and go to state 113
-    READFLOAT  shift, and go to state 114
-    READINT    shift, and go to state 115
+    error      shift, and go to state 108
+    ID         shift, and go to state 109
+    WILDSCORE  shift, and go to state 110
+    WHILE      shift, and go to state 111
+    YIELD      shift, and go to state 112
+    PRINT      shift, and go to state 113
+    READBOOL   shift, and go to state 114
+    READFLOAT  shift, and go to state 115
+    READINT    shift, and go to state 116
 
-    id_list     go to state 116
-    yieldexpr   go to state 117
-    stmts       go to state 118
-    stmt        go to state 119
-    io_stmt     go to state 120
-    while_expr  go to state 121
+    id_list     go to state 117
+    yieldexpr   go to state 118
+    stmts       go to state 119
+    stmt        go to state 120
+    io_stmt     go to state 121
+    while_expr  go to state 122
 
 
 State 66
@@ -1084,7 +1091,7 @@ State 66
    52 nonapp: '(' expr . ')'
    84 op_prec8: '(' expr . ')'
 
-    ')'  shift, and go to state 122
+    ')'  shift, and go to state 123
 
 
 State 67
@@ -1099,7 +1106,7 @@ State 68
    86 exprs: expr .
    87      | expr . ',' exprs
 
-    ','  shift, and go to state 123
+    ','  shift, and go to state 124
 
     $default  reduce using rule 86 (exprs)
 
@@ -1108,7 +1115,7 @@ State 69
 
    88 list_expr: '[' exprs . ']'
 
-    ']'  shift, and go to state 124
+    ']'  shift, and go to state 125
 
 
 State 70
@@ -1129,7 +1136,7 @@ State 70
     basic_value  go to state 35
     appexpr      go to state 36
     nonapp       go to state 37
-    expr         go to state 125
+    expr         go to state 126
     ifexpr       go to state 39
     op_prec1     go to state 40
     op_prec2     go to state 41
@@ -1174,7 +1181,7 @@ State 73
     basic_value  go to state 35
     appexpr      go to state 36
     nonapp       go to state 37
-    expr         go to state 126
+    expr         go to state 127
     ifexpr       go to state 39
     op_prec1     go to state 40
     op_prec2     go to state 41
@@ -1212,7 +1219,7 @@ State 77
 
    90 where_exp: WHERE . '{' line_elems '}'
 
-    '{'  shift, and go to state 127
+    '{'  shift, and go to state 128
 
 
 State 78
@@ -1242,7 +1249,7 @@ State 80
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec1     go to state 128
+    op_prec1     go to state 129
     op_prec2     go to state 41
     op_prec3     go to state 42
     op_prec4     go to state 43
@@ -1266,7 +1273,7 @@ State 81
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec2     go to state 129
+    op_prec2     go to state 130
     op_prec3     go to state 42
     op_prec4     go to state 43
     op_prec5     go to state 44
@@ -1289,7 +1296,7 @@ State 82
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec3     go to state 130
+    op_prec3     go to state 131
     op_prec4     go to state 43
     op_prec5     go to state 44
     op_prec6     go to state 45
@@ -1311,7 +1318,7 @@ State 83
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec3     go to state 131
+    op_prec3     go to state 132
     op_prec4     go to state 43
     op_prec5     go to state 44
     op_prec6     go to state 45
@@ -1333,7 +1340,7 @@ State 84
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec3     go to state 132
+    op_prec3     go to state 133
     op_prec4     go to state 43
     op_prec5     go to state 44
     op_prec6     go to state 45
@@ -1355,7 +1362,7 @@ State 85
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec3     go to state 133
+    op_prec3     go to state 134
     op_prec4     go to state 43
     op_prec5     go to state 44
     op_prec6     go to state 45
@@ -1377,7 +1384,7 @@ State 86
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec3     go to state 134
+    op_prec3     go to state 135
     op_prec4     go to state 43
     op_prec5     go to state 44
     op_prec6     go to state 45
@@ -1399,7 +1406,7 @@ State 87
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec3     go to state 135
+    op_prec3     go to state 136
     op_prec4     go to state 43
     op_prec5     go to state 44
     op_prec6     go to state 45
@@ -1421,7 +1428,7 @@ State 88
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec4     go to state 136
+    op_prec4     go to state 137
     op_prec5     go to state 44
     op_prec6     go to state 45
     op_prec7     go to state 46
@@ -1442,7 +1449,7 @@ State 89
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec4     go to state 137
+    op_prec4     go to state 138
     op_prec5     go to state 44
     op_prec6     go to state 45
     op_prec7     go to state 46
@@ -1463,7 +1470,7 @@ State 90
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec6     go to state 138
+    op_prec6     go to state 139
     op_prec7     go to state 46
     op_prec8     go to state 47
     list_expr    go to state 48
@@ -1482,7 +1489,7 @@ State 91
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec6     go to state 139
+    op_prec6     go to state 140
     op_prec7     go to state 46
     op_prec8     go to state 47
     list_expr    go to state 48
@@ -1501,7 +1508,7 @@ State 92
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec7     go to state 140
+    op_prec7     go to state 141
     op_prec8     go to state 47
     list_expr    go to state 48
 
@@ -1519,7 +1526,7 @@ State 93
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec8     go to state 141
+    op_prec8     go to state 142
     list_expr    go to state 48
 
 
@@ -1536,7 +1543,7 @@ State 94
     '-'       shift, and go to state 34
 
     basic_value  go to state 71
-    op_prec8     go to state 142
+    op_prec8     go to state 143
     list_expr    go to state 48
 
 
@@ -1546,15 +1553,15 @@ State 95
    30           | WILDSCORE ':' . list_value
 
     ID         shift, and go to state 8
-    WILDSCORE  shift, and go to state 143
+    WILDSCORE  shift, and go to state 144
     BOOLVAL    shift, and go to state 10
     NUMBER     shift, and go to state 11
     FLOATNUM   shift, and go to state 12
-    '('        shift, and go to state 144
+    '('        shift, and go to state 145
     '['        shift, and go to state 51
 
-    basic_value       go to state 145
-    list_value        go to state 146
+    basic_value       go to state 146
+    list_value        go to state 147
     built_list_value  go to state 55
 
 
@@ -1570,7 +1577,7 @@ State 97
    34 list_args: arg_value .
    35          | arg_value . ',' list_args
 
-    ','  shift, and go to state 147
+    ','  shift, and go to state 148
 
     $default  reduce using rule 34 (list_args)
 
@@ -1580,7 +1587,7 @@ State 98
    28 list_value: '[' list_args . ']' ':' list_value
    37 built_list_value: '[' list_args . ']'
 
-    ']'  shift, and go to state 148
+    ']'  shift, and go to state 149
 
 
 State 99
@@ -1596,16 +1603,16 @@ State 100
    32           | basic_value ':' . ID
    33           | basic_value ':' . WILDSCORE
 
-    ID         shift, and go to state 149
-    WILDSCORE  shift, and go to state 150
+    ID         shift, and go to state 150
+    WILDSCORE  shift, and go to state 151
     BOOLVAL    shift, and go to state 10
     NUMBER     shift, and go to state 11
     FLOATNUM   shift, and go to state 12
-    '('        shift, and go to state 144
+    '('        shift, and go to state 145
     '['        shift, and go to state 51
 
-    basic_value       go to state 145
-    list_value        go to state 151
+    basic_value       go to state 146
+    list_value        go to state 152
     built_list_value  go to state 55
 
 
@@ -1621,7 +1628,7 @@ State 102
    91 procdecl: ID args '=' DO . '{' stmts '}'
    92         | ID args '=' DO . '{' stmts '}' where_exp
 
-    '{'  shift, and go to state 152
+    '{'  shift, and go to state 153
 
 
 State 103
@@ -1630,9 +1637,9 @@ State 103
     8        | ID args '=' expr . where_exp
 
     WHERE  shift, and go to state 77
-    ';'    shift, and go to state 153
+    ';'    shift, and go to state 154
 
-    where_exp  go to state 154
+    where_exp  go to state 155
 
 
 State 104
@@ -1640,7 +1647,7 @@ State 104
    40 funtype: '(' funtype ')' .
    42        | '(' funtype ')' . RARROW funtype
 
-    RARROW  shift, and go to state 155
+    RARROW  shift, and go to state 156
 
     $default  reduce using rule 40 (funtype)
 
@@ -1661,39 +1668,70 @@ State 106
 
 State 107
 
-   56 ifexpr: IF expr THEN . '{' expr '}' ELSE '{' expr '}'
+   56 ifexpr: IF expr THEN . expr ELSE expr
 
-    '{'  shift, and go to state 156
+    ID        shift, and go to state 8
+    BOOLVAL   shift, and go to state 10
+    NUMBER    shift, and go to state 11
+    FLOATNUM  shift, and go to state 12
+    IF        shift, and go to state 30
+    '('       shift, and go to state 32
+    '['       shift, and go to state 33
+    '-'       shift, and go to state 34
+
+    basic_value  go to state 35
+    appexpr      go to state 36
+    nonapp       go to state 37
+    expr         go to state 157
+    ifexpr       go to state 39
+    op_prec1     go to state 40
+    op_prec2     go to state 41
+    op_prec3     go to state 42
+    op_prec4     go to state 43
+    op_prec5     go to state 44
+    op_prec6     go to state 45
+    op_prec7     go to state 46
+    op_prec8     go to state 47
+    list_expr    go to state 48
 
 
 State 108
 
-   18 id_list: ID . ':' id_list
-   20        | ID .
+   95 procdecl: ID '=' DO '{' error . '}'
+  104 stmt: error . ';'
 
-    ':'  shift, and go to state 157
-
-    $default  reduce using rule 20 (id_list)
+    ';'  shift, and go to state 158
+    '}'  shift, and go to state 159
 
 
 State 109
 
-   19 id_list: WILDSCORE . ':' id_list
-   21        | WILDSCORE .
+   18 id_list: ID . ':' id_list
+   20        | ID .
 
-    ':'  shift, and go to state 158
+    ':'  shift, and go to state 160
 
-    $default  reduce using rule 21 (id_list)
+    $default  reduce using rule 20 (id_list)
 
 
 State 110
 
-  107 while_expr: WHILE . '(' expr ')' '{' stmts '}'
+   19 id_list: WILDSCORE . ':' id_list
+   21        | WILDSCORE .
 
-    '('  shift, and go to state 159
+    ':'  shift, and go to state 161
+
+    $default  reduce using rule 21 (id_list)
 
 
 State 111
+
+  109 while_expr: WHILE . '(' expr ')' '{' stmts '}'
+
+    '('  shift, and go to state 162
+
+
+State 112
 
    57 yieldexpr: YIELD . ifexpr
    58          | YIELD . appexpr
@@ -1709,10 +1747,10 @@ State 111
     '-'       shift, and go to state 34
 
     basic_value  go to state 35
-    appexpr      go to state 160
+    appexpr      go to state 163
     nonapp       go to state 37
-    ifexpr       go to state 161
-    op_prec1     go to state 162
+    ifexpr       go to state 164
+    op_prec1     go to state 165
     op_prec2     go to state 41
     op_prec3     go to state 42
     op_prec4     go to state 43
@@ -1723,9 +1761,9 @@ State 111
     list_expr    go to state 48
 
 
-State 112
+State 113
 
-  106 io_stmt: PRINT . expr
+  108 io_stmt: PRINT . expr
 
     ID        shift, and go to state 8
     BOOLVAL   shift, and go to state 10
@@ -1739,7 +1777,7 @@ State 112
     basic_value  go to state 35
     appexpr      go to state 36
     nonapp       go to state 37
-    expr         go to state 163
+    expr         go to state 166
     ifexpr       go to state 39
     op_prec1     go to state 40
     op_prec2     go to state 41
@@ -1752,90 +1790,91 @@ State 112
     list_expr    go to state 48
 
 
-State 113
-
-  105 io_stmt: READBOOL .
-
-    $default  reduce using rule 105 (io_stmt)
-
-
 State 114
 
-  104 io_stmt: READFLOAT .
+  107 io_stmt: READBOOL .
 
-    $default  reduce using rule 104 (io_stmt)
+    $default  reduce using rule 107 (io_stmt)
 
 
 State 115
 
-  103 io_stmt: READINT .
+  106 io_stmt: READFLOAT .
 
-    $default  reduce using rule 103 (io_stmt)
+    $default  reduce using rule 106 (io_stmt)
 
 
 State 116
 
-   97 stmt: id_list . LARROW expr ';'
-   98     | id_list . LARROW while_expr
-   99     | id_list . LARROW io_stmt ';'
+  105 io_stmt: READINT .
 
-    LARROW  shift, and go to state 164
+    $default  reduce using rule 105 (io_stmt)
 
 
 State 117
 
-  100 stmt: yieldexpr . ';'
+   98 stmt: id_list . LARROW expr ';'
+   99     | id_list . LARROW while_expr
+  100     | id_list . LARROW io_stmt ';'
 
-    ';'  shift, and go to state 165
+    LARROW  shift, and go to state 167
 
 
 State 118
 
-   93 procdecl: ID '=' DO '{' stmts . '}'
-   94         | ID '=' DO '{' stmts . '}' where_exp
-
-    '}'  shift, and go to state 166
-
-
-State 119
-
-   95 stmts: stmt .
-   96      | stmt . stmts
-
-    ID         shift, and go to state 108
-    WILDSCORE  shift, and go to state 109
-    WHILE      shift, and go to state 110
-    YIELD      shift, and go to state 111
-    PRINT      shift, and go to state 112
-    READBOOL   shift, and go to state 113
-    READFLOAT  shift, and go to state 114
-    READINT    shift, and go to state 115
-
-    $default  reduce using rule 95 (stmts)
-
-    id_list     go to state 116
-    yieldexpr   go to state 117
-    stmts       go to state 167
-    stmt        go to state 119
-    io_stmt     go to state 120
-    while_expr  go to state 121
-
-
-State 120
-
-  102 stmt: io_stmt . ';'
+  101 stmt: yieldexpr . ';'
 
     ';'  shift, and go to state 168
 
 
+State 119
+
+   93 procdecl: ID '=' DO '{' stmts . '}'
+   94         | ID '=' DO '{' stmts . '}' where_exp
+
+    '}'  shift, and go to state 169
+
+
+State 120
+
+   96 stmts: stmt .
+   97      | stmt . stmts
+
+    error      shift, and go to state 170
+    ID         shift, and go to state 109
+    WILDSCORE  shift, and go to state 110
+    WHILE      shift, and go to state 111
+    YIELD      shift, and go to state 112
+    PRINT      shift, and go to state 113
+    READBOOL   shift, and go to state 114
+    READFLOAT  shift, and go to state 115
+    READINT    shift, and go to state 116
+
+    '}'  reduce using rule 96 (stmts)
+
+    id_list     go to state 117
+    yieldexpr   go to state 118
+    stmts       go to state 171
+    stmt        go to state 120
+    io_stmt     go to state 121
+    while_expr  go to state 122
+
+
 State 121
 
-  101 stmt: while_expr .
+  103 stmt: io_stmt . ';'
 
-    $default  reduce using rule 101 (stmt)
+    ';'  shift, and go to state 172
 
 
 State 122
+
+  102 stmt: while_expr .
+
+    $default  reduce using rule 102 (stmt)
+
+
+State 123
 
    52 nonapp: '(' expr ')' .
    84 op_prec8: '(' expr ')' .
@@ -1848,7 +1887,7 @@ State 122
     $default  reduce using rule 84 (op_prec8)
 
 
-State 123
+State 124
 
    87 exprs: expr ',' . exprs
 
@@ -1874,115 +1913,115 @@ State 123
     op_prec6     go to state 45
     op_prec7     go to state 46
     op_prec8     go to state 47
-    exprs        go to state 169
+    exprs        go to state 173
     list_expr    go to state 48
 
 
-State 124
+State 125
 
    88 list_expr: '[' exprs ']' .
 
     $default  reduce using rule 88 (list_expr)
 
 
-State 125
+State 126
 
    84 op_prec8: '(' expr . ')'
 
-    ')'  shift, and go to state 170
-
-
-State 126
-
-   52 nonapp: '(' expr . ')'
-
-    ')'  shift, and go to state 171
+    ')'  shift, and go to state 174
 
 
 State 127
+
+   52 nonapp: '(' expr . ')'
+
+    ')'  shift, and go to state 175
+
+
+State 128
 
    90 where_exp: WHERE '{' . line_elems '}'
 
     ID  shift, and go to state 1
 
-    line_elems    go to state 172
+    line_elems    go to state 176
     line_elem     go to state 4
     fundecl       go to state 5
     funtype_decl  go to state 6
     procdecl      go to state 7
 
 
-State 128
+State 129
 
    60 op_prec1: op_prec2 OR op_prec1 .
 
     $default  reduce using rule 60 (op_prec1)
 
 
-State 129
+State 130
 
    62 op_prec2: op_prec3 AND op_prec2 .
 
     $default  reduce using rule 62 (op_prec2)
 
 
-State 130
+State 131
 
    65 op_prec3: op_prec4 DIFF op_prec3 .
 
     $default  reduce using rule 65 (op_prec3)
 
 
-State 131
+State 132
 
    64 op_prec3: op_prec4 EQUALS op_prec3 .
 
     $default  reduce using rule 64 (op_prec3)
 
 
-State 132
+State 133
 
    67 op_prec3: op_prec4 LEQ op_prec3 .
 
     $default  reduce using rule 67 (op_prec3)
 
 
-State 133
+State 134
 
    69 op_prec3: op_prec4 GEQ op_prec3 .
 
     $default  reduce using rule 69 (op_prec3)
 
 
-State 134
+State 135
 
    66 op_prec3: op_prec4 '<' op_prec3 .
 
     $default  reduce using rule 66 (op_prec3)
 
 
-State 135
+State 136
 
    68 op_prec3: op_prec4 '>' op_prec3 .
 
     $default  reduce using rule 68 (op_prec3)
 
 
-State 136
+State 137
 
    72 op_prec4: op_prec5 APPEND op_prec4 .
 
     $default  reduce using rule 72 (op_prec4)
 
 
-State 137
+State 138
 
    71 op_prec4: op_prec5 ':' op_prec4 .
 
     $default  reduce using rule 71 (op_prec4)
 
 
-State 138
+State 139
 
    74 op_prec5: op_prec5 '+' op_prec6 .
    77 op_prec6: op_prec6 . '%' op_prec7
@@ -1992,7 +2031,7 @@ State 138
     $default  reduce using rule 74 (op_prec5)
 
 
-State 139
+State 140
 
    75 op_prec5: op_prec5 '-' op_prec6 .
    77 op_prec6: op_prec6 . '%' op_prec7
@@ -2002,7 +2041,7 @@ State 139
     $default  reduce using rule 75 (op_prec5)
 
 
-State 140
+State 141
 
    77 op_prec6: op_prec6 '%' op_prec7 .
    79 op_prec7: op_prec7 . '*' op_prec8
@@ -2014,21 +2053,21 @@ State 140
     $default  reduce using rule 77 (op_prec6)
 
 
-State 141
+State 142
 
    79 op_prec7: op_prec7 '*' op_prec8 .
 
     $default  reduce using rule 79 (op_prec7)
 
 
-State 142
+State 143
 
    80 op_prec7: op_prec7 '/' op_prec8 .
 
     $default  reduce using rule 80 (op_prec7)
 
 
-State 143
+State 144
 
    29 list_value: WILDSCORE . ':' WILDSCORE
    29           | WILDSCORE ':' WILDSCORE .
@@ -2039,14 +2078,14 @@ State 143
     $default  reduce using rule 29 (list_value)
 
 
-State 144
+State 145
 
    26 basic_value: '(' . ')'
 
     ')'  shift, and go to state 50
 
 
-State 145
+State 146
 
    27 list_value: basic_value . ':' list_value
    32           | basic_value . ':' ID
@@ -2055,14 +2094,14 @@ State 145
     ':'  shift, and go to state 100
 
 
-State 146
+State 147
 
    30 list_value: WILDSCORE ':' list_value .
 
     $default  reduce using rule 30 (list_value)
 
 
-State 147
+State 148
 
    35 list_args: arg_value ',' . list_args
 
@@ -2074,20 +2113,20 @@ State 147
 
     arg_value    go to state 97
     basic_value  go to state 18
-    list_args    go to state 173
+    list_args    go to state 177
 
 
-State 148
+State 149
 
    28 list_value: '[' list_args ']' . ':' list_value
    37 built_list_value: '[' list_args ']' .
 
-    ':'  shift, and go to state 174
+    ':'  shift, and go to state 178
 
     $default  reduce using rule 37 (built_list_value)
 
 
-State 149
+State 150
 
    25 basic_value: ID .
    32 list_value: basic_value ':' ID .
@@ -2096,7 +2135,7 @@ State 149
     $default  reduce using rule 25 (basic_value)
 
 
-State 150
+State 151
 
    29 list_value: WILDSCORE . ':' WILDSCORE
    30           | WILDSCORE . ':' list_value
@@ -2107,50 +2146,51 @@ State 150
     $default  reduce using rule 33 (list_value)
 
 
-State 151
+State 152
 
    27 list_value: basic_value ':' list_value .
 
     $default  reduce using rule 27 (list_value)
 
 
-State 152
+State 153
 
    91 procdecl: ID args '=' DO '{' . stmts '}'
    92         | ID args '=' DO '{' . stmts '}' where_exp
 
-    ID         shift, and go to state 108
-    WILDSCORE  shift, and go to state 109
-    WHILE      shift, and go to state 110
-    YIELD      shift, and go to state 111
-    PRINT      shift, and go to state 112
-    READBOOL   shift, and go to state 113
-    READFLOAT  shift, and go to state 114
-    READINT    shift, and go to state 115
+    error      shift, and go to state 170
+    ID         shift, and go to state 109
+    WILDSCORE  shift, and go to state 110
+    WHILE      shift, and go to state 111
+    YIELD      shift, and go to state 112
+    PRINT      shift, and go to state 113
+    READBOOL   shift, and go to state 114
+    READFLOAT  shift, and go to state 115
+    READINT    shift, and go to state 116
 
-    id_list     go to state 116
-    yieldexpr   go to state 117
-    stmts       go to state 175
-    stmt        go to state 119
-    io_stmt     go to state 120
-    while_expr  go to state 121
+    id_list     go to state 117
+    yieldexpr   go to state 118
+    stmts       go to state 179
+    stmt        go to state 120
+    io_stmt     go to state 121
+    while_expr  go to state 122
 
 
-State 153
+State 154
 
     7 fundecl: ID args '=' expr ';' .
 
     $default  reduce using rule 7 (fundecl)
 
 
-State 154
+State 155
 
     8 fundecl: ID args '=' expr where_exp .
 
     $default  reduce using rule 8 (fundecl)
 
 
-State 155
+State 156
 
    42 funtype: '(' funtype ')' RARROW . funtype
 
@@ -2161,62 +2201,54 @@ State 155
     '('      shift, and go to state 26
     '['      shift, and go to state 27
 
-    funtype     go to state 176
+    funtype     go to state 180
     basic_type  go to state 29
-
-
-State 156
-
-   56 ifexpr: IF expr THEN '{' . expr '}' ELSE '{' expr '}'
-
-    ID        shift, and go to state 8
-    BOOLVAL   shift, and go to state 10
-    NUMBER    shift, and go to state 11
-    FLOATNUM  shift, and go to state 12
-    IF        shift, and go to state 30
-    '('       shift, and go to state 32
-    '['       shift, and go to state 33
-    '-'       shift, and go to state 34
-
-    basic_value  go to state 35
-    appexpr      go to state 36
-    nonapp       go to state 37
-    expr         go to state 177
-    ifexpr       go to state 39
-    op_prec1     go to state 40
-    op_prec2     go to state 41
-    op_prec3     go to state 42
-    op_prec4     go to state 43
-    op_prec5     go to state 44
-    op_prec6     go to state 45
-    op_prec7     go to state 46
-    op_prec8     go to state 47
-    list_expr    go to state 48
 
 
 State 157
 
-   18 id_list: ID ':' . id_list
+   56 ifexpr: IF expr THEN expr . ELSE expr
 
-    ID         shift, and go to state 108
-    WILDSCORE  shift, and go to state 109
-
-    id_list  go to state 178
+    ELSE  shift, and go to state 181
 
 
 State 158
 
-   19 id_list: WILDSCORE ':' . id_list
+  104 stmt: error ';' .
 
-    ID         shift, and go to state 108
-    WILDSCORE  shift, and go to state 109
-
-    id_list  go to state 179
+    $default  reduce using rule 104 (stmt)
 
 
 State 159
 
-  107 while_expr: WHILE '(' . expr ')' '{' stmts '}'
+   95 procdecl: ID '=' DO '{' error '}' .
+
+    $default  reduce using rule 95 (procdecl)
+
+
+State 160
+
+   18 id_list: ID ':' . id_list
+
+    ID         shift, and go to state 109
+    WILDSCORE  shift, and go to state 110
+
+    id_list  go to state 182
+
+
+State 161
+
+   19 id_list: WILDSCORE ':' . id_list
+
+    ID         shift, and go to state 109
+    WILDSCORE  shift, and go to state 110
+
+    id_list  go to state 183
+
+
+State 162
+
+  109 while_expr: WHILE '(' . expr ')' '{' stmts '}'
 
     ID        shift, and go to state 8
     BOOLVAL   shift, and go to state 10
@@ -2230,7 +2262,7 @@ State 159
     basic_value  go to state 35
     appexpr      go to state 36
     nonapp       go to state 37
-    expr         go to state 180
+    expr         go to state 184
     ifexpr       go to state 39
     op_prec1     go to state 40
     op_prec2     go to state 41
@@ -2243,7 +2275,7 @@ State 159
     list_expr    go to state 48
 
 
-State 160
+State 163
 
    49 appexpr: appexpr . nonapp
    58 yieldexpr: YIELD appexpr .
@@ -2260,43 +2292,43 @@ State 160
     nonapp       go to state 75
 
 
-State 161
+State 164
 
    57 yieldexpr: YIELD ifexpr .
 
     $default  reduce using rule 57 (yieldexpr)
 
 
-State 162
+State 165
 
    59 yieldexpr: YIELD op_prec1 .
 
     $default  reduce using rule 59 (yieldexpr)
 
 
-State 163
+State 166
 
-  106 io_stmt: PRINT expr .
+  108 io_stmt: PRINT expr .
 
-    $default  reduce using rule 106 (io_stmt)
+    $default  reduce using rule 108 (io_stmt)
 
 
-State 164
+State 167
 
-   97 stmt: id_list LARROW . expr ';'
-   98     | id_list LARROW . while_expr
-   99     | id_list LARROW . io_stmt ';'
+   98 stmt: id_list LARROW . expr ';'
+   99     | id_list LARROW . while_expr
+  100     | id_list LARROW . io_stmt ';'
 
     ID         shift, and go to state 8
     BOOLVAL    shift, and go to state 10
     NUMBER     shift, and go to state 11
     FLOATNUM   shift, and go to state 12
     IF         shift, and go to state 30
-    WHILE      shift, and go to state 110
-    PRINT      shift, and go to state 112
-    READBOOL   shift, and go to state 113
-    READFLOAT  shift, and go to state 114
-    READINT    shift, and go to state 115
+    WHILE      shift, and go to state 111
+    PRINT      shift, and go to state 113
+    READBOOL   shift, and go to state 114
+    READFLOAT  shift, and go to state 115
+    READINT    shift, and go to state 116
     '('        shift, and go to state 32
     '['        shift, and go to state 33
     '-'        shift, and go to state 34
@@ -2304,7 +2336,7 @@ State 164
     basic_value  go to state 35
     appexpr      go to state 36
     nonapp       go to state 37
-    expr         go to state 181
+    expr         go to state 185
     ifexpr       go to state 39
     op_prec1     go to state 40
     op_prec2     go to state 41
@@ -2315,18 +2347,18 @@ State 164
     op_prec7     go to state 46
     op_prec8     go to state 47
     list_expr    go to state 48
-    io_stmt      go to state 182
-    while_expr   go to state 183
+    io_stmt      go to state 186
+    while_expr   go to state 187
 
 
-State 165
+State 168
 
-  100 stmt: yieldexpr ';' .
+  101 stmt: yieldexpr ';' .
 
-    $default  reduce using rule 100 (stmt)
+    $default  reduce using rule 101 (stmt)
 
 
-State 166
+State 169
 
    93 procdecl: ID '=' DO '{' stmts '}' .
    94         | ID '=' DO '{' stmts '}' . where_exp
@@ -2335,59 +2367,66 @@ State 166
 
     $default  reduce using rule 93 (procdecl)
 
-    where_exp  go to state 184
+    where_exp  go to state 188
 
 
-State 167
+State 170
 
-   96 stmts: stmt stmts .
+  104 stmt: error . ';'
 
-    $default  reduce using rule 96 (stmts)
-
-
-State 168
-
-  102 stmt: io_stmt ';' .
-
-    $default  reduce using rule 102 (stmt)
+    ';'  shift, and go to state 158
 
 
-State 169
+State 171
+
+   97 stmts: stmt stmts .
+
+    $default  reduce using rule 97 (stmts)
+
+
+State 172
+
+  103 stmt: io_stmt ';' .
+
+    $default  reduce using rule 103 (stmt)
+
+
+State 173
 
    87 exprs: expr ',' exprs .
 
     $default  reduce using rule 87 (exprs)
 
 
-State 170
+State 174
 
    84 op_prec8: '(' expr ')' .
 
     $default  reduce using rule 84 (op_prec8)
 
 
-State 171
+State 175
 
    52 nonapp: '(' expr ')' .
 
     $default  reduce using rule 52 (nonapp)
 
 
-State 172
+State 176
 
    90 where_exp: WHERE '{' line_elems . '}'
 
-    '}'  shift, and go to state 185
+    '}'  shift, and go to state 189
 
 
-State 173
+State 177
 
    35 list_args: arg_value ',' list_args .
 
     $default  reduce using rule 35 (list_args)
 
 
-State 174
+State 178
 
    28 list_value: '[' list_args ']' ':' . list_value
 
@@ -2396,177 +2435,32 @@ State 174
     BOOLVAL    shift, and go to state 10
     NUMBER     shift, and go to state 11
     FLOATNUM   shift, and go to state 12
-    '('        shift, and go to state 144
+    '('        shift, and go to state 145
     '['        shift, and go to state 51
 
-    basic_value       go to state 145
-    list_value        go to state 186
+    basic_value       go to state 146
+    list_value        go to state 190
     built_list_value  go to state 55
 
 
-State 175
+State 179
 
    91 procdecl: ID args '=' DO '{' stmts . '}'
    92         | ID args '=' DO '{' stmts . '}' where_exp
 
-    '}'  shift, and go to state 187
+    '}'  shift, and go to state 191
 
 
-State 176
+State 180
 
    42 funtype: '(' funtype ')' RARROW funtype .
 
     $default  reduce using rule 42 (funtype)
 
 
-State 177
-
-   56 ifexpr: IF expr THEN '{' expr . '}' ELSE '{' expr '}'
-
-    '}'  shift, and go to state 188
-
-
-State 178
-
-   18 id_list: ID ':' id_list .
-
-    $default  reduce using rule 18 (id_list)
-
-
-State 179
-
-   19 id_list: WILDSCORE ':' id_list .
-
-    $default  reduce using rule 19 (id_list)
-
-
-State 180
-
-  107 while_expr: WHILE '(' expr . ')' '{' stmts '}'
-
-    ')'  shift, and go to state 189
-
-
 State 181
 
-   97 stmt: id_list LARROW expr . ';'
-
-    ';'  shift, and go to state 190
-
-
-State 182
-
-   99 stmt: id_list LARROW io_stmt . ';'
-
-    ';'  shift, and go to state 191
-
-
-State 183
-
-   98 stmt: id_list LARROW while_expr .
-
-    $default  reduce using rule 98 (stmt)
-
-
-State 184
-
-   94 procdecl: ID '=' DO '{' stmts '}' where_exp .
-
-    $default  reduce using rule 94 (procdecl)
-
-
-State 185
-
-   90 where_exp: WHERE '{' line_elems '}' .
-
-    $default  reduce using rule 90 (where_exp)
-
-
-State 186
-
-   28 list_value: '[' list_args ']' ':' list_value .
-
-    $default  reduce using rule 28 (list_value)
-
-
-State 187
-
-   91 procdecl: ID args '=' DO '{' stmts '}' .
-   92         | ID args '=' DO '{' stmts '}' . where_exp
-
-    WHERE  shift, and go to state 77
-
-    $default  reduce using rule 91 (procdecl)
-
-    where_exp  go to state 192
-
-
-State 188
-
-   56 ifexpr: IF expr THEN '{' expr '}' . ELSE '{' expr '}'
-
-    ELSE  shift, and go to state 193
-
-
-State 189
-
-  107 while_expr: WHILE '(' expr ')' . '{' stmts '}'
-
-    '{'  shift, and go to state 194
-
-
-State 190
-
-   97 stmt: id_list LARROW expr ';' .
-
-    $default  reduce using rule 97 (stmt)
-
-
-State 191
-
-   99 stmt: id_list LARROW io_stmt ';' .
-
-    $default  reduce using rule 99 (stmt)
-
-
-State 192
-
-   92 procdecl: ID args '=' DO '{' stmts '}' where_exp .
-
-    $default  reduce using rule 92 (procdecl)
-
-
-State 193
-
-   56 ifexpr: IF expr THEN '{' expr '}' ELSE . '{' expr '}'
-
-    '{'  shift, and go to state 195
-
-
-State 194
-
-  107 while_expr: WHILE '(' expr ')' '{' . stmts '}'
-
-    ID         shift, and go to state 108
-    WILDSCORE  shift, and go to state 109
-    WHILE      shift, and go to state 110
-    YIELD      shift, and go to state 111
-    PRINT      shift, and go to state 112
-    READBOOL   shift, and go to state 113
-    READFLOAT  shift, and go to state 114
-    READINT    shift, and go to state 115
-
-    id_list     go to state 116
-    yieldexpr   go to state 117
-    stmts       go to state 196
-    stmt        go to state 119
-    io_stmt     go to state 120
-    while_expr  go to state 121
-
-
-State 195
-
-   56 ifexpr: IF expr THEN '{' expr '}' ELSE '{' . expr '}'
+   56 ifexpr: IF expr THEN expr ELSE . expr
 
     ID        shift, and go to state 8
     BOOLVAL   shift, and go to state 10
@@ -2580,7 +2474,7 @@ State 195
     basic_value  go to state 35
     appexpr      go to state 36
     nonapp       go to state 37
-    expr         go to state 197
+    expr         go to state 192
     ifexpr       go to state 39
     op_prec1     go to state 40
     op_prec2     go to state 41
@@ -2593,29 +2487,147 @@ State 195
     list_expr    go to state 48
 
 
+State 182
+
+   18 id_list: ID ':' id_list .
+
+    $default  reduce using rule 18 (id_list)
+
+
+State 183
+
+   19 id_list: WILDSCORE ':' id_list .
+
+    $default  reduce using rule 19 (id_list)
+
+
+State 184
+
+  109 while_expr: WHILE '(' expr . ')' '{' stmts '}'
+
+    ')'  shift, and go to state 193
+
+
+State 185
+
+   98 stmt: id_list LARROW expr . ';'
+
+    ';'  shift, and go to state 194
+
+
+State 186
+
+  100 stmt: id_list LARROW io_stmt . ';'
+
+    ';'  shift, and go to state 195
+
+
+State 187
+
+   99 stmt: id_list LARROW while_expr .
+
+    $default  reduce using rule 99 (stmt)
+
+
+State 188
+
+   94 procdecl: ID '=' DO '{' stmts '}' where_exp .
+
+    $default  reduce using rule 94 (procdecl)
+
+
+State 189
+
+   90 where_exp: WHERE '{' line_elems '}' .
+
+    $default  reduce using rule 90 (where_exp)
+
+
+State 190
+
+   28 list_value: '[' list_args ']' ':' list_value .
+
+    $default  reduce using rule 28 (list_value)
+
+
+State 191
+
+   91 procdecl: ID args '=' DO '{' stmts '}' .
+   92         | ID args '=' DO '{' stmts '}' . where_exp
+
+    WHERE  shift, and go to state 77
+
+    $default  reduce using rule 91 (procdecl)
+
+    where_exp  go to state 196
+
+
+State 192
+
+   56 ifexpr: IF expr THEN expr ELSE expr .
+
+    $default  reduce using rule 56 (ifexpr)
+
+
+State 193
+
+  109 while_expr: WHILE '(' expr ')' . '{' stmts '}'
+
+    '{'  shift, and go to state 197
+
+
+State 194
+
+   98 stmt: id_list LARROW expr ';' .
+
+    $default  reduce using rule 98 (stmt)
+
+
+State 195
+
+  100 stmt: id_list LARROW io_stmt ';' .
+
+    $default  reduce using rule 100 (stmt)
+
+
 State 196
 
-  107 while_expr: WHILE '(' expr ')' '{' stmts . '}'
+   92 procdecl: ID args '=' DO '{' stmts '}' where_exp .
 
-    '}'  shift, and go to state 198
+    $default  reduce using rule 92 (procdecl)
 
 
 State 197
 
-   56 ifexpr: IF expr THEN '{' expr '}' ELSE '{' expr . '}'
+  109 while_expr: WHILE '(' expr ')' '{' . stmts '}'
 
-    '}'  shift, and go to state 199
+    error      shift, and go to state 170
+    ID         shift, and go to state 109
+    WILDSCORE  shift, and go to state 110
+    WHILE      shift, and go to state 111
+    YIELD      shift, and go to state 112
+    PRINT      shift, and go to state 113
+    READBOOL   shift, and go to state 114
+    READFLOAT  shift, and go to state 115
+    READINT    shift, and go to state 116
+
+    id_list     go to state 117
+    yieldexpr   go to state 118
+    stmts       go to state 198
+    stmt        go to state 120
+    io_stmt     go to state 121
+    while_expr  go to state 122
 
 
 State 198
 
-  107 while_expr: WHILE '(' expr ')' '{' stmts '}' .
+  109 while_expr: WHILE '(' expr ')' '{' stmts . '}'
 
-    $default  reduce using rule 107 (while_expr)
+    '}'  shift, and go to state 199
 
 
 State 199
 
-   56 ifexpr: IF expr THEN '{' expr '}' ELSE '{' expr '}' .
+  109 while_expr: WHILE '(' expr ')' '{' stmts '}' .
 
-    $default  reduce using rule 56 (ifexpr)
+    $default  reduce using rule 109 (while_expr)

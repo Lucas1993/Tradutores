@@ -1,3 +1,5 @@
+#ifndef LIST_ERROR_H
+#define LIST_ERROR_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,4 +18,5 @@ typedef struct list_error_t {
 
 void add_error(list_error_t** root, comp_error_t* erro);
 comp_error_t* make_error(int type, char* msg, int line, int col);
-void del_list(list_error_t** root);
+void del_list(list_error_t* root);
+#endif

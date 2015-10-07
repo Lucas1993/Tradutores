@@ -1,8 +1,10 @@
 #include "list_error.h"
 
 void add_error(list_error_t** root, comp_error_t* erro) {
+    if(root == NULL) exit(2);
     list_error_t* aux = NULL;
-    aux = malloc(sizeof(list_error_t));
+    aux = (list_error_t*) malloc(sizeof(list_error_t));
+    /*memset(aux, 0, sizeof(list_error_t));*/
     if (aux == NULL) {
         exit(1);
     }
@@ -25,7 +27,8 @@ void add_error(list_error_t** root, comp_error_t* erro) {
 
 comp_error_t* make_error(int type, char* msg, int line, int col) {
     comp_error_t* err = NULL;
-    err = malloc(sizeof(comp_error_t));
+    err = (comp_error_t*) malloc(sizeof(comp_error_t));
+    /*memset(err, 0, sizeof(comp_error_t));*/
     if (err == NULL) {
         exit(1);
     }
@@ -37,23 +40,25 @@ comp_error_t* make_error(int type, char* msg, int line, int col) {
     return err;
 }
 
-void del_list(list_error_t** root) {
-    list_error_t* aux = NULL;
-    if (root != NULL && (*root) != NULL) {
-        if ((*root)->erro != NULL) {
-            if ((*root)->erro->msg != NULL) {
-                free((*root)->erro->msg);
+void del_list(list_error_t* root) {
+    list_error_t* cur = NULL;
+    list_error_t* next = NULL;
+    cur = root;
+    next = cur->next;
+    while (cur != NULL) {
+        if ((cur)->erro != NULL) {
+            if ((cur)->erro->msg != NULL) {
+                free((cur)->erro->msg);
+                (cur)->erro->msg = NULL;
             }
-            free((*root)->erro);
+            free((cur)->erro);
+            (cur)->erro = NULL;
         }
-        if ((*root)->next != NULL) {
-            aux = (*root)->next;
-        }
-        free(*root);
-    }
-    root = NULL;
-    if (aux != NULL) {
-        del_list(&aux);
+
+        free(cur);
+        cur = next;
+        next = (next)->next;
+
     }
 
 }
