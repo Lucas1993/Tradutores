@@ -61,7 +61,7 @@ o envia para o sintático mesmo assim, para tentar encontrar mais erros antes de
 No analisador sintático, a função que registra erros é a \emph{yyerror}. Esta também irá registrar a linha e coluna
 onde o erro ocorreu, e irá utilizar como mensagem o erro passado pelo Bison.
 Para tentar evitar terminação imediata ao encontrar um erro, a palavra reservada \emph{error} é usada em algumas regras,
-tratando o erro localmente. Isto é feito particularmente nas regras das variáveis \emph{fundecl} e \emph{stmt}.   
+tratando o erro localmente. Isto é feito particularmente nas regras das variáveis \emph{fundecl}, \emph{procdecl} e \emph{stmt}.   
 
 
 Para registrar os erros, as funções \emph{make\_error} e \emph{add\_error} são usadas, sendo implementadas em um arquivo separado, chamado
@@ -213,24 +213,27 @@ Os símbolos são adicionados na tabela quando um identificador qualquer é enco
 
 \section{Descrição dos arquivos de teste}
 
-Existem 4 arquivos de teste contidos na pasta \emph{testes}.
+Existem 5 arquivos de teste contidos na pasta \emph{testes}.
 \begin{itemize}
     \item O arquivo \emph{correto1.txt} mostra um programa simples da linguagem. Observar os operadores e os identificadores com números.
     \item O arquivo \emph{correto2.txt} contém mais alguns exemplos, como constantes booleanas, comentários e erros sendo ignorados dentro dos comentários, 
         em especial, identificador começando com underscore.
-    \item O arquivo \emph{incorreto1.txt} já contém alguns erros. Identificadores começando com underscore e caracteres inválidos estão presentes.
-    \item O arquivo \emph{incorreto2.txt} também contém alguns erros. Em especial vale notar que \emph{\#} não inicia um comentário,
-        \emph{x - -} não retorna dois tokens, mas três. Identificadores não podem começar com números e nem underscores.
+    \item O arquivo \emph{incorreto1.txt} já contém alguns erros. Identificadores começando com underscore (linhas 1 e 2) e caracteres inválidos (linha 2) estão presentes. Na linha 1, é necessário parentesis ao redor de listas na declaração de argumentos, a falta destes ocasiona erro. Na linha 4, um número não pode ter underscore no meio dele.
+    \item O arquivo \emph{incorreto2.txt} também contém alguns erros. Em especial vale notar, na linha 1, que \emph{\#} não inicia um comentário, e nas linhas 3 e 4, identificadores não podem começar com underscore. Na linha 7 existe um erro sintático, a construção ``- -" não existe na linguagem. Statements começados por identificadores têm que ser seguidos de uma atribuição, logo o parser espera um ``\textless-".  
+    \item O arquivo \emph{incorreto3.txt} contém dois erros. O primeiro, na linha 1: If não utiliza chaves. O segundo, na linha 5: se aparece um identificador, tem que ser seguido de uma atribuição. Statements são só atribuições, whiles e yields.
 \end{itemize}
 
+\pagebreak
 
 \section{Dificuldades encontradas}
 
-Não foram encontradas muitas dificuldades no desenvolvimento do trabalho. A única que vale a pena
-ser mencionada é a identificação de erros que o analisador não percebe imediatamente.
-Um exemplo é identificar números seguidos de letras como um erro léxico. O analisador léxico retorna dois tokens,
-\textless T\_NUM\textgreater e \textless T\_ID\textgreater, ao invés de cair na regra de token não identificado. Para tratar este tipo de erro, uma regra foi
-adicionada para cada um.
+Ocorreu um conflito de reduce/reduce que ocasionava em vários outros e foi complicado de
+localizar e resolver, na regra ``appexpr $\rightarrow$ expr expr".
+
+A gramática teve que ser modificada para permitir o casamento de padrões de listas nas declarações de funções, o que também deu certo trabalho.
+
+Fora isto, os outros detalhes não ofereceram muita dificuldade, sendo basicamente trabalho
+braçal.
 
 \section{Referências Bibliográficas}
 [1] The Haskell 98 Report - https://www.haskell.org/onlinereport/index.html $^1$
