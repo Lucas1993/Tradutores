@@ -131,7 +131,7 @@ extern int yydebug;
   enum yytokentype
   {
     ID = 258,
-    UNDERSCORE = 259,
+    WILDSCORE = 259,
     FLOAT = 260,
     BOOLVAL = 261,
     BOOL = 262,
@@ -537,7 +537,7 @@ static const yytype_uint16 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "ID", "UNDERSCORE", "FLOAT", "BOOLVAL",
+  "$end", "error", "$undefined", "ID", "WILDSCORE", "FLOAT", "BOOLVAL",
   "BOOL", "NUMBER", "FLOATNUM", "INTEGER", "IF", "ELSE", "THEN", "WHILE",
   "WHERE", "YIELD", "DO", "PRINT", "READBOOL", "READFLOAT", "READINT",
   "RARROW", "LARROW", "DIFF", "EQUALS", "DOUBLECOLON", "APPEND", "AND",
@@ -3474,7 +3474,7 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                     print_tree(tmp, ARGS_T, lvl + 1);
                 }
             } else {
-                ident(lvl + 1); printf("| UNDERSCORE\n");
+                ident(lvl + 1); printf("| WILDSCORE\n");
                 if(node.args_f->next != NULL) {
                     tmp.args_f = node.args_f->next;
                     print_tree(tmp, ARGS_T, lvl + 1);
@@ -3519,7 +3519,7 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                     ident(lvl + 1); printf("| ]\n");
                     break;
                 case LS_WLD:
-                    ident(lvl + 1); printf("| UNDERSCORE\n");
+                    ident(lvl + 1); printf("| WILDSCORE\n");
                     break;
                 case LS_BLT:
                     tmp.built_list_val_f = node.list_value_f->opt.built_list_val;

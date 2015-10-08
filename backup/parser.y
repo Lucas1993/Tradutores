@@ -34,7 +34,7 @@ void print_tree(YYSTYPE node, char node_type, int lvl);
 %error-verbose
 
 %token <str> ID
-%token UNDERSCORE
+%token WILDSCORE
 %token FLOAT
 %token <boolval> BOOLVAL
 %token BOOL
@@ -237,7 +237,7 @@ args:
         $$ = tmp;
     
     }
-    | UNDERSCORE args  {
+    | WILDSCORE args  {
         args_t* tmp = NEW(args_t);
         tmp->next = $2;
         $$ = tmp;
@@ -249,7 +249,7 @@ args:
         $$ = tmp;
     
     }
-    | UNDERSCORE {
+    | WILDSCORE {
         $$ = NEW(arg_t);
     }
 	;
@@ -284,7 +284,7 @@ id_list:
             $$ = tmp;
             add_symbol(&symtable, $1, NULL);
       }
-      | UNDERSCORE ':' id_list {
+      | WILDSCORE ':' id_list {
             id_list_t* tmp = NEW(id_list_t);
             tmp->next = $3;
             $$ = tmp;
@@ -295,7 +295,7 @@ id_list:
             $$ = tmp; 
             add_symbol(&symtable, $1, NULL);
       }
-      | UNDERSCORE  {
+      | WILDSCORE  {
             id_list_t* tmp = NEW(id_list_t);
             $$ = tmp; 
       }
@@ -350,13 +350,13 @@ list_value:
         $$ = tmp;
     
     }
-    | UNDERSCORE ':' UNDERSCORE {
+    | WILDSCORE ':' WILDSCORE {
         list_value_t* tmp = NEW(list_value_t);
         tmp->ls_type = LS_WLD;
         $$ = tmp;
     
     }
-    | UNDERSCORE ':' list_value {
+    | WILDSCORE ':' list_value {
         list_value_t* tmp = NEW(list_value_t);
         tmp->ls_type = LS_WLD;
         tmp->next = $3;
@@ -378,7 +378,7 @@ list_value:
         $$ = tmp;
         add_symbol(&symtable, $3, NULL);
     }
-    | basic_value ':' UNDERSCORE {
+    | basic_value ':' WILDSCORE {
         list_value_t* tmp = NEW(list_value_t);
         $$ = tmp;
     }
@@ -1480,7 +1480,7 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                     print_tree(tmp, ARGS_T, lvl + 1);
                 }
             } else {
-                ident(lvl + 1); printf("| UNDERSCORE\n");
+                ident(lvl + 1); printf("| WILDSCORE\n");
                 if(node.args_f->next != NULL) {
                     tmp.args_f = node.args_f->next;
                     print_tree(tmp, ARGS_T, lvl + 1);
@@ -1525,7 +1525,7 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                     ident(lvl + 1); printf("| ]\n");
                     break;
                 case LS_WLD:
-                    ident(lvl + 1); printf("| UNDERSCORE\n");
+                    ident(lvl + 1); printf("| WILDSCORE\n");
                     break;
                 case LS_BLT:
                     tmp.built_list_val_f = node.list_value_f->opt.built_list_val;

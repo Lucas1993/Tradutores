@@ -46,7 +46,7 @@ extern int yydebug;
   enum yytokentype
   {
     ID = 258,
-    UNDERSCORE = 259,
+    WILDSCORE = 259,
     FLOAT = 260,
     BOOLVAL = 261,
     BOOL = 262,

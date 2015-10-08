@@ -266,9 +266,9 @@ fundecl:
 
 args:
     arg_value args  
-    | UNDERSCORE args  
+    | WILDSCORE args  
     | arg_value 
-    | UNDERSCORE 
+    | WILDSCORE 
 	;
 
 arg_value:
@@ -279,9 +279,9 @@ arg_value:
 
 id_list:
        ID ':' id_list 
-      | UNDERSCORE ':' id_list 
+      | WILDSCORE ':' id_list 
       | ID  
-      | UNDERSCORE  
+      | WILDSCORE  
       ;
 
 basic_value: 
@@ -295,11 +295,11 @@ basic_value:
 list_value:
     basic_value ':' list_value 
     |'[' list_args ']' ':' list_value 
-    | UNDERSCORE ':' UNDERSCORE 
-    | UNDERSCORE ':' list_value 
+    | WILDSCORE ':' WILDSCORE 
+    | WILDSCORE ':' list_value 
     | built_list_value 
     | basic_value ':' ID 
-    | basic_value ':' UNDERSCORE 
+    | basic_value ':' WILDSCORE 
 	;
 
 list_args:

@@ -19,18 +19,18 @@ Grammar
    12        | ID error '=' expr ';'
 
    13 args: arg_value args
-   14     | WILDSCORE args
+   14     | UNDERSCORE args
    15     | arg_value
-   16     | WILDSCORE
+   16     | UNDERSCORE
 
    17 arg_value: '(' list_value ')'
    18          | basic_value
    19          | '(' arg_value ')'
 
    20 id_list: ID ':' id_list
-   21        | WILDSCORE ':' id_list
+   21        | UNDERSCORE ':' id_list
    22        | ID
-   23        | WILDSCORE
+   23        | UNDERSCORE
 
    24 basic_value: NUMBER
    25            | FLOATNUM
@@ -40,11 +40,11 @@ Grammar
 
    29 list_value: basic_value ':' list_value
    30           | '[' list_args ']' ':' list_value
-   31           | WILDSCORE ':' WILDSCORE
-   32           | WILDSCORE ':' list_value
+   31           | UNDERSCORE ':' UNDERSCORE
+   32           | UNDERSCORE ':' list_value
    33           | built_list_value
    34           | basic_value ':' ID
-   35           | basic_value ':' WILDSCORE
+   35           | basic_value ':' UNDERSCORE
 
    36 list_args: arg_value
    37          | arg_value ',' list_args
@@ -171,7 +171,7 @@ $end (0) 0
 '}' (125) 92 93 94 95 96 97 111
 error (256) 11 12 97 106
 ID (258) 7 8 9 10 11 12 20 22 27 34 40 49 93 94 95 96 97
-WILDSCORE (259) 14 16 21 23 31 32 35
+UNDERSCORE (259) 14 16 21 23 31 32 35
 FLOAT (260) 46
 BOOLVAL (261) 26
 BOOL (262) 47
@@ -309,7 +309,7 @@ State 1
 
     error        shift, and go to state 8
     ID           shift, and go to state 9
-    WILDSCORE    shift, and go to state 10
+    UNDERSCORE   shift, and go to state 10
     BOOLVAL      shift, and go to state 11
     NUMBER       shift, and go to state 12
     FLOATNUM     shift, and go to state 13
@@ -390,15 +390,15 @@ State 9
 
 State 10
 
-   14 args: WILDSCORE . args
-   16     | WILDSCORE .
+   14 args: UNDERSCORE . args
+   16     | UNDERSCORE .
 
-    ID         shift, and go to state 9
-    WILDSCORE  shift, and go to state 10
-    BOOLVAL    shift, and go to state 11
-    NUMBER     shift, and go to state 12
-    FLOATNUM   shift, and go to state 13
-    '('        shift, and go to state 16
+    ID          shift, and go to state 9
+    UNDERSCORE  shift, and go to state 10
+    BOOLVAL     shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    FLOATNUM    shift, and go to state 13
+    '('         shift, and go to state 16
 
     $default  reduce using rule 16 (args)
 
@@ -482,14 +482,14 @@ State 16
    19          | '(' . arg_value ')'
    28 basic_value: '(' . ')'
 
-    ID         shift, and go to state 9
-    WILDSCORE  shift, and go to state 51
-    BOOLVAL    shift, and go to state 11
-    NUMBER     shift, and go to state 12
-    FLOATNUM   shift, and go to state 13
-    '('        shift, and go to state 16
-    ')'        shift, and go to state 52
-    '['        shift, and go to state 53
+    ID          shift, and go to state 9
+    UNDERSCORE  shift, and go to state 51
+    BOOLVAL     shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    FLOATNUM    shift, and go to state 13
+    '('         shift, and go to state 16
+    ')'         shift, and go to state 52
+    '['         shift, and go to state 53
 
     arg_value         go to state 54
     basic_value       go to state 55
@@ -513,12 +513,12 @@ State 18
    13 args: arg_value . args
    15     | arg_value .
 
-    ID         shift, and go to state 9
-    WILDSCORE  shift, and go to state 10
-    BOOLVAL    shift, and go to state 11
-    NUMBER     shift, and go to state 12
-    FLOATNUM   shift, and go to state 13
-    '('        shift, and go to state 16
+    ID          shift, and go to state 9
+    UNDERSCORE  shift, and go to state 10
+    BOOLVAL     shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    FLOATNUM    shift, and go to state 13
+    '('         shift, and go to state 16
 
     $default  reduce using rule 15 (args)
 
@@ -581,7 +581,7 @@ State 22
 
 State 23
 
-   14 args: WILDSCORE args .
+   14 args: UNDERSCORE args .
 
     $default  reduce using rule 14 (args)
 
@@ -944,8 +944,8 @@ State 50
 
 State 51
 
-   31 list_value: WILDSCORE . ':' WILDSCORE
-   32           | WILDSCORE . ':' list_value
+   31 list_value: UNDERSCORE . ':' UNDERSCORE
+   32           | UNDERSCORE . ':' list_value
 
     ':'  shift, and go to state 99
 
@@ -987,7 +987,7 @@ State 55
    18 arg_value: basic_value .
    29 list_value: basic_value . ':' list_value
    34           | basic_value . ':' ID
-   35           | basic_value . ':' WILDSCORE
+   35           | basic_value . ':' UNDERSCORE
 
     ':'  shift, and go to state 104
 
@@ -1054,15 +1054,15 @@ State 60
 
    97 procdecl: ID error '=' '{' . stmts '}'
 
-    error      shift, and go to state 109
-    ID         shift, and go to state 110
-    WILDSCORE  shift, and go to state 111
-    WHILE      shift, and go to state 112
-    YIELD      shift, and go to state 113
-    PRINT      shift, and go to state 114
-    READBOOL   shift, and go to state 115
-    READFLOAT  shift, and go to state 116
-    READINT    shift, and go to state 117
+    error       shift, and go to state 109
+    ID          shift, and go to state 110
+    UNDERSCORE  shift, and go to state 111
+    WHILE       shift, and go to state 112
+    YIELD       shift, and go to state 113
+    PRINT       shift, and go to state 114
+    READBOOL    shift, and go to state 115
+    READFLOAT   shift, and go to state 116
+    READINT     shift, and go to state 117
 
     id_list     go to state 118
     yieldexpr   go to state 119
@@ -1142,15 +1142,15 @@ State 69
    95 procdecl: ID '=' DO '{' . stmts '}'
    96         | ID '=' DO '{' . stmts '}' where_exp
 
-    error      shift, and go to state 109
-    ID         shift, and go to state 110
-    WILDSCORE  shift, and go to state 111
-    WHILE      shift, and go to state 112
-    YIELD      shift, and go to state 113
-    PRINT      shift, and go to state 114
-    READBOOL   shift, and go to state 115
-    READFLOAT  shift, and go to state 116
-    READINT    shift, and go to state 117
+    error       shift, and go to state 109
+    ID          shift, and go to state 110
+    UNDERSCORE  shift, and go to state 111
+    WHILE       shift, and go to state 112
+    YIELD       shift, and go to state 113
+    PRINT       shift, and go to state 114
+    READBOOL    shift, and go to state 115
+    READFLOAT   shift, and go to state 116
+    READINT     shift, and go to state 117
 
     id_list     go to state 118
     yieldexpr   go to state 119
@@ -1623,16 +1623,16 @@ State 98
 
 State 99
 
-   31 list_value: WILDSCORE ':' . WILDSCORE
-   32           | WILDSCORE ':' . list_value
+   31 list_value: UNDERSCORE ':' . UNDERSCORE
+   32           | UNDERSCORE ':' . list_value
 
-    ID         shift, and go to state 9
-    WILDSCORE  shift, and go to state 151
-    BOOLVAL    shift, and go to state 11
-    NUMBER     shift, and go to state 12
-    FLOATNUM   shift, and go to state 13
-    '('        shift, and go to state 152
-    '['        shift, and go to state 53
+    ID          shift, and go to state 9
+    UNDERSCORE  shift, and go to state 151
+    BOOLVAL     shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    FLOATNUM    shift, and go to state 13
+    '('         shift, and go to state 152
+    '['         shift, and go to state 53
 
     basic_value       go to state 153
     list_value        go to state 154
@@ -1675,15 +1675,15 @@ State 104
 
    29 list_value: basic_value ':' . list_value
    34           | basic_value ':' . ID
-   35           | basic_value ':' . WILDSCORE
+   35           | basic_value ':' . UNDERSCORE
 
-    ID         shift, and go to state 157
-    WILDSCORE  shift, and go to state 158
-    BOOLVAL    shift, and go to state 11
-    NUMBER     shift, and go to state 12
-    FLOATNUM   shift, and go to state 13
-    '('        shift, and go to state 152
-    '['        shift, and go to state 53
+    ID          shift, and go to state 157
+    UNDERSCORE  shift, and go to state 158
+    BOOLVAL     shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    FLOATNUM    shift, and go to state 13
+    '('         shift, and go to state 152
+    '['         shift, and go to state 53
 
     basic_value       go to state 153
     list_value        go to state 159
@@ -1742,8 +1742,8 @@ State 110
 
 State 111
 
-   21 id_list: WILDSCORE . ':' id_list
-   23        | WILDSCORE .
+   21 id_list: UNDERSCORE . ':' id_list
+   23        | UNDERSCORE .
 
     ':'  shift, and go to state 166
 
@@ -1865,15 +1865,15 @@ State 121
    98 stmts: stmt .
    99      | stmt . stmts
 
-    error      shift, and go to state 109
-    ID         shift, and go to state 110
-    WILDSCORE  shift, and go to state 111
-    WHILE      shift, and go to state 112
-    YIELD      shift, and go to state 113
-    PRINT      shift, and go to state 114
-    READBOOL   shift, and go to state 115
-    READFLOAT  shift, and go to state 116
-    READINT    shift, and go to state 117
+    error       shift, and go to state 109
+    ID          shift, and go to state 110
+    UNDERSCORE  shift, and go to state 111
+    WHILE       shift, and go to state 112
+    YIELD       shift, and go to state 113
+    PRINT       shift, and go to state 114
+    READBOOL    shift, and go to state 115
+    READFLOAT   shift, and go to state 116
+    READINT     shift, and go to state 117
 
     '}'  reduce using rule 98 (stmts)
 
@@ -2162,9 +2162,9 @@ State 150
 
 State 151
 
-   31 list_value: WILDSCORE . ':' WILDSCORE
-   31           | WILDSCORE ':' WILDSCORE .
-   32           | WILDSCORE . ':' list_value
+   31 list_value: UNDERSCORE . ':' UNDERSCORE
+   31           | UNDERSCORE ':' UNDERSCORE .
+   32           | UNDERSCORE . ':' list_value
 
     ':'  shift, and go to state 99
 
@@ -2182,14 +2182,14 @@ State 153
 
    29 list_value: basic_value . ':' list_value
    34           | basic_value . ':' ID
-   35           | basic_value . ':' WILDSCORE
+   35           | basic_value . ':' UNDERSCORE
 
     ':'  shift, and go to state 104
 
 
 State 154
 
-   32 list_value: WILDSCORE ':' list_value .
+   32 list_value: UNDERSCORE ':' list_value .
 
     $default  reduce using rule 32 (list_value)
 
@@ -2230,9 +2230,9 @@ State 157
 
 State 158
 
-   31 list_value: WILDSCORE . ':' WILDSCORE
-   32           | WILDSCORE . ':' list_value
-   35           | basic_value ':' WILDSCORE .
+   31 list_value: UNDERSCORE . ':' UNDERSCORE
+   32           | UNDERSCORE . ':' list_value
+   35           | basic_value ':' UNDERSCORE .
 
     ':'  shift, and go to state 99
 
@@ -2258,15 +2258,15 @@ State 161
    93 procdecl: ID args '=' DO '{' . stmts '}'
    94         | ID args '=' DO '{' . stmts '}' where_exp
 
-    error      shift, and go to state 109
-    ID         shift, and go to state 110
-    WILDSCORE  shift, and go to state 111
-    WHILE      shift, and go to state 112
-    YIELD      shift, and go to state 113
-    PRINT      shift, and go to state 114
-    READBOOL   shift, and go to state 115
-    READFLOAT  shift, and go to state 116
-    READINT    shift, and go to state 117
+    error       shift, and go to state 109
+    ID          shift, and go to state 110
+    UNDERSCORE  shift, and go to state 111
+    WHILE       shift, and go to state 112
+    YIELD       shift, and go to state 113
+    PRINT       shift, and go to state 114
+    READBOOL    shift, and go to state 115
+    READFLOAT   shift, and go to state 116
+    READINT     shift, and go to state 117
 
     id_list     go to state 118
     yieldexpr   go to state 119
@@ -2301,18 +2301,18 @@ State 165
 
    20 id_list: ID ':' . id_list
 
-    ID         shift, and go to state 110
-    WILDSCORE  shift, and go to state 111
+    ID          shift, and go to state 110
+    UNDERSCORE  shift, and go to state 111
 
     id_list  go to state 187
 
 
 State 166
 
-   21 id_list: WILDSCORE ':' . id_list
+   21 id_list: UNDERSCORE ':' . id_list
 
-    ID         shift, and go to state 110
-    WILDSCORE  shift, and go to state 111
+    ID          shift, and go to state 110
+    UNDERSCORE  shift, and go to state 111
 
     id_list  go to state 188
 
@@ -2523,13 +2523,13 @@ State 185
 
    30 list_value: '[' list_args ']' ':' . list_value
 
-    ID         shift, and go to state 9
-    WILDSCORE  shift, and go to state 51
-    BOOLVAL    shift, and go to state 11
-    NUMBER     shift, and go to state 12
-    FLOATNUM   shift, and go to state 13
-    '('        shift, and go to state 152
-    '['        shift, and go to state 53
+    ID          shift, and go to state 9
+    UNDERSCORE  shift, and go to state 51
+    BOOLVAL     shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    FLOATNUM    shift, and go to state 13
+    '('         shift, and go to state 152
+    '['         shift, and go to state 53
 
     basic_value       go to state 153
     list_value        go to state 197
@@ -2553,7 +2553,7 @@ State 187
 
 State 188
 
-   21 id_list: WILDSCORE ':' id_list .
+   21 id_list: UNDERSCORE ':' id_list .
 
     $default  reduce using rule 21 (id_list)
 
@@ -2694,15 +2694,15 @@ State 204
 
   111 while_expr: WHILE '(' expr ')' '{' . stmts '}'
 
-    error      shift, and go to state 109
-    ID         shift, and go to state 110
-    WILDSCORE  shift, and go to state 111
-    WHILE      shift, and go to state 112
-    YIELD      shift, and go to state 113
-    PRINT      shift, and go to state 114
-    READBOOL   shift, and go to state 115
-    READFLOAT  shift, and go to state 116
-    READINT    shift, and go to state 117
+    error       shift, and go to state 109
+    ID          shift, and go to state 110
+    UNDERSCORE  shift, and go to state 111
+    WHILE       shift, and go to state 112
+    YIELD       shift, and go to state 113
+    PRINT       shift, and go to state 114
+    READBOOL    shift, and go to state 115
+    READFLOAT   shift, and go to state 116
+    READINT     shift, and go to state 117
 
     id_list     go to state 118
     yieldexpr   go to state 119

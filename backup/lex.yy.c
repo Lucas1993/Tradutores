@@ -945,7 +945,7 @@ YY_RULE_SETUP
 case 22:
 YY_RULE_SETUP
 #line 94 "tokenizer.lex"
-{ col += yyleng; return UNDERSCORE; }
+{ col += yyleng; return WILDSCORE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP

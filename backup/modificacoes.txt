@@ -1,0 +1,13 @@
+Modificações feitas
+===================
+
+ - Statement mudado: basic_value para ID
+ - basic_type: list_type mudado pra fazer sentido
+ - appexpr: mudado completamente
+ - built_value_list: adicionado nova regra para virgulas
+ - Passagem de listas explicitas como argumento sempre deve ser acompanhada de parenteses!
+ - Stmt mudado de novo: Yield retirado de expr e adicionado em stmt. ID trocado por id_list
+ - Procedimentos não retornam mais valores implicitamente. Yield é necessário.
+ - If não utiliza yield nem chaves mais.
+
+
