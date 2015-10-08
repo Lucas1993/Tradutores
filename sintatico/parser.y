@@ -10,7 +10,7 @@
 #define NEW(TYPE) memset(malloc(sizeof(TYPE)), 0, sizeof(TYPE))
 
 void yyerror(const char *str) {    
-    size_t sz = sizeof(str) + 64;
+    size_t sz = strlen(str) + 256;
     char* msg = malloc(sz);
 
     has_errors = 1;
@@ -225,6 +225,8 @@ fundecl:
         add_symbol(&symtable, $1, NULL);
     
     }
+    | ID args '=' error ';' {yyerrok;}
+    | ID error '=' expr ';'  { yyerrok; }
 	;
 
 args:
@@ -827,7 +829,7 @@ procdecl:
         $$ = tmp;
         add_symbol(&symtable, $1, NULL);
     }
-    | ID '=' DO '{' error '}' { yyerrok; } 
+    | ID error '=' '{' stmts '}' { yyerrok; }
 	;
 
 stmts:
@@ -1301,7 +1303,7 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                     print_tree(tmp, IFEXPR_T, lvl + 1);
                     break;
                 default:
-                    printf("ERRO!");
+                    printf("ERRO!\n");
                     break; 
             }
             break;
@@ -1437,6 +1439,7 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
                 tmp.where_f = node.proc_f->where_exp;
                 print_tree(tmp, WHERE_T, lvl + 1);
             }
+            ident(lvl+1); printf("| ;\n");
             break;
         case LINES_T:
             ident(lvl); printf("| line_elems\n");

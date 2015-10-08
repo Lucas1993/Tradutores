@@ -2128,7 +2128,7 @@ int yywrap() { return 1; }
 void lex_error() {
     has_errors = 1;
     const char* def = " lexical error, unexpected ";
-    size_t sz = sizeof(def) + sizeof(yytext) + 20;
+    size_t sz = strlen(def) + strlen(yytext) + 20;
     char* msg = malloc(sz);
 
     sprintf(msg, "%d:%d:%s '%s'", line, col, def, yytext);

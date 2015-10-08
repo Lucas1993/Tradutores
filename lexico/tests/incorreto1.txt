@@ -1,4 +1,4 @@
 _function [] = False;
-/* _function xs = if (pred? True) then { True } else { False };
+/* _function xs = if (pred? True) then { True } else { False }; */
 
-func2 x = x + 9_9; */
+_func2 x = x + 9_9; 
