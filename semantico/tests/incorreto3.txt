@@ -1,0 +1,6 @@
+fun x = if (x == 3) then { 2 } else { 3 };
+
+proc z = do {
+    x <- 2;
+    x;
+}

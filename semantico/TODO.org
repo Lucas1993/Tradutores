@@ -1,0 +1,18 @@
+* TODO Análise semântica
+  - [ ] Reestruturar a árvore sintática, retirando nós desnecessários
+** Definições e tabela de símbolos
+      - [X] Criar funções de push e leave
+      - [X] Colocar o gerenciamento da tabela de símbolos na gramática
+      - [-] Cadatrar ID's na symbol table atual
+      - [-] Buscar ID's na symbol table
+      - [ ] Registrar erros de ID não cadastrado
+      - [ ] Lidar com definições inconsistentes (tipo, número de argumento)
+** Type Checking
+      - [ ] Pensar nas funções e estruturas necessárias para fazer a
+            unificação
+      - [ ] Reportar erros de tipo
+
+* TODO Geração de Código
+  - [ ] Decidir como lidar com listas
+  - [ ] Calcular espaço necessário para armazenar cada tipo
+*
