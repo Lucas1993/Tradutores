@@ -1,11 +1,9 @@
-
 %{
 #include <stdio.h>
 #include <string.h>
 #include "ast.h"
 #include "list_error.h"
 #include "sym_table.h"
-#include "types.h"
 #include "lex.yy.c"
 
 /*Macro para alocar e inicializar a struct toda com 0*/
@@ -103,6 +101,9 @@ void print_tree(YYSTYPE node, char node_type, int lvl);
     line_t* line_f;           
     args_t* args_f;           
     program_t* program_f;        
+    list_args_t* list_args_f;      
+    built_list_val_t* built_list_val_f; 
+    list_value_t* list_value_f;
     char* str;
     int intval;
     float floatval;
@@ -135,8 +136,8 @@ void print_tree(YYSTYPE node, char node_type, int lvl);
 %type    <basic_type_f> basic_type     
 %type    <funtype_f> funtype
 %type    <funtype_decl_f> funtype_decl
+%type    <basic_val_f> pure_value
 %type    <basic_val_f> basic_value
-%type    <arg_f> arg_val_list 
 %type    <arg_f> arg_value 
 %type    <decl_f> decl_w_args
 %type    <decl_f> decl_no_args
@@ -145,6 +146,9 @@ void print_tree(YYSTYPE node, char node_type, int lvl);
 %type    <line_f> line_elem
 %type    <args_f> args 
 %type    <program_f> program      
+%type    <list_args_f> list_args
+%type    <built_list_val_f> built_list_value
+%type    <list_value_f> list_value
 
 
 %start program
@@ -214,7 +218,11 @@ decl_w_args:
         } else {
             enter_ctxt(sym);
             args_t* cur = $2;
-            declare_args(cur, sym);
+
+            while(cur != NULL) {
+                
+                cur = cur -> next;
+            }
         }
 
     }
@@ -232,7 +240,6 @@ decl_no_args:
             printf("\nTipo nao declarado!");
             exit(4);
         } else {
-            // Check arg numbers
             enter_ctxt(sym);
         
         }
@@ -296,79 +303,61 @@ fundecl:
 	;
 
 args:
-    arg_val_list args  {
+    arg_value args  {
         args_t* tmp = NEW(args_t);
         tmp->arg = $1;
         tmp->next = $2;
         $$ = tmp;
     
     }
-    | arg_val_list {
+    | UNDERSCORE args  {
+        args_t* tmp = NEW(args_t);
+        tmp->next = $2;
+        $$ = tmp;
+    
+    }
+    | arg_value {
         args_t* tmp = NEW(args_t);
         tmp->arg = $1;
         $$ = tmp;
     
     }
+    | UNDERSCORE {
+        $$ = NEW(arg_t);
+    }
 	;
 
-arg_val_list:
-    arg_val_list ':' arg_value {
-        arg_t* tmp = $1;
-        while(tmp->list_tail != NULL) {
-            tmp = tmp->list_tail;
-        }
-        tmp->list_tail = $3;
-        $$ = $1;
-    }
-    | arg_value {
-        $$ = $1; 
-    }
-    ;
-
 arg_value:
-    NUMBER {
+    '(' list_value ')' {
         arg_t* tmp = NEW(arg_t);
-        tmp->tp = AR_INT;
-        tmp->opt.intval = $1;
+        tmp->tp = AR_LIST;
+        tmp->opt.listval = $2;
         $$ = tmp;
+    
     }
-    | FLOATNUM {
+    | pure_value {
         arg_t* tmp = NEW(arg_t);
-        tmp->tp = AR_FLOAT;
-        tmp->opt.floatval = $1;
-        $$ = tmp;
-    }
-    | BOOLVAL {
-        arg_t* tmp = NEW(arg_t);
-        tmp->tp = AR_BOOL;
-        tmp->opt.boolval = $1;
+        tmp->tp = AR_BASIC;
+        tmp->opt.basicval = $1;
         $$ = tmp; 
     }
     | ID {
         arg_t* tmp = NEW(arg_t);
-        tmp->tp = AR_LABEL;
-        tmp->opt.label = $1;
-        $$ = tmp; 
-    }
-    | '(' ')' {
-        arg_t* tmp = NEW(arg_t);
-        tmp->tp = AR_UNIT;
-        $$ = tmp; 
-    }
-    | UNDERSCORE {
-        arg_t* tmp = NEW(arg_t);
-        tmp->tp = AR_UNDERSCORE;
-        $$ = tmp; 
-    
-    }
-    | '[' ']' {
-        arg_t* tmp = NEW(arg_t);
-        tmp->tp = AR_LIST;
+        tmp->tp = AR_BASIC;
+
+        basic_val_t* str = NEW(basic_val_t);
+        tmp->valtype = BLABEL;
+        tmp->val.label = $1;
+
+        tmp->opt.basicval = str;
         $$ = tmp; 
     
     }
     | '(' arg_value ')' {
-        $$ = $2; 
+        arg_t* tmp = NEW(arg_t);
+        tmp->tp = AR_ARG;
+        tmp->opt.argval = $2;
+        $$ = tmp; 
     }
 	;
 
@@ -397,7 +386,7 @@ id_list:
       }
       ;
 
-basic_value: 
+pure_value: 
     NUMBER {
         basic_val_t* tmp = NEW(basic_val_t);
         tmp->valtype = BINT;
@@ -416,6 +405,17 @@ basic_value:
         tmp->val.boolval = $1;
         $$ = tmp; 
     }
+    | '(' ')' {
+        basic_val_t* tmp = NEW(basic_val_t);
+        tmp->valtype = BUNIT;
+        $$ = tmp; 
+    }
+	;
+
+basic_value:
+    pure_value {
+        $$ = $1;
+    }
     | ID {
         basic_val_t* tmp = NEW(basic_val_t);
         tmp->valtype = BLABEL;
@@ -426,10 +426,106 @@ basic_value:
             add_not_declared(symtable, $1, line, col);
         }
     }
-    | '(' ')' {
-        basic_val_t* tmp = NEW(basic_val_t);
-        tmp->valtype = BUNIT;
-        $$ = tmp; 
+    ;
+
+
+list_value:
+    basic_value ':' list_value {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_BASIC;
+        tmp->opt.basic_val = $1;
+        tmp->next = $3;
+        $$ = tmp;
+    }
+    |'[' list_args ']' ':' list_value {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_LIST;
+        tmp->opt.list_args_val = $2;
+        tmp->next = $5;
+        $$ = tmp;
+    
+    }
+    | UNDERSCORE ':' UNDERSCORE {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_WLD;
+        $$ = tmp;
+    
+    }
+    | UNDERSCORE ':' list_value {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_WLD;
+        tmp->next = $3;
+        $$ = tmp;
+    
+    }
+    | built_list_value {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_BLT;
+        tmp->opt.built_list_val = $1;
+        $$ = tmp;
+    
+    }
+    | ID ':' ID {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_BASIC;
+
+        basic_val_t* str = NEW(basic_val_t);
+        tmp->valtype = BLABEL;
+        tmp->val.label = $1;
+
+        tmp->opt.basic_val = str;
+        tmp->label = $3;
+        $$ = tmp;
+    }
+    | ID ':' UNDERSCORE {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_BASIC;
+
+        basic_val_t* str = NEW(basic_val_t);
+        tmp->valtype = BLABEL;
+        tmp->val.label = $1;
+
+        tmp->opt.basic_val = str;
+        $$ = tmp;
+    }
+    | pure_value ':' ID {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_BASIC;
+        tmp->opt.basic_val = $1;
+        tmp->label = $3;
+        $$ = tmp;
+        add_symbol($3, NULL, line);
+    }
+    | pure_value ':' UNDERSCORE {
+        list_value_t* tmp = NEW(list_value_t);
+        tmp->ls_type = LS_BASIC;
+        tmp->opt.basic_val = $1;
+        $$ = tmp;
+    }
+	;
+
+list_args:
+         arg_value {
+            list_args_t* tmp = NEW(list_args_t);
+            tmp->arg = $1;
+            $$ = tmp;
+         }
+         | arg_value ',' list_args {
+            list_args_t* tmp = NEW(list_args_t);
+            tmp->arg = $1;
+            tmp->next = $3;
+            $$ = tmp;
+         }
+         ;
+
+built_list_value:
+    '[' ']' {
+        $$ = NEW(built_list_val_t);
+    }
+    | '[' list_args ']' {
+        built_list_val_t* tmp = NEW(built_list_val_t);
+        tmp->vals = $2;
+        $$ = tmp;
     }
 	;
 
@@ -1435,6 +1531,24 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
         case ARG_T:
             ident(lvl); printf("| arg_value\n");
             switch(node.arg_f->tp) {
+                case AR_LIST:
+                    ident(lvl + 1); printf("| ( \n");;
+                    tmp.list_value_f = node.arg_f->opt.listval;
+                    print_tree(tmp, LIST_VALUE_T, lvl + 1);
+                    ident(lvl + 1); printf("| ) \n");;
+                    break;
+                case AR_BASIC:
+                    tmp.basic_val_f = node.arg_f->opt.basicval;
+                    print_tree(tmp, BASIC_VAL_T, lvl + 1);
+                    break;
+                case AR_ARG:
+                    ident(lvl + 1); printf("| ( \n");;
+
+                    tmp.arg_f = node.arg_f->opt.argval;
+                    print_tree(tmp, ARG_T, lvl + 1);
+
+                    ident(lvl + 1); printf("| ) \n");;
+                    break;
                 default:
                     printf("ERRO!");
                     break; 
@@ -1510,6 +1624,65 @@ void print_tree(YYSTYPE node, char node_type, int lvl) {
             ident(lvl); printf("| program\n");
             tmp.lines_f = node.program_f->lines;
             print_tree(tmp, LINES_T, lvl + 1);
+            break;
+        case LIST_ARGS_T:
+            ident(lvl); printf("| list_args\n");
+            tmp.arg_f = node.list_args_f->arg;
+            print_tree(tmp, ARG_T, lvl + 1);
+            if(node.list_args_f->next != NULL) {
+                printf("| ,\n");
+                tmp.list_args_f = node.list_args_f->next;
+                print_tree(tmp, LIST_ARGS_T, lvl + 1);
+            }
+            break;
+        case BUILT_LIST_VAL_T:
+            ident(lvl); printf("| built_list_value\n");
+            ident(lvl + 1); printf("| [\n");
+            if(node.built_list_val_f->vals != NULL) {
+                tmp.list_args_f = node.built_list_val_f->vals;
+                print_tree(tmp, LIST_ARGS_T, lvl + 1);
+            }
+            ident(lvl + 1); printf("| ]\n");
+            break;
+        case LIST_VALUE_T:
+            ident(lvl); printf("| list_value\n");
+            switch(node.list_value_f->ls_type) {
+                case LS_BASIC:
+                    tmp.basic_val_f = node.list_value_f->opt.basic_val;
+                    print_tree(tmp, BASIC_VAL_T, lvl + 1);
+                    break;
+                case LS_LIST:
+                    ident(lvl + 1); printf("| [\n");
+                    tmp.list_args_f = node.list_value_f->opt.list_args_val;
+                    print_tree(tmp, LIST_ARGS_T, lvl + 1);
+                    ident(lvl + 1); printf("| ]\n");
+                    break;
+                case LS_WLD:
+                    ident(lvl + 1); printf("| UNDERSCORE\n");
+                    break;
+                case LS_BLT:
+                    tmp.built_list_val_f = node.list_value_f->opt.built_list_val;
+                    print_tree(tmp, BUILT_LIST_VAL_T, lvl + 1);
+                    break;
+                default:
+                    printf("ERRO!");
+                    break; 
+            }
+            if(node.list_value_f->next != NULL) {
+                ident(lvl + 1); printf("| :\n");
+                tmp.list_value_f = node.list_value_f->next;
+                print_tree(tmp, LIST_VALUE_T, lvl + 1);
+            } else {
+                if(node.list_value_f->label != NULL) {
+                    ident(lvl + 1); printf("| :\n");
+                    ident(lvl + 1); printf("ID, %s\n", node.list_value_f->label);
+                } else {
+                    if(node.list_value_f->ls_type != LS_BLT) {
+                        ident(lvl + 1); printf("| :\n");
+                        ident(lvl + 1); printf("| _\n"); 
+                    }
+                }
+            }
             break;
         case LIST_EXPR_T:
             ident(lvl); printf("| list_expr\n");

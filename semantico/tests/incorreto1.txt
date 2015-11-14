@@ -1,4 +1,6 @@
+_function :: [Integer] -> Bool;
 _function [] = False;
 _function xs = if (pred? True) then True else False;
 
+func2 :: Integer -> Integer;
 func2 x = x + 9_9; 

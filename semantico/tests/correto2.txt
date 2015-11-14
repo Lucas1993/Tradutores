@@ -10,6 +10,7 @@ incListBy i xs = do {
     }
     yield rev ys;
 } where {
+    rev :: [a] -> [a];
     rev ([]) = [];
     rev (x:xs) = (rev xs) ++ [x];
 }

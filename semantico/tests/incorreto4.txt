@@ -1,0 +1,2 @@
+fun :: Integer -> Integer -> Integer;
+fun x [] = x + y + 2;

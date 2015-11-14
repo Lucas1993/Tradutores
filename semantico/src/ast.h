@@ -67,12 +67,15 @@ struct args_t {
 };
 
 struct arg_t {
-    enum { AR_LIST, AR_BASIC, AR_ARG } tp;
+    enum { AR_INT, AR_FLOAT, AR_BOOL, AR_LABEL, AR_UNIT, 
+        AR_LIST, AR_UNDERSCORE } tp;
     union {
-        list_value_t* listval;
-        basic_val_t* basicval;
-        arg_t* argval;
+        int intval;
+        float floatval;
+        int boolval;
+        char* label;
     } opt;
+    arg_t* list_tail;
 };
 
 struct basic_val_t {
@@ -84,26 +87,6 @@ struct basic_val_t {
         char* label;
         id_list_t* ids;
     } val;
-};
-
-struct list_value_t {
-    enum { LS_BASIC, LS_LIST, LS_WLD, LS_BLT } ls_type;
-    union {
-        basic_val_t* basic_val;
-        list_args_t* list_args_val;
-        built_list_val_t* built_list_val;
-    } opt;
-    char* label;
-    list_value_t* next;
-};
-
-struct built_list_val_t {
-    list_args_t* vals;
-};
-
-struct list_args_t {
-    arg_t* arg;
-    list_args_t* next;
 };
 
 struct funtype_decl_t {
@@ -230,6 +213,7 @@ struct while_t {
     expr_t* expr;
     stmts_t* stmts;
 };
+
 
 // -----------------
 

@@ -1,6 +1,10 @@
 #include "list_error.h"
 
+extern list_error_t* error_list_root;
+extern int has_errors;
+
 void add_error(list_error_t** root, comp_error_t* erro) {
+    has_errors = 1;
     if(root == NULL) exit(2);
     list_error_t* aux = NULL;
     aux = (list_error_t*) malloc(sizeof(list_error_t));
@@ -61,4 +65,47 @@ void del_list(list_error_t* root) {
 
     }
 
+}
+
+void add_not_declared(sym_table_t* scope, char* label, int line, int col) {
+    not_found_t* aux = (not_found_t*) malloc(sizeof(not_found_t));
+    memset(aux, 0, sizeof(not_found_t));
+
+    aux->scope = scope;
+    aux->label = label;
+    aux->line = line;
+    aux->col = col;
+
+    if (not_decl_ids == NULL) {
+        not_decl_ids = aux;
+    } else {
+        not_found_t* tmp = not_decl_ids;
+        while(tmp->next != NULL) {
+            tmp = tmp->next;
+        }
+        tmp->next = aux;
+    }
+
+}
+
+void check_all_undeclared() {
+    not_found_t* cur = not_decl_ids;
+    while(cur != NULL) {
+        sym_table_t* old_st = symtable;
+        symtable = cur->scope;
+
+        sym_node_t* node = get_symbol(cur->label);
+
+        if (node == NULL) {
+            size_t sz = 256 + strlen(cur->label);
+            char* msg = malloc(sz);
+
+            sprintf(msg, "%d:%d: semantical error: identifier %s not declared\n", cur->line, cur->col, cur->label);
+            comp_error_t* err = make_error(3, msg, cur->line, cur->col);
+            add_error(&error_list_root, err);
+        }
+
+        symtable = old_st;
+        cur = cur->next;
+    }
 }

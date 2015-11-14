@@ -82,7 +82,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 66 "parser.y" /* yacc.c:1909  */
+#line 79 "parser.y" /* yacc.c:1909  */
 
     while_t* while_f;          
     io_t* io_f;             
@@ -110,15 +110,12 @@ union YYSTYPE
     line_t* line_f;           
     args_t* args_f;           
     program_t* program_f;        
-    list_args_t* list_args_f;      
-    built_list_val_t* built_list_val_f; 
-    list_value_t* list_value_f;
     char* str;
     int intval;
     float floatval;
     int boolval;
 
-#line 122 "parser.tab.h" /* yacc.c:1909  */
+#line 119 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

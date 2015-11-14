@@ -5,12 +5,10 @@
 #include "sym_table.h"
 #include "parser.tab.h"
 
+extern int line;
+extern int col;
+extern list_error_t* error_list_root;
 
-int line = 1;
-int col = 1;
-
-int has_errors = 0;
-list_error_t* error_list_root = NULL;
 void lex_error();
 
 
@@ -120,8 +118,8 @@ _+{R_NUMBER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; yylval.intv
 {R_PRINT}                                           { col += yyleng; return PRINT; }
 {R_BOOLVAL}                                         { col += yyleng; yylval.boolval = strcmp("True", yytext) != 0; return BOOLVAL; }
 {R_LETTER}({R_NUMBER}|{R_LETTER}|_)*                { col += yyleng; yylval.str = strdup(yytext); return ID; }
-{R_NUMBER}+                                         { col += yyleng; yylval.intval = atoi(yytext); return NUMBER; }
-{R_NUMBER}+'.'{R_NUMBER}+                           { col += yyleng; yylval.floatval = atof(yytext); return FLOATNUM; }
+({R_MINUS})?{R_NUMBER}+                                         { col += yyleng; yylval.intval = atoi(yytext); return NUMBER; }
+({R_MINUS})?{R_NUMBER}+'.'{R_NUMBER}+                           { col += yyleng; yylval.floatval = atof(yytext); return FLOATNUM; }
 {WS}+                                               { col += yyleng; BEGIN(INITIAL); }
 {NL}                                                { col = 1; line++; BEGIN(INITIAL);}
 .                                                   { lex_error(); }
@@ -132,7 +130,6 @@ _+{R_NUMBER}({R_NUMBER}|{R_LETTER}|_)*              { col += yyleng; yylval.intv
 int yywrap() { return 1; }
 
 void lex_error() {
-    has_errors = 1;
     const char* def = " lexical error, unexpected ";
     size_t sz = strlen(def) + strlen(yytext) + 20;
     char* msg = malloc(sz);

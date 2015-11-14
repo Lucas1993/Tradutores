@@ -1,11 +1,14 @@
 * TODO Análise semântica
+  - [ ] Verificar uso correto de yield e funções de IO
   - [ ] Reestruturar a árvore sintática, retirando nós desnecessários
+  - [ ] Adicionar regras para a main e para "+ expr"
 ** Definições e tabela de símbolos
       - [X] Criar funções de push e leave
       - [X] Colocar o gerenciamento da tabela de símbolos na gramática
-      - [-] Cadatrar ID's na symbol table atual
-      - [-] Buscar ID's na symbol table
-      - [ ] Registrar erros de ID não cadastrado
+      - [X] Cadastrar ID's na symbol table atual
+      - [X] Buscar ID's na symbol table
+      - [-] Registrar erros de ID não cadastrado
+            - [ ] Lidar com o caso de declaração após uso (lembrar do where)
       - [ ] Lidar com definições inconsistentes (tipo, número de argumento)
 ** Type Checking
       - [ ] Pensar nas funções e estruturas necessárias para fazer a

@@ -3,8 +3,8 @@
 all: clean comp 
 	mv src/a.out ./compiler
 
-comp: parser.tab.o list_error.o sym_table.o
-	cd src && gcc list_error.o sym_table.o parser.tab.o -g -lfl -ly 
+comp: parser.tab.o list_error.o sym_table.o types.o
+	cd src && gcc list_error.o sym_table.o types.o parser.tab.o -g -lfl -ly 
 
 parser.tab.o: lex.yy.c parser.tab.c
 	cd src && gcc parser.tab.c -ly -g -c
@@ -14,6 +14,9 @@ list_error.o:
 
 sym_table.o: 
 	cd src && gcc -Wall sym_table.c -g -c 
+
+types.o:
+	cd src && gcc -Wall types.c -g -c 
 
 lex.yy.c:
 	cd src && flex tokenizer.lex
