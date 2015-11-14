@@ -1,2 +1,6 @@
 fun :: Integer -> Integer -> Integer;
 fun x [] = x + y + 2;
+
+bar :: Bool -> [Integer] -> Bool;
+bar _ x:xs = False;
+bar True xs = True;

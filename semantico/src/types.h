@@ -4,6 +4,7 @@
 #include "ast.h"
 #include "list_error.h"
 #include "sym_table.h"
+#include <string.h>
 #include <stdlib.h>
 
 int check_args(arg_t* arg, funtype_t* type);

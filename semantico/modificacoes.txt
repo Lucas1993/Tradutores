@@ -4,3 +4,4 @@ Modificações feitas
  - Adicionadas variaveis decl_w_args e decl_no_args para poder lidar com escopo
    e a tabela de símbolos. fundecl e procdecl modificadas para usar as novas variáveis.
 
+ - Regras para definições de argumentos modificadas.
